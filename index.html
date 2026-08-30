@@ -18,90 +18,12 @@ input,select,button,textarea{font-family:inherit}
 </head>
 <body>
 <div id="root"></div>
+<script type="module">
+  import * as Designer from "./designer.js";
+  window.Designer = Designer;
+</script>
 <script type="text/babel">
-const { useState } = React;
-
-/* ── Deterministic synthetic sequence generator ────────────────────────────
-   Used only for parts where exact registry sequences aren't embedded.
-   Same seed → same sequence every time. */
-function synth(length, gcFrac, seed) {
-  let h = [...seed].reduce((a, c) => (Math.imul(a, 31) + c.charCodeAt(0)) | 0, 0x12345678);
-  const rand = () => { h ^= h << 13; h ^= h >> 17; h ^= h << 5; return (h >>> 0) / 2**32; };
-  let s = "ATG";
-  for (let i = 3; i < length - 3; i++) {
-    const r = rand();
-    s += r < gcFrac/2 ? "G" : r < gcFrac ? "C" : r < gcFrac + (1-gcFrac)/2 ? "A" : "T";
-  }
-  return s + "TAA";
-}
-
-/* ── Sequence database ─────────────────────────────────────────────────────
-   Sources: iGEM Parts Registry, Addgene, primary literature.
-   Synthetic parts generated deterministically and labeled ⚠️.           */
-const DB = {
-  // ── Promoters ──────────────────────────────────────────────────────────
-  "Pveg Promoter": {
-    seq: "AACAAAAAGATTTTTTATATTTTTTTTAAATAATTTTTTATTATTTGTTTGAAAGAATAAATCATATAAAGGGAATTTGGATGCAGGCATTTTTTTCTTGT",
-    src: "B. subtilis veg gene upstream region (sigma-A, -35/TTGACA -10/TATAAT)",
-    desc: "Constitutive sigma-A promoter; strong expression throughout all growth phases in B. subtilis."
-  },
-  "Ptrc Promoter": {
-    seq: "AATTGTGAGCGGATAACAATTTCACACAGGAAACAGCTATGACCATGATTACGCCAAGCTTGCATGCCTGCAG",
-    src: "de Boer et al. 1983 (hybrid tac/trp); active in gram-negative hosts",
-    desc: "Hybrid tac/trp constitutive promoter. Strong expression in Vibrio and E. coli-class bacteria."
-  },
-  // ── RBS ────────────────────────────────────────────────────────────────
-  "B0034 RBS": {
-    seq: "AAAGAGGAGAAA",
-    src: "iGEM Parts Registry BBa_B0034",
-    desc: "Well-characterized strong RBS (Shine-Dalgarno). ~2500 au by Salis RBS Calculator."
-  },
-  "Consensus RBS": {
-    seq: "AAGGAGGTTTTT",
-    src: "Spike et al. 2022 — V. natrigens expression toolkit",
-    desc: "Consensus SD sequence optimized for strong translation initiation in Vibrio natrigens."
-  },
-  // ── Lysqdvp001 endolysin (codon-optimized per host) ────────────────────
-  "Lysqdvp001 Endolysin": {
-    seq: synth(900, 0.44, "Lysqdvp001_Bsubtilis_codonopt"),
-    seq_vn: synth(900, 0.47, "Lysqdvp001_Vnatrigens_codonopt"),
-    src: "⚠️ Synthetic placeholder — paste your verified sequence from qdvp001 phage genome / PMC11022554",
-    desc: "Modular endolysin from phage qdvp001. Cleaves MurNAc-L-Ala bond in Vibrio peptidoglycan. Replace with your lab-verified sequence before synthesis."
-  },
-  // ── Terminators ────────────────────────────────────────────────────────
-  "rrnB T1 Terminator": {
-    seq: "GCTTTTTTTATACTAAGTTGGCATTATAAAAAAGCATTGCTTATCAATTTGTTGCAACGAACAGGTCACTATCAGTCAAAATAAAATCATTATTTGAT",
-    src: "E. coli rrnB operon T1 terminator; Lisser & Margalit 1993",
-    desc: "Rho-independent stem-loop transcription terminator. Efficient in both E. coli and B. subtilis."
-  },
-  "T7 Te Terminator": {
-    seq: "CTAGCATAACCCCTTGGGGCCTCTAAACGGGTCTTGAGGGGTTTTTTGCTGAAAGGAGGAACT",
-    src: "T7 phage class III terminator; Dunn & Studier 1983 / BBa_B0015",
-    desc: "Strong rho-independent terminator. Compatible with Vibrio natrigens and most gram-negative hosts."
-  },
-  // ── Selection markers ──────────────────────────────────────────────────
-  "Spectinomycin Resistance (SpcR)": {
-    seq: synth(570, 0.44, "aad9_SpcR_spectinomycin_aminonucleoside"),
-    src: "⚠️ Synthetic placeholder — aad9 (aminonucleoside 3'-adenyltransferase); Clark et al. 1999 / pDR111",
-    desc: "Spectinomycin/streptomycin resistance. Efficient selection in B. subtilis without affecting biofilm formation."
-  },
-  "Kanamycin Resistance (KanR)": {
-    seq: synth(816, 0.47, "aph3_KanR_kanamycin_aminoglycoside_phosphotransferase"),
-    src: "⚠️ Synthetic placeholder — APH(3')-Ia; Beck et al. 1982 / Tn903",
-    desc: "Kanamycin resistance via aminoglycoside 3'-phosphotransferase. Standard selection in Vibrio natrigens."
-  },
-  // ── Origins of replication ─────────────────────────────────────────────
-  "pUB110 ori": {
-    seq: synth(1842, 0.36, "pUB110_ori_rolling_circle_staphylococcus_bacillus"),
-    src: "⚠️ Synthetic placeholder — pUB110 rolling-circle ori; McKenzie et al. 1986",
-    desc: "Rolling-circle origin of replication. ~15–20 copies/cell in B. subtilis. Gram-positive compatible."
-  },
-  "pVSV105 ori": {
-    seq: synth(2100, 0.43, "pVSV105_ori_vibrio_broad_host_range_cosmid"),
-    src: "⚠️ Synthetic placeholder — pVSV105; Krasteva et al. 2010 / Addgene #61554",
-    desc: "Broad-host-range origin compatible with Vibrio species. ~10–15 copies/cell in V. natrigens."
-  },
-};
+const { useState, useEffect, useLayoutEffect, useMemo, useRef } = React;
 
 /* ── Delivery protocols (hardcoded per host) ───────────────────────────── */
 const PROTOCOLS = {
@@ -134,13 +56,28 @@ const PROTOCOLS = {
 };
 
 /* ── Part presets ─────────────────────────────────────────────────────── */
-const PRESETS = {
-  "B. subtilis": ["Pveg Promoter","B0034 RBS","Lysqdvp001 Endolysin","rrnB T1 Terminator","Spectinomycin Resistance (SpcR)","pUB110 ori"],
-  "V. natrigens": ["Ptrc Promoter","Consensus RBS","Lysqdvp001 Endolysin","T7 Te Terminator","Kanamycin Resistance (KanR)","pVSV105 ori"],
-};
+const HOST_ALIAS = { "V. natriegens": "V. natrigens" };
+const protocolFor = host => PROTOCOLS[HOST_ALIAS[host] || host] || null;
 
-const FILL = { promoter:"#4ade80",rbs:"#fbbf24",cds:"#60a5fa",terminator:"#f87171",marker:"#c084fc",origin:"#fb923c" };
-const TYPES = ["promoter","rbs","cds","terminator","marker","origin"];
+const FILL = {
+  promoter:"#4ade80", operator:"#22d3ee", rbs:"#fbbf24", cds:"#60a5fa", signal:"#f472b6",
+  terminator:"#f87171", marker:"#c084fc", origin:"#fb923c", orit:"#a3e635", other:"#64748b",
+};
+const EV = { verified:"#22c55e", placeholder:"#f97316" };
+function EvidencePill({ evidence }) {
+  const c = EV[evidence];
+  if (!c) return null;
+  return (
+    <span
+      title={evidence === "verified"
+        ? "Sequence has a real source in ./data/parts.json"
+        : "No verified sequence on file - needs a lab-confirmed sequence"}
+      style={{fontSize:10,padding:"2px 7px",background:`${c}1a`,color:c,borderRadius:20,border:`1px solid ${c}33`,whiteSpace:"nowrap"}}
+    >{evidence}</span>
+  );
+}
+// roughly transcriptional order, then vector elements
+const TYPES = ["promoter","operator","rbs","cds","signal","terminator","marker","origin","orit","other"];
 const TYPE_MAP = {
   "Promoter":"promoter","RBS":"rbs","Endolysin":"cds","Terminator":"terminator",
   "Resistance":"marker","ori":"origin","origin":"origin","promoter":"promoter",
@@ -161,11 +98,127 @@ function gcCalc(seq) {
   const gc = [...seq].filter(c => c === "G" || c === "C").length;
   return (gc / seq.length) * 100;
 }
-function getSeq(name, host) {
-  const entry = DB[name];
-  if (!entry) return synth(300, 0.45, name + "_unknown");
-  if (name === "Lysqdvp001 Endolysin" && host === "V. natrigens") return entry.seq_vn;
+function seqFor(entry, host) {
+  if (!entry) return null;
+  const variant = entry.hosts && entry.hosts[host];
+  if (variant && "seq" in variant) return variant.seq;
   return entry.seq;
+}
+// template slot roles -> the existing type palette
+const ROLE_TYPE = { ori:"origin", ori_shuttle:"origin", orit:"orit" };
+
+function Section({ title, tone, children }) {
+  return (
+    <div style={{marginBottom:14}}>
+      <div style={{fontSize:10,color:tone||"#475569",marginBottom:6,letterSpacing:.5,textTransform:"uppercase"}}>{title}</div>
+      {children}
+    </div>
+  );
+}
+
+/* ── Searchable part dropdown ─────────────────────────────────────────
+   Ranks name-prefix > name-substring > whole-word description match.
+   Menu is position:fixed so an overflow:hidden ancestor cannot clip it. */
+function PartCombo({ pool, placeholder, onPick, onCustom, hint }) {
+  const [q, setQ] = useState("");
+  const [sel, setSel] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState(null);
+  const boxRef = useRef(null);
+
+  const hits = useMemo(() => {
+    const s = q.trim().toLowerCase();
+    if (!s || !pool || !pool.length) return [];
+    const word = new RegExp("\\b" + s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    const out = [];
+    for (const p of pool) {
+      const i = p.name.toLowerCase().indexOf(s);
+      if (i === 0) out.push([0, p]);
+      else if (i > 0) out.push([1, p]);
+      else if (word.test(p.desc || "")) out.push([2, p]);
+    }
+    out.sort((a, b) => a[0] - b[0] || a[1].name.length - b[1].name.length || a[1].name.localeCompare(b[1].name));
+    return out.slice(0, 10).map(x => x[1]);
+  }, [q, pool]);
+
+  useLayoutEffect(() => {
+    if (!open || !hits.length) { setPos(null); return; }
+    const place = () => {
+      const el = boxRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const gap = 4, edge = 12;
+      const below = window.innerHeight - r.bottom - edge;
+      const above = r.top - edge;
+      const up = below < 180 && above > below;
+      setPos({
+        left: r.left, width: r.width, up,
+        offset: up ? window.innerHeight - r.top + gap : r.bottom + gap,
+        maxHeight: Math.max(120, Math.min(400, (up ? above : below) - gap)),
+      });
+    };
+    place();
+    window.addEventListener("scroll", place, true);
+    window.addEventListener("resize", place);
+    return () => {
+      window.removeEventListener("scroll", place, true);
+      window.removeEventListener("resize", place);
+    };
+  }, [open, hits.length, q]);
+
+  const choose = rec => { onPick(rec); setQ(""); setSel(0); setOpen(false); };
+  const key = e => {
+    if (e.key === "ArrowDown") { e.preventDefault(); setSel(s => Math.min(s + 1, hits.length - 1)); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); setSel(s => Math.max(s - 1, 0)); }
+    else if (e.key === "Enter") {
+      e.preventDefault();
+      if (hits[sel]) choose(hits[sel]);
+      else if (onCustom && q.trim()) { onCustom(q.trim()); setQ(""); setOpen(false); }
+    } else if (e.key === "Escape") setOpen(false);
+  };
+
+  return (
+    <div style={{flex:1,minWidth:0}}>
+      <div ref={boxRef} style={{display:"flex",gap:8,padding:"7px 10px",background:"#0f172a",border:"1px solid #334155",borderRadius:6}}>
+        <input
+          value={q}
+          onChange={e=>{setQ(e.target.value);setSel(0);setOpen(true);}}
+          onFocus={()=>setOpen(true)}
+          onBlur={()=>setOpen(false)}
+          onKeyDown={key}
+          placeholder={placeholder}
+          style={{flex:1,minWidth:0,background:"none",border:"none",outline:"none",color:"#e2e8f0",fontSize:12}}
+        />
+        {q.trim() && (
+          <span style={{fontSize:10,color:"#475569",alignSelf:"center",whiteSpace:"nowrap"}}>
+            {hits.length ? `${hits.length===10?"top 10":hits.length} · ↵` : (hint || "no match")}
+          </span>
+        )}
+      </div>
+      {open && hits.length > 0 && pos && (
+        <div style={{position:"fixed",left:pos.left,width:pos.width,[pos.up?"bottom":"top"]:pos.offset,
+          maxHeight:pos.maxHeight,overflowY:"auto",background:"#0f172a",border:"1px solid #334155",
+          borderRadius:7,zIndex:1000,boxShadow:"0 10px 30px rgba(0,0,0,.55)"}}>
+          {hits.map((s,i)=>(
+            <div key={s.id}
+              onMouseDown={e=>{e.preventDefault();choose(s);}}
+              onMouseEnter={()=>setSel(i)}
+              style={{display:"flex",alignItems:"center",gap:8,padding:"7px 10px",cursor:"pointer",
+                background:i===sel?"#1e293b":"transparent",
+                borderLeft:`3px solid ${i===sel?(FILL[s.type]||"#64748b"):"transparent"}`}}>
+              <span style={{flex:1,minWidth:0}}>
+                <span style={{display:"block",fontSize:12,color:"#e2e8f0",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</span>
+                {s.desc && <span style={{display:"block",fontSize:10,color:"#475569",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.desc}</span>}
+              </span>
+              <span style={{fontSize:10,color:"#475569",whiteSpace:"nowrap"}}>{s.length ? s.length.toLocaleString()+" bp" : "\u2014"}</span>
+              <span style={{fontSize:10,padding:"2px 7px",background:`${FILL[s.type]||"#64748b"}1a`,color:FILL[s.type]||"#64748b",borderRadius:20,border:`1px solid ${FILL[s.type]||"#64748b"}33`,whiteSpace:"nowrap"}}>{s.type}</span>
+              <EvidencePill evidence={s.evidence}/>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 let _uid = 0;
@@ -221,47 +274,133 @@ function App() {
   const [parts, setParts] = useState([]);       // {id, name, type, seq, len}
   const [result, setResult] = useState(null);
   const [tab, setTab] = useState("map");
-  const [addName, setAddName] = useState("");
-  const [addType, setAddType] = useState("cds");
+  const [addFilter, setAddFilter] = useState("");   // "" = all types
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(null); // part id for seq editing
+  const [db, setDb] = useState(null);            // parts array from ./data/parts.json
+  const [dbErr, setDbErr] = useState(null);
+  const [templates, setTemplates] = useState(null);
+  const [tplId, setTplId] = useState("");
+  const [cdsPart, setCdsPart] = useState(null);     // chosen gene of interest
+  const [asmErr, setAsmErr] = useState(null);   // names of parts with no sequence
 
-  const pickHost = h => {
-    setHost(h);
-    setParts(PRESETS[h].map(name => {
-      const seq = getSeq(name, h);
-      return { id:++_uid, name, type: guessType(name), seq, len: seq.length };
-    }));
-    setResult(null); setExpanded(null);
+  useEffect(() => {
+    let cancelled = false;
+    const get = u => fetch(u).then(r => { if (!r.ok) throw new Error(u + " - HTTP " + r.status); return r.json(); });
+    Promise.all([get("./data/parts.json"), get("./data/templates.json")])
+      .then(([p, t]) => {
+        if (cancelled) return;
+        setDb(p.parts || []);
+        setTemplates(t.templates || []);
+        setTplId(prev => prev || (t.templates && t.templates[0] ? t.templates[0].id : ""));
+      })
+      .catch(e => { if (!cancelled) setDbErr(e.message); });
+    return () => { cancelled = true; };
+  }, []);
+
+  // name -> part. 293 names repeat in the SnapGene bundle; first occurrence wins.
+  const byName = useMemo(() => {
+    const m = new Map();
+    if (db) for (const p of db) if (!m.has(p.name)) m.set(p.name, p);
+    return m;
+  }, [db]);
+  const byId = useMemo(() => {
+    const m = new Map();
+    if (db) for (const p of db) m.set(p.id, p);
+    return m;
+  }, [db]);
+
+  // the exact record a design part came from; falls back to name for custom parts
+  const meta = p => (p.srcId && byId.get(p.srcId)) || byName.get(p.name) || null;
+
+  // design() indexes with partsById[id], so it needs a plain object, not the Map
+  const partsById = useMemo(() => {
+    const o = {};
+    if (db) for (const p of db) o[p.id] = p;
+    return o;
+  }, [db]);
+
+  const template = useMemo(
+    () => (templates || []).find(t => t.id === tplId) || null,
+    [templates, tplId]
+  );
+
+  const cdsPool = useMemo(() => (db || []).filter(p => p.type === "cds"), [db]);
+  const addPool = useMemo(
+    () => (!db ? [] : addFilter ? db.filter(p => p.type === addFilter) : db),
+    [db, addFilter]
+  );
+  const cdsMatch = cdsPart;
+
+  // { plan } on success, { err } on failure - no setState during render
+  const designed = useMemo(() => {
+    if (!template || !window.Designer) return {};
+    try { return { plan: window.Designer.design(template, partsById, cdsMatch) }; }
+    catch (e) { return { err: e.message }; }
+  }, [template, partsById, cdsMatch]);
+  const plan = designed.plan || null;
+  const designErr = designed.err || null;
+
+  useEffect(() => {
+    if (!plan || !template) return;
+    setHost(template.host);
+    setParts(prev => {
+      const seeded = plan.order.map(o => {
+        const rec = partsById[o.id];
+        const seq = rec ? rec.seq : null;
+        return {
+          id: ++_uid, srcId: o.id, name: o.name,
+          type: (rec && rec.type) || ROLE_TYPE[o.role] || o.role,
+          role: o.role, seq, len: seq ? seq.length : 0,
+        };
+      });
+      return [...seeded, ...prev.filter(p => p.extra)];   // hand-added parts survive
+    });
+    setResult(null); setExpanded(null); setAsmErr(null);
+  }, [plan, template, partsById]);
+
+  const addRecord = rec => {
+    const seq = seqFor(rec, host);
+    setParts(p => [...p, {id:++_uid, srcId:rec.id, name:rec.name, type:rec.type, seq, len: seq ? seq.length : 0, extra:true}]);
+    setResult(null); setAsmErr(null);
+  };
+
+  // free text with no match: keep it as a custom part to paste a sequence into
+  const addCustom = name => {
+    setParts(p => [...p, {id:++_uid, srcId:null, name, type:guessType(name), seq:null, len:0, extra:true}]);
+    setResult(null); setAsmErr(null);
   };
 
   const updateSeq = (id, newSeq) => {
     const s = newSeq.toUpperCase().replace(/[^ATCG]/g,"");
     setParts(p => p.map(x => x.id===id ? {...x, seq:s, len:s.length} : x));
-    setResult(null);
+    setResult(null); setAsmErr(null);
   };
 
-  const addPart = () => {
-    if (!addName.trim()) return;
-    const name = addName.trim();
-    const type = addType;
-    const seq = getSeq(name, host) || synth(300, 0.45, name);
-    setParts(p => [...p, {id:++_uid, name, type, seq, len:seq.length}]);
-    setAddName("");
-    setResult(null);
-  };
-
-  const delPart = id => { setParts(p => p.filter(x => x.id!==id)); setResult(null); };
+  const delPart = id => { setParts(p => p.filter(x => x.id!==id)); setResult(null); setAsmErr(null); };
   const movePart = (id,d) => setParts(prev => {
     const i=prev.findIndex(x=>x.id===id);
     if(i+d<0||i+d>=prev.length) return prev;
-    const a=[...prev]; [a[i],a[i+d]]=[a[i+d],a[i]]; setResult(null); return a;
+    const a=[...prev]; [a[i],a[i+d]]=[a[i+d],a[i]]; setResult(null); setAsmErr(null); return a;
   });
 
   const assemble = () => {
+    const blockers = [];
+    if (plan) {
+      for (const g of plan.gaps) {
+        blockers.push(g.role + " — " + g.reason + (g.missing ? " (" + g.missing.join(", ") + ")" : ""));
+      }
+    }
+    for (const p of parts) if (!p.seq) blockers.push(p.name + " — no verified sequence on file");
+    if (blockers.length) {
+      setAsmErr(blockers);
+      setResult(null);
+      return;
+    }
+    setAsmErr(null);
     const assembled = parts.map(p=>p.seq).join("");
     const gc = gcCalc(assembled);
-    const proto = PROTOCOLS[host];
+    const proto = protocolFor(host);
     setResult({ assembled, gc, total: assembled.length, proto });
     setTab("map");
   };
@@ -279,6 +418,17 @@ function App() {
     tabBtn:a=>({flex:1,padding:"10px 4px",background:"none",border:"none",borderBottom:`2px solid ${a?"#0ea5e9":"transparent"}`,color:a?"#38bdf8":"#475569",cursor:"pointer",fontSize:11,fontWeight:a?600:400}),
     ib:{background:"none",border:"none",color:"#475569",cursor:"pointer",padding:"2px 5px",fontSize:12},
   };
+
+  if (dbErr || !db || !templates) return (
+    <div style={{minHeight:"100vh",background:"#0f172a",color:"#e2e8f0",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13}}>
+      <div style={{textAlign:"center"}}>
+        <div style={{fontSize:26,marginBottom:10}}>🧬</div>
+        {dbErr
+          ? <div style={{color:"#f87171"}}>Could not load ./data/parts.json — {dbErr}</div>
+          : <div style={{color:"#64748b"}}>Loading parts…</div>}
+      </div>
+    </div>
+  );
 
   return (
     <div style={{minHeight:"100vh",background:"#0f172a",color:"#e2e8f0"}}>
@@ -302,39 +452,84 @@ function App() {
 
       <div style={{padding:"20px",maxWidth:860,margin:"0 auto"}}>
 
-        {/* Step 1 */}
+        {/* 01 - template, gene, and the editable part list */}
         <div style={{marginBottom:16}}>
-          <span style={S.label}>01 — Host organism</span>
-          <div style={{display:"flex",gap:10}}>
-            {Object.keys(PRESETS).map(h=>(
-              <button key={h} onClick={()=>pickHost(h)} style={{flex:1,padding:"14px 12px",background:host===h?"#0c4a6e":"#1e293b",border:`2px solid ${host===h?"#0ea5e9":"#334155"}`,borderRadius:10,cursor:"pointer",color:"#e2e8f0",textAlign:"left"}}>
-                <div style={{fontSize:20,marginBottom:3}}>{h==="B. subtilis"?"🦠":"⚡"}</div>
-                <div style={{fontSize:13,fontWeight:700,fontStyle:"italic",color:host===h?"#38bdf8":"#94a3b8"}}>{h}</div>
-                <div style={{fontSize:10,color:"#64748b",marginTop:3,lineHeight:1.5}}>
-                  {h==="B. subtilis"?"Coral-surface colonizer · Biofilm-forming · GRAS probiotic":"Marine environment · Ultra-fast growth · High electroporation efficiency"}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
+          <span style={S.label}>01 — Design</span>
+          <div style={S.card}>
 
-        {/* Step 2 */}
-        {host && (
-          <div style={{marginBottom:16}}>
-            <span style={S.label}>02 — Genetic parts</span>
-            <div style={S.card}>
-              <div style={{padding:"8px 14px",background:"#0f172a",borderBottom:"1px solid #1e293b",display:"flex",gap:10,flexWrap:"wrap"}}>
-                {TYPES.map(t=><div key={t} style={{display:"flex",alignItems:"center",gap:5,fontSize:11}}><div style={{width:8,height:8,borderRadius:2,background:FILL[t]}}/><span style={{color:"#64748b"}}>{t}</span></div>)}
+            {/* template + gene of interest */}
+            <div style={{display:"flex",gap:10,padding:"12px 14px",flexWrap:"wrap",borderBottom:"1px solid #1e293b"}}>
+              <div style={{flex:"1 1 240px",minWidth:0}}>
+                <div style={{fontSize:10,color:"#475569",marginBottom:5}}>HOST / TEMPLATE</div>
+                <select value={tplId} onChange={e=>setTplId(e.target.value)}
+                  style={{width:"100%",background:"#0f172a",border:"1px solid #334155",borderRadius:6,color:"#e2e8f0",fontSize:12,padding:"8px",outline:"none"}}>
+                  {templates.map(t => <option key={t.id} value={t.id}>{t.host} — {t.label}</option>)}
+                </select>
               </div>
+              <div style={{flex:"1 1 240px",minWidth:0}}>
+                <div style={{fontSize:10,color:"#475569",marginBottom:5}}>GENE OF INTEREST · {cdsPool.length.toLocaleString()} CDS</div>
+                {cdsPart ? (
+                  <div style={{display:"flex",alignItems:"center",gap:8,padding:"7px 10px",background:"#0f172a",border:"1px solid #1e3a5f",borderRadius:6}}>
+                    <span style={{flex:1,minWidth:0,fontSize:12,color:"#93c5fd",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cdsPart.name}</span>
+                    <span style={{fontSize:10,color:"#475569",whiteSpace:"nowrap"}}>{cdsPart.seq ? cdsPart.length.toLocaleString()+" bp" : "no seq"}</span>
+                    <EvidencePill evidence={cdsPart.evidence}/>
+                    <button onClick={()=>setCdsPart(null)} style={{...S.ib,fontSize:15}} title="Clear">×</button>
+                  </div>
+                ) : (
+                  <div style={{display:"flex"}}>
+                    <PartCombo pool={cdsPool} placeholder="Search CDS parts… e.g. GFP, lacZ, Lysqdvp001"
+                      onPick={rec=>setCdsPart(rec)} hint="no CDS match"/>
+                  </div>
+                )}
+              </div>
+            </div>
 
-              <div style={{padding:"12px 14px"}}>
+            {designErr && (
+              <div style={{margin:"12px 14px",background:"#2a0a0a",border:"1px solid #b91c1c",borderRadius:8,padding:"10px 12px",color:"#fca5a5",fontSize:12}}>
+                designer.js threw: {designErr}
+              </div>
+            )}
+            {!window.Designer && (
+              <div style={{margin:"12px 14px",background:"#2a0a0a",border:"1px solid #b91c1c",borderRadius:8,padding:"10px 12px",color:"#fca5a5",fontSize:12}}>
+                ./designer.js did not load — the page must be served over http, not opened as a file.
+              </div>
+            )}
+
+            {plan && (
+              <div style={{display:"flex",background:"#0f172a",borderBottom:"1px solid #1e293b"}}>
+                {[{v:plan.buildable?"Buildable":"Not buildable",l:"Status",c:plan.buildable?"#4ade80":"#f87171"},
+                  {v:`${(plan.totalLength/1000).toFixed(2)} kb`,l:"Length",c:"#38bdf8"},
+                  {v:`${plan.gc}%`,l:"GC",c:"#38bdf8"},
+                  {v:parts.length,l:"Parts",c:"#38bdf8"}].map((s,i)=>(
+                  <div key={i} style={{flex:1,padding:"10px 6px",textAlign:"center",borderRight:i<3?"1px solid #1e293b":"none"}}>
+                    <div style={{fontSize:14,fontWeight:800,color:s.c}}>{s.v}</div>
+                    <div style={{fontSize:10,color:"#475569"}}>{s.l}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* type legend */}
+            <div style={{padding:"8px 14px",background:"#0f172a",borderBottom:"1px solid #1e293b",display:"flex",gap:10,flexWrap:"wrap"}}>
+              {TYPES.map(t=><div key={t} style={{display:"flex",alignItems:"center",gap:5,fontSize:11}}><div style={{width:8,height:8,borderRadius:2,background:FILL[t]}}/><span style={{color:"#64748b"}}>{t}</span></div>)}
+            </div>
+
+            {/* the design, editable in place */}
+            <div style={{padding:"12px 14px"}}>
+              <div style={{fontSize:10,color:"#475569",marginBottom:8,letterSpacing:.5}}>
+                PART ORDER · 5' → 3' · use ▲▼ to reorder, ✎ to edit a sequence
+              </div>
+              {parts.length === 0 && (
+                <div style={{fontSize:12,color:"#475569",padding:"10px 0"}}>No parts yet — pick a template above.</div>
+              )}
                 {parts.map((p,i)=>(
                   <div key={p.id} style={{marginBottom:5}}>
                     <div style={{display:"flex",alignItems:"center",gap:8,padding:"8px 10px",background:"#0f172a",border:`1px solid ${FILL[p.type]||"#334155"}22`,borderLeft:`3px solid ${FILL[p.type]||"#334155"}`,borderRadius:expanded===p.id?"7px 7px 0 0":7}}>
                       <span style={{color:"#334155",fontSize:11,minWidth:16}}>{i+1}</span>
-                      <span style={{flex:1,fontSize:13}}>{p.name}</span>
+                      <span style={{flex:1,fontSize:13}}>{p.name}{!p.seq && <span style={{color:"#fbbf24",marginLeft:6,fontSize:11}} title="No verified sequence on file">⚠️</span>}</span>
                       <span style={{fontSize:10,color:"#64748b"}}>{p.len.toLocaleString()} bp</span>
                       <span style={{fontSize:10,padding:"2px 7px",background:`${FILL[p.type]||"#64748b"}1a`,color:FILL[p.type]||"#64748b",borderRadius:20,border:`1px solid ${FILL[p.type]||"#64748b"}33`}}>{p.type}</span>
+                      <EvidencePill evidence={meta(p)?.evidence}/>
                       <button onClick={()=>setExpanded(expanded===p.id?null:p.id)} style={{...S.ib,color:expanded===p.id?"#38bdf8":"#475569",fontSize:11}} title="Edit sequence">✎</button>
                       <button onClick={()=>movePart(p.id,-1)} style={S.ib}>▲</button>
                       <button onClick={()=>movePart(p.id,1)} style={S.ib}>▼</button>
@@ -342,40 +537,112 @@ function App() {
                     </div>
                     {expanded===p.id && (
                       <div style={{background:"#070f1a",border:`1px solid ${FILL[p.type]||"#334155"}44`,borderTop:"none",borderRadius:"0 0 7px 7px",padding:10}}>
-                        <div style={{fontSize:10,color:"#475569",marginBottom:6}}>{DB[p.name]?.src || "Custom sequence"}</div>
+                        <div style={{fontSize:10,color:"#475569",marginBottom:6}}>{meta(p)?.src || "Custom sequence"}</div>
                         <textarea
-                          value={p.seq}
+                          value={p.seq || ""}
                           onChange={e=>updateSeq(p.id,e.target.value)}
                           rows={4}
                           placeholder="Paste or edit sequence here (ATCG only)"
                           style={{width:"100%",background:"#0f172a",border:"1px solid #334155",borderRadius:5,color:"#60a5fa",fontSize:10,fontFamily:"monospace",padding:"8px",resize:"vertical",outline:"none"}}
                         />
-                        {DB[p.name]?.src?.startsWith("⚠️") && (
-                          <div style={{fontSize:10,color:"#fbbf24",marginTop:4}}>⚠️ Placeholder sequence — paste your verified lab sequence above before ordering synthesis.</div>
+                        {meta(p)?.evidence === "placeholder" && (
+                          <div style={{fontSize:10,color:"#fbbf24",marginTop:4}}>⚠️ No verified sequence on file — paste your lab sequence above before ordering synthesis.</div>
                         )}
                       </div>
                     )}
                   </div>
                 ))}
 
-                {/* Add part row */}
-                <div style={{display:"flex",gap:8,marginTop:10,padding:"8px 10px",background:"#0f172a",border:"1px dashed #334155",borderRadius:7}}>
-                  <input value={addName} onChange={e=>setAddName(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addPart()} placeholder="Add part by name (e.g., sfGFP, lacI, pelB signal...)" style={{flex:1,background:"none",border:"none",outline:"none",color:"#e2e8f0",fontSize:12}}/>
-                  <select value={addType} onChange={e=>setAddType(e.target.value)} style={{background:"#1e293b",border:"1px solid #334155",borderRadius:5,color:"#94a3b8",fontSize:11,padding:"3px 6px"}}>
-                    {TYPES.map(t=><option key={t} value={t}>{t}</option>)}
-                  </select>
-                  <button onClick={addPart} style={{background:"#1e3a5f",border:"1px solid #334155",borderRadius:5,color:"#93c5fd",fontSize:12,padding:"4px 12px",cursor:"pointer"}}>+ Add</button>
-                </div>
-              </div>
 
-              <div style={{padding:"0 14px 14px"}}>
-                <button onClick={assemble} disabled={!parts.length} style={{width:"100%",padding:"13px",background:"linear-gradient(90deg,#0369a1,#0ea5e9)",border:"none",borderRadius:9,color:"#fff",fontSize:14,fontWeight:700,cursor:!parts.length?"not-allowed":"pointer",opacity:!parts.length?.5:1}}>
-                  ⚗️ Assemble Plasmid
-                </button>
+              {/* add more parts, optionally filtered by type */}
+              <div style={{display:"flex",gap:8,marginTop:10,alignItems:"stretch",flexWrap:"wrap"}}>
+                <select value={addFilter} onChange={e=>setAddFilter(e.target.value)}
+                  style={{background:"#0f172a",border:"1px solid #334155",borderRadius:6,color:addFilter?FILL[addFilter]:"#94a3b8",fontSize:11,padding:"0 8px",outline:"none",flexShrink:0}}>
+                  <option value="">all types</option>
+                  {TYPES.map(t=><option key={t} value={t}>{t}</option>)}
+                </select>
+                <PartCombo
+                  pool={addPool}
+                  placeholder={addFilter ? `Add another ${addFilter}… (${addPool.length.toLocaleString()} parts)` : `Add another part… (${addPool.length.toLocaleString()} parts)`}
+                  onPick={addRecord}
+                  onCustom={addCustom}
+                  hint="↵ adds as custom"
+                />
               </div>
             </div>
+
+            {plan && (
+              <div style={{padding:"0 14px"}}>
+                {plan.gaps.length > 0 && (
+                  <Section title={`Gaps (${plan.gaps.length})`} tone="#f87171">
+                    {plan.gaps.map((g,i)=>(
+                      <div key={i} style={{fontSize:12,color:"#fca5a5",padding:"5px 8px",background:"#2a0a0a",border:"1px solid #7f1d1d",borderRadius:5,marginBottom:4}}>
+                        <b>{g.role}</b> — {g.reason}
+                        {g.missing && <span style={{color:"#7f1d1d",display:"block",fontSize:10,marginTop:2,fontFamily:"monospace"}}>wanted: {g.missing.join(", ")}</span>}
+                      </div>
+                    ))}
+                  </Section>
+                )}
+
+                {plan.placeholders.length > 0 && (
+                  <Section title={`Placeholders (${plan.placeholders.length})`} tone="#fbbf24">
+                    <div style={{fontSize:12,color:"#fbbf24",padding:"5px 8px",background:"#1c1500",border:"1px solid #78350f",borderRadius:5}}>
+                      {plan.placeholders.join(", ")}
+                      <span style={{display:"block",fontSize:10,color:"#a16207",marginTop:3}}>No verified sequence on file — primers cannot be designed until these are supplied.</span>
+                    </div>
+                  </Section>
+                )}
+
+                {plan.siteConflicts.length > 0 && (
+                  <Section title={`Site conflicts (${plan.siteConflicts.length})`} tone="#fbbf24">
+                    {plan.siteConflicts.map((c,i)=>(
+                      <div key={i} style={{fontSize:12,color:"#fbbf24",padding:"4px 8px",background:"#1c1500",border:"1px solid #78350f",borderRadius:5,marginBottom:4}}>
+                        <b>{c.enzyme}</b> site inside <b>{c.part}</b> at position {c.position.toLocaleString()}
+                      </div>
+                    ))}
+                  </Section>
+                )}
+
+                {plan.primers.length > 0 && (
+                  <Section title={`Gibson primers (${plan.primers.length*2})`}>
+                    {plan.primers.map((pr,i)=>(
+                      <div key={i} style={{marginBottom:8,background:"#070f1a",border:"1px solid #1e293b",borderRadius:6,padding:"8px 10px"}}>
+                        <div style={{fontSize:11,color:"#93c5fd",marginBottom:4}}>{pr.part} <span style={{color:"#475569"}}>· {pr.role}</span></div>
+                        {[["F",pr.fwd,pr.fwd_tm],["R",pr.rev,pr.rev_tm]].map(([d,s,t])=>(
+                          <div key={d} style={{display:"flex",gap:8,alignItems:"baseline",marginTop:2}}>
+                            <span style={{fontSize:10,color:"#475569",minWidth:12}}>{d}</span>
+                            <span style={{flex:1,fontFamily:"monospace",fontSize:10,color:"#60a5fa",wordBreak:"break-all"}}>{s}</span>
+                            <span style={{fontSize:10,color:"#64748b",whiteSpace:"nowrap"}}>Tm {t}°C</span>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </Section>
+                )}
+              </div>
+            )}
+
+            {/* assemble */}
+            <div style={{padding:"0 14px 14px"}}>
+              {asmErr && (
+                <div style={{background:"#2a0a0a",border:"1px solid #b91c1c",borderRadius:9,padding:"12px 14px",marginBottom:10}}>
+                  <div style={{color:"#f87171",fontSize:13,fontWeight:700,marginBottom:6}}>
+                    ✕ Cannot assemble — {asmErr.length} unresolved issue{asmErr.length>1?"s":""}
+                  </div>
+                  <ul style={{margin:"0 0 8px 18px",padding:0}}>
+                    {asmErr.map(msg => <li key={msg} style={{color:"#fca5a5",fontSize:12,lineHeight:1.6}}>{msg}</li>)}
+                  </ul>
+                  <div style={{color:"#fbbf24",fontSize:11}}>
+                    Supply the missing parts in ./data/parts.json, or click ✎ above to paste a verified sequence.
+                  </div>
+                </div>
+              )}
+              <button onClick={assemble} disabled={!parts.length} style={{width:"100%",padding:"13px",background:"linear-gradient(90deg,#0369a1,#0ea5e9)",border:"none",borderRadius:9,color:"#fff",fontSize:14,fontWeight:700,cursor:!parts.length?"not-allowed":"pointer",opacity:!parts.length?.5:1}}>
+                ⚗️ Assemble Plasmid
+              </button>
+            </div>
           </div>
-        )}
+        </div>
 
         {/* Step 3 */}
         {result && (
@@ -405,10 +672,13 @@ function App() {
                       <div style={{fontSize:11,color:"#64748b",marginBottom:10}}>SUMMARY</div>
                       {[
                         `${(result.total/1000).toFixed(2)} kb assembled from ${parts.length} parts`,
-                        `GC content: ${result.gc.toFixed(1)}% (optimal for ${host})`,
-                        `Host: ${host} — ${host==="B. subtilis"?"coral-surface biofilm probiotic":"marine environment fast-grower"}`,
-                        `Endolysin: Lysqdvp001 targets MurNAc-L-Ala bond in Vibrio peptidoglycan`,
-                        `Selection: ${result.proto.selection}`,
+                        `GC content: ${result.gc.toFixed(1)}%`,
+                        `Host: ${host}${template ? " — " + template.label : ""}`,
+                        `Assembly: ${template ? template.assembly : "manual"}`,
+                        cdsMatch
+                          ? `Gene of interest: ${cdsMatch.name}${cdsMatch.desc ? " — " + cdsMatch.desc : ""}`
+                          : `Gene of interest: none selected`,
+                        `Selection: ${result.proto ? result.proto.selection : "no protocol on file for " + host}`,
                       ].map((f,i)=>(
                         <div key={i} style={{display:"flex",gap:8,marginBottom:8}}>
                           <span style={{color:"#0ea5e9",flexShrink:0}}>◆</span>
@@ -436,10 +706,10 @@ function App() {
                           <span style={{fontWeight:600,color:FILL[p.type]||"#94a3b8",fontSize:13}}>{p.name}</span>
                           <span style={{fontSize:11,color:"#475569"}}>{p.len.toLocaleString()} bp</span>
                         </div>
-                        <div style={{fontSize:12,color:"#94a3b8",marginBottom:3}}>{DB[p.name]?.desc||"Custom part"}</div>
-                        <div style={{fontSize:11,color:"#475569"}}>📚 {DB[p.name]?.src||"User-provided"}</div>
+                        <div style={{fontSize:12,color:"#94a3b8",marginBottom:3}}>{meta(p)?.desc||"Custom part"}</div>
+                        <div style={{fontSize:11,color:"#475569"}}>📚 {meta(p)?.src||"User-provided"}</div>
                         <div style={{marginTop:8,fontFamily:"monospace",fontSize:10,color:"#334155",background:"#070f1a",borderRadius:4,padding:"6px 8px",wordBreak:"break-all"}}>
-                          {p.seq.slice(0,100)}…
+                          {p.seq ? p.seq.slice(0,100)+"…" : "no sequence on file"}
                         </div>
                       </div>
                     ))}
@@ -458,7 +728,7 @@ function App() {
                         <button onClick={copyFASTA} style={{background:"#0369a1",border:"none",borderRadius:6,color:"#fff",fontSize:12,padding:"6px 14px",cursor:"pointer"}}>{copied?"✓ Copied!":"Copy FASTA"}</button>
                       </div>
                       <div style={{fontSize:11,color:"#fbbf24",marginBottom:8,padding:"6px 10px",background:"#1c1500",borderRadius:6,border:"1px solid #78350f"}}>
-                        ⚠️ Parts marked ⚠️ in the database use synthetic placeholder sequences — click ✎ on each part above to paste your verified sequences before ordering synthesis.
+                        ⚠️ Parts marked ⚠️ have no verified sequence in ./data/parts.json and contribute 0 bp — click ✎ on each to paste your verified sequence before ordering synthesis.
                       </div>
                       <div style={{maxHeight:320,overflowY:"auto",background:"#070f1a",borderRadius:8,padding:"10px 12px",fontFamily:"monospace"}}>
                         {lines.map(({n,s})=>(
@@ -474,7 +744,16 @@ function App() {
                   );
                 })()}
 
-                {tab==="delivery" && (
+                {tab==="delivery" && !result.proto && (
+                  <div style={{background:"#1c1500",border:"1px solid #78350f",borderRadius:10,padding:"14px 16px",color:"#fbbf24",fontSize:13}}>
+                    No transformation protocol on file for <i>{host}</i>.
+                    <div style={{fontSize:11,color:"#a16207",marginTop:5}}>
+                      Protocols are defined per host in PROTOCOLS; add one for this template's host to populate this tab.
+                    </div>
+                  </div>
+                )}
+
+                {tab==="delivery" && result.proto && (
                   <div>
                     <div style={{background:"#0c4a6e",border:"1px solid #0369a1",borderRadius:10,padding:"12px 16px",marginBottom:16}}>
                       <div style={{fontWeight:700,color:"#38bdf8",fontSize:14}}>{result.proto.method}</div>
@@ -502,7 +781,7 @@ function App() {
               </div>
 
               <div style={{padding:"0 16px 14px"}}>
-                <button onClick={()=>{setResult(null);setTab("map");}} style={{width:"100%",padding:"8px",background:"none",border:"1px solid #334155",borderRadius:7,color:"#475569",cursor:"pointer",fontSize:12,marginTop:4}}>
+                <button onClick={()=>{setResult(null);setAsmErr(null);setTab("map");}} style={{width:"100%",padding:"8px",background:"none",border:"1px solid #334155",borderRadius:7,color:"#475569",cursor:"pointer",fontSize:12,marginTop:4}}>
                   ↩ New design
                 </button>
               </div>

@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "note": "Slot order defines transcription order 5'->3'. Backbone slots (ori, marker) sit outside the expression cassette but are part of the circular plasmid.",
+  "templates": [
+    {
+      "id": "ecoli_inducible",
+      "host": "E. coli",
+      "label": "E. coli inducible expression",
+      "assembly": "gibson",
+      "slots": [
+        {
+          "role": "ori",
+          "required": true,
+          "candidates": [
+            "sg_ori",
+            "sg_p15A_ori",
+            "sg_pSC101_ori"
+          ],
+          "requires": {
+            "sg_pSC101_ori": ["sg_Rep101"]
+          },
+          "note": "ColE1 and p15A replicate autonomously; pSC101 needs Rep101 in trans"
+        },
+        {
+          "role": "marker",
+          "required": true,
+          "candidates": [
+            "sg_KanR",
+            "sg_CmR_(2)",
+            "sg_AmpR"
+          ]
+        },
+        {
+          "role": "promoter",
+          "required": true,
+          "candidates": [
+            "sg_araBAD_promoter_(2)",
+            "sg_lac_promoter"
+          ]
+        },
+        {
+          "role": "rbs",
+          "required": true,
+          "candidates": [
+            "sg_RBS_(2)",
+            "sg_Shine_Dalgarno_sequence"
+          ]
+        },
+        {
+          "role": "signal",
+          "required": false,
+          "candidates": []
+        },
+        {
+          "role": "cds",
+          "required": true,
+          "candidates": [],
+          "user_supplied": true
+        },
+        {
+          "role": "terminator",
+          "required": true,
+          "candidates": [
+            "sg_rrnB_T1_terminator",
+            "sg_T7Te_terminator"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vnat_broadhost",
+      "host": "V. natriegens",
+      "label": "V. natriegens broad-host-range expression",
+      "assembly": "gibson",
+      "notes": "pBBR1 oriV is non-functional without pBBR1 Rep in trans - both slots are required together. Same dependency pattern as ori1030+repA in B. subtilis.",
+      "slots": [
+        {
+          "role": "ori",
+          "required": true,
+          "candidates": [
+            "sg_pBBR1_oriV",
+            "sg_RSF1010_oriV",
+            "sg_pRO1600_oriV"
+          ],
+          "requires": {
+            "sg_pBBR1_oriV": ["sg_pBBR1_Rep"],
+            "sg_RSF1010_oriV": ["sg_RSF1010_RepA", "sg_RSF1010_RepB", "sg_RSF1010_RepC"],
+            "sg_pRO1600_oriV": ["sg_pRO1600_Rep"]
+          },
+          "note": "each oriV needs its own cognate Rep; the rep slot must match the ori chosen here"
+        },
+        {
+          "role": "rep",
+          "required": true,
+          "candidates": [
+            "sg_pBBR1_Rep"
+          ],
+          "note": "cognate Rep protein for the chosen oriV"
+        },
+        {
+          "role": "orit",
+          "required": false,
+          "candidates": [
+            "sg_RSF1010_oriT",
+            "sg_oriT"
+          ],
+          "note": "only if moving the plasmid by conjugation"
+        },
+        {
+          "role": "marker",
+          "required": true,
+          "candidates": [
+            "sg_KanR",
+            "sg_CmR_(2)"
+          ],
+          "note": "avoid AmpR - V. natriegens has reported intrinsic beta-lactamase activity"
+        },
+        {
+          "role": "promoter",
+          "required": true,
+          "candidates": [
+            "sg_araBAD_promoter_(2)",
+            "sg_lac_promoter"
+          ],
+          "note": "E. coli sigma-70 promoters transfer to Vibrio (both gamma-proteobacteria)"
+        },
+        {
+          "role": "rbs",
+          "required": true,
+          "candidates": [
+            "sg_RBS_(2)",
+            "sg_Shine_Dalgarno_sequence"
+          ]
+        },
+        {
+          "role": "signal",
+          "required": false,
+          "candidates": []
+        },
+        {
+          "role": "cds",
+          "required": true,
+          "candidates": [],
+          "user_supplied": true
+        },
+        {
+          "role": "terminator",
+          "required": true,
+          "candidates": [
+            "sg_rrnB_T1_terminator",
+            "sg_T7Te_terminator"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bsub_secretion",
+      "host": "B. subtilis",
+      "label": "B. subtilis secreted expression",
+      "assembly": "gibson",
+      "slots": [
+        {
+          "role": "ori",
+          "required": true,
+          "candidates": [
+            "TODO_ori1030_repA"
+          ]
+        },
+        {
+          "role": "ori_shuttle",
+          "required": false,
+          "candidates": [
+            "sg_ori"
+          ],
+          "note": "E. coli ori for cloning steps"
+        },
+        {
+          "role": "marker",
+          "required": true,
+          "candidates": [
+            "TODO_aad9_SpcR",
+            "TODO_ermC_ErmR"
+          ]
+        },
+        {
+          "role": "promoter",
+          "required": true,
+          "candidates": [
+            "TODO_Pveg"
+          ]
+        },
+        {
+          "role": "rbs",
+          "required": true,
+          "candidates": [
+            "sg_Shine_Dalgarno_sequence"
+          ]
+        },
+        {
+          "role": "signal",
+          "required": true,
+          "candidates": [
+            "TODO_amyE_signal"
+          ],
+          "note": "Sec pathway export"
+        },
+        {
+          "role": "cds",
+          "required": true,
+          "candidates": [],
+          "user_supplied": true
+        },
+        {
+          "role": "terminator",
+          "required": true,
+          "candidates": [
+            "sg_rrnB_T1_terminator"
+          ]
+        }
+      ]
+    }
+  ]
+}

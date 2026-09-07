@@ -21,7 +21,10 @@ export function fillTemplate(template, partsById, userCds) {
   const chosen = [], gaps = [], picks = [];
   for (const slot of template.slots) {
     if (slot.user_supplied) {
-      if (userCds) { const p = { ...userCds, role: slot.role }; chosen.push(p); picks.push([slot, p]); }
+      // The user's chosen gene wins; otherwise fall back to the template's own
+      // default candidate so a template opens as a complete, inspectable plasmid.
+      const pick = userCds || slot.candidates.map(id => partsById[id]).find(Boolean);
+      if (pick) { const p = { ...pick, role: slot.role }; chosen.push(p); picks.push([slot, p]); }
       else if (slot.required) gaps.push({ role: slot.role, reason: "no CDS provided" });
       continue;
     }

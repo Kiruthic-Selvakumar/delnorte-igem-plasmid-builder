@@ -119,6 +119,17 @@ function Section({ title, tone, children }) {
 /* ── Searchable part dropdown ─────────────────────────────────────────
    Ranks name-prefix > name-substring > whole-word description match.
    Menu is position:fixed so an overflow:hidden ancestor cannot clip it. */
+/* DNA query helpers. A query counts as DNA only when it is nothing but bases
+   (whitespace and digits tolerated, so a wrapped or numbered paste works) and
+   is >= 8 bases once cleaned. That floor keeps short words off the DNA path. */
+const DNA_COMP = { A:"T", C:"G", G:"C", T:"A", N:"N" };
+const revcomp = s => { let o = ""; for (let i = s.length - 1; i >= 0; i--) o += DNA_COMP[s[i]] || "N"; return o; };
+const asDNA = raw => {
+  if (!/^[acgtn0-9\s]+$/i.test(raw)) return "";
+  const s = raw.toUpperCase().replace(/[^ACGTN]/g, "");
+  return s.length >= 8 ? s : "";
+};
+
 function PartCombo({ pool, placeholder, onPick, onCustom, hint }) {
   const [q, setQ] = useState("");
   const [sel, setSel] = useState(0);
@@ -126,20 +137,43 @@ function PartCombo({ pool, placeholder, onPick, onCustom, hint }) {
   const [pos, setPos] = useState(null);
   const boxRef = useRef(null);
 
-  const hits = useMemo(() => {
-    const s = q.trim().toLowerCase();
-    if (!s || !pool || !pool.length) return [];
+  const res = useMemo(() => {
+    const raw = q.trim();
+    const s = raw.toLowerCase();
+    if (!s || !pool || !pool.length) return { list: [], notes: null, dna: "" };
     const word = new RegExp("\\b" + s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
-    const out = [];
+    const best = new Map();                       // id -> [rank, part, note]
+    const add = (p, rank, note) => {
+      const cur = best.get(p.id);
+      if (!cur) { best.set(p.id, [rank, p, note || ""]); return; }
+      if (rank < cur[0]) cur[0] = rank;
+      if (note && !cur[2]) cur[2] = note;
+    };
     for (const p of pool) {
       const i = p.name.toLowerCase().indexOf(s);
-      if (i === 0) out.push([0, p]);
-      else if (i > 0) out.push([1, p]);
-      else if (word.test(p.desc || "")) out.push([2, p]);
+      if (i === 0) add(p, 1);
+      else if (i > 0) add(p, 3);
+      else if (word.test(p.desc || "")) add(p, 4);
     }
+    const dna = asDNA(raw);
+    if (dna) {
+      const rc = revcomp(dna);
+      for (const p of pool) {
+        if (!p.seq) continue;
+        const S = p.seq.toUpperCase();
+        if (S === dna) { add(p, 0, "exact sequence match"); continue; }
+        const f = S.indexOf(dna);
+        if (f >= 0) { add(p, 2, "+ strand @ " + (f + 1).toLocaleString()); continue; }
+        const r = S.indexOf(rc);
+        if (r >= 0) add(p, 2, "- strand (revcomp) @ " + (r + 1).toLocaleString());
+      }
+    }
+    const out = [...best.values()];
     out.sort((a, b) => a[0] - b[0] || a[1].name.length - b[1].name.length || a[1].name.localeCompare(b[1].name));
-    return out.slice(0, 10).map(x => x[1]);
+    const top = out.slice(0, 10);
+    return { list: top.map(x => x[1]), notes: new Map(top.map(x => [x[1].id, x[2]])), dna };
   }, [q, pool]);
+  const hits = res.list;
 
   useLayoutEffect(() => {
     if (!open || !hits.length) { setPos(null); return; }
@@ -191,7 +225,9 @@ function PartCombo({ pool, placeholder, onPick, onCustom, hint }) {
         />
         {q.trim() && (
           <span style={{fontSize:10,color:"#475569",alignSelf:"center",whiteSpace:"nowrap"}}>
-            {hits.length ? `${hits.length===10?"top 10":hits.length} · ↵` : (hint || "no match")}
+            {hits.length
+              ? `${hits.length===10?"top 10":hits.length}${res.dna?` · ${res.dna.length} bp`:""} · ↵`
+              : (res.dna ? "no part contains that sequence" : (hint || "no match"))}
           </span>
         )}
       </div>
@@ -208,7 +244,9 @@ function PartCombo({ pool, placeholder, onPick, onCustom, hint }) {
                 borderLeft:`3px solid ${i===sel?(FILL[s.type]||"#64748b"):"transparent"}`}}>
               <span style={{flex:1,minWidth:0}}>
                 <span style={{display:"block",fontSize:12,color:"#e2e8f0",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.name}</span>
-                {s.desc && <span style={{display:"block",fontSize:10,color:"#475569",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.desc}</span>}
+                {res.notes && res.notes.get(s.id)
+                  ? <span style={{display:"block",fontSize:10,color:"#22d3ee",fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{res.notes.get(s.id)}</span>
+                  : s.desc && <span style={{display:"block",fontSize:10,color:"#475569",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.desc}</span>}
               </span>
               <span style={{fontSize:10,color:"#475569",whiteSpace:"nowrap"}}>{s.length ? s.length.toLocaleString()+" bp" : "\u2014"}</span>
               <span style={{fontSize:10,padding:"2px 7px",background:`${FILL[s.type]||"#64748b"}1a`,color:FILL[s.type]||"#64748b",borderRadius:20,border:`1px solid ${FILL[s.type]||"#64748b"}33`,whiteSpace:"nowrap"}}>{s.type}</span>
@@ -477,7 +515,7 @@ function App() {
                   </div>
                 ) : (
                   <div style={{display:"flex"}}>
-                    <PartCombo pool={cdsPool} placeholder="Search CDS parts… e.g. GFP, lacZ, Lysqdvp001"
+                    <PartCombo pool={cdsPool} placeholder="Search CDS by name, or paste a DNA sequence…"
                       onPick={rec=>setCdsPart(rec)} hint="no CDS match"/>
                   </div>
                 )}
@@ -563,7 +601,7 @@ function App() {
                 </select>
                 <PartCombo
                   pool={addPool}
-                  placeholder={addFilter ? `Add another ${addFilter}… (${addPool.length.toLocaleString()} parts)` : `Add another part… (${addPool.length.toLocaleString()} parts)`}
+                  placeholder={addFilter ? `Add another ${addFilter} — name or DNA… (${addPool.length.toLocaleString()} parts)` : `Add another part — name or DNA… (${addPool.length.toLocaleString()} parts)`}
                   onPick={addRecord}
                   onCustom={addCustom}
                   hint="↵ adds as custom"

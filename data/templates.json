@@ -1,236 +1,287 @@
 {
-  "schema_version": 1,
-  "note": "Slot order defines transcription order 5'->3'. Backbone slots (ori, marker) sit outside the expression cassette but are part of the circular plasmid.",
-  "templates": [
+ "schema_version": 1,
+ "note": "Slot order defines transcription order 5'->3'. Backbone slots (ori, marker) sit outside the expression cassette but are part of the circular plasmid.",
+ "templates": [
+  {
+   "id": "bsub_secretion",
+   "host": "B. subtilis",
+   "label": "B. subtilis PerR/PkatA peroxide-inducible secretion (Del Norte)",
+   "assembly": "gibson",
+   "notes": "Mirrors the team's own 4,791 bp B. subtilis plasmid. PerR is expressed from its own promoter and represses PkatA; peroxide oxidises PerR, derepressing PkatA, which drives RBS_st7 -> amyE signal peptide -> KanR -> endolysin -> GFP as one secreted cassette. pUB110 is a rolling-circle origin and needs RepU in cis, so both slots are required together.",
+   "slots": [
     {
-      "id": "ecoli_inducible",
-      "host": "E. coli",
-      "label": "E. coli inducible expression",
-      "assembly": "gibson",
-      "slots": [
-        {
-          "role": "ori",
-          "required": true,
-          "candidates": [
-            "sg_ori",
-            "sg_p15A_ori",
-            "sg_pSC101_ori"
-          ],
-          "requires": {
-            "sg_pSC101_ori": ["sg_Rep101"]
-          },
-          "note": "ColE1 and p15A replicate autonomously; pSC101 needs Rep101 in trans"
-        },
-        {
-          "role": "marker",
-          "required": true,
-          "candidates": [
-            "sg_KanR",
-            "sg_CmR_(2)",
-            "sg_AmpR"
-          ]
-        },
-        {
-          "role": "promoter",
-          "required": true,
-          "candidates": [
-            "sg_araBAD_promoter_(2)",
-            "sg_lac_promoter"
-          ]
-        },
-        {
-          "role": "rbs",
-          "required": true,
-          "candidates": [
-            "sg_RBS_(2)",
-            "sg_Shine_Dalgarno_sequence"
-          ]
-        },
-        {
-          "role": "signal",
-          "required": false,
-          "candidates": []
-        },
-        {
-          "role": "cds",
-          "required": true,
-          "candidates": [],
-          "user_supplied": true
-        },
-        {
-          "role": "terminator",
-          "required": true,
-          "candidates": [
-            "sg_rrnB_T1_terminator",
-            "sg_T7Te_terminator"
-          ]
-        }
+     "role": "ori",
+     "required": true,
+     "candidates": [
+      "dn_pub110_ori"
+     ],
+     "requires": {
+      "dn_pub110_ori": [
+       "dn_repu_pub110"
       ]
+     },
+     "note": "positions 1-1524 in the team's plasmid, together with RepU; ori sequence still unresolved"
     },
     {
-      "id": "vnat_broadhost",
-      "host": "V. natriegens",
-      "label": "V. natriegens broad-host-range expression",
-      "assembly": "gibson",
-      "notes": "pBBR1 oriV is non-functional without pBBR1 Rep in trans - both slots are required together. Same dependency pattern as ori1030+repA in B. subtilis.",
-      "slots": [
-        {
-          "role": "ori",
-          "required": true,
-          "candidates": [
-            "sg_pBBR1_oriV",
-            "sg_RSF1010_oriV",
-            "sg_pRO1600_oriV"
-          ],
-          "requires": {
-            "sg_pBBR1_oriV": ["sg_pBBR1_Rep"],
-            "sg_RSF1010_oriV": ["sg_RSF1010_RepA", "sg_RSF1010_RepB", "sg_RSF1010_RepC"],
-            "sg_pRO1600_oriV": ["sg_pRO1600_Rep"]
-          },
-          "note": "each oriV needs its own cognate Rep; the rep slot must match the ori chosen here"
-        },
-        {
-          "role": "rep",
-          "required": true,
-          "candidates": [
-            "sg_pBBR1_Rep"
-          ],
-          "note": "cognate Rep protein for the chosen oriV"
-        },
-        {
-          "role": "orit",
-          "required": false,
-          "candidates": [
-            "sg_RSF1010_oriT",
-            "sg_oriT"
-          ],
-          "note": "only if moving the plasmid by conjugation"
-        },
-        {
-          "role": "marker",
-          "required": true,
-          "candidates": [
-            "sg_KanR",
-            "sg_CmR_(2)"
-          ],
-          "note": "avoid AmpR - V. natriegens has reported intrinsic beta-lactamase activity"
-        },
-        {
-          "role": "promoter",
-          "required": true,
-          "candidates": [
-            "sg_araBAD_promoter_(2)",
-            "sg_lac_promoter"
-          ],
-          "note": "E. coli sigma-70 promoters transfer to Vibrio (both gamma-proteobacteria)"
-        },
-        {
-          "role": "rbs",
-          "required": true,
-          "candidates": [
-            "sg_RBS_(2)",
-            "sg_Shine_Dalgarno_sequence"
-          ]
-        },
-        {
-          "role": "signal",
-          "required": false,
-          "candidates": []
-        },
-        {
-          "role": "cds",
-          "required": true,
-          "candidates": [],
-          "user_supplied": true
-        },
-        {
-          "role": "terminator",
-          "required": true,
-          "candidates": [
-            "sg_rrnB_T1_terminator",
-            "sg_T7Te_terminator"
-          ]
-        }
-      ]
+     "role": "rep",
+     "required": true,
+     "candidates": [
+      "dn_repu_pub110"
+     ],
+     "note": "cognate RepU protein for the pUB110 ori"
     },
     {
-      "id": "bsub_secretion",
-      "host": "B. subtilis",
-      "label": "B. subtilis secreted expression",
-      "assembly": "gibson",
-      "notes": "pUB110 ori is a rolling-circle origin that needs RepU acting in cis - both slots are required together, same dependency pattern as pBBR1 oriV+Rep in V. natriegens.",
-      "slots": [
-        {
-          "role": "ori",
-          "required": true,
-          "candidates": [
-            "dn_pub110_ori"
-          ],
-          "requires": {
-            "dn_pub110_ori": ["dn_repu_pub110"]
-          },
-          "note": "pUB110 dso is still a placeholder pending exact nick-site boundary; RepU CDS is verified"
-        },
-        {
-          "role": "rep",
-          "required": true,
-          "candidates": [
-            "dn_repu_pub110"
-          ],
-          "note": "cognate RepU protein for the pUB110 ori"
-        },
-        {
-          "role": "ori_shuttle",
-          "required": false,
-          "candidates": [
-            "sg_ori"
-          ],
-          "note": "E. coli ori for cloning steps"
-        },
-        {
-          "role": "marker",
-          "required": true,
-          "candidates": [
-            "dn_spectinomycin_resistance_spcr",
-            "dn_ermc_resistance_ermr"
-          ]
-        },
-        {
-          "role": "promoter",
-          "required": true,
-          "candidates": [
-            "dn_pveg_promoter"
-          ]
-        },
-        {
-          "role": "rbs",
-          "required": true,
-          "candidates": [
-            "sg_Shine_Dalgarno_sequence"
-          ]
-        },
-        {
-          "role": "signal",
-          "required": true,
-          "candidates": [
-            "dn_amye_signal_peptide"
-          ],
-          "note": "Sec pathway export"
-        },
-        {
-          "role": "cds",
-          "required": true,
-          "candidates": [],
-          "user_supplied": true
-        },
-        {
-          "role": "terminator",
-          "required": true,
-          "candidates": [
-            "dn_rrnb_t1_terminator"
-          ]
-        }
-      ]
+     "role": "promoter_perr",
+     "required": true,
+     "candidates": [
+      "dn_perr_promoter"
+     ],
+     "note": "1525-1910; drives the PerR repressor"
+    },
+    {
+     "role": "regulator",
+     "required": true,
+     "candidates": [
+      "dn_perr_protein"
+     ],
+     "note": "1911-2244; PerR represses PkatA until oxidised by H2O2"
+    },
+    {
+     "role": "terminator_perr",
+     "required": true,
+     "candidates": [
+      "dn_perr_terminator"
+     ],
+     "note": "2245-2298; insulates the PerR module from PkatA"
+    },
+    {
+     "role": "promoter",
+     "required": true,
+     "candidates": [
+      "dn_pkata_promoter"
+     ],
+     "note": "2299-2364; PerR-repressed, peroxide-inducible. Carries a perfect 7/7 PerR box"
+    },
+    {
+     "role": "rbs",
+     "required": true,
+     "candidates": [
+      "dn_rbs_st7"
+     ],
+     "note": "2365-2391; includes the ATG, so the signal peptide that follows adds a second Met"
+    },
+    {
+     "role": "signal",
+     "required": true,
+     "candidates": [
+      "dn_amye_signal_peptide_sp33",
+      "dn_amye_signal_peptide"
+     ],
+     "note": "2392-2490; amyE Sec signal, cleaved after Ala33"
+    },
+    {
+     "role": "linker",
+     "required": false,
+     "candidates": [
+      "dn_mcs"
+     ],
+     "note": "2491-2502; in-frame Ala-Cys-Ser-Ala junction to the marker"
+    },
+    {
+     "role": "marker",
+     "required": true,
+     "candidates": [
+      "dn_kanamycin_resistance_kanr"
+     ],
+     "note": "2503-3312; APH(3')-Ia, secreted as part of the fusion"
+    },
+    {
+     "role": "cds",
+     "required": true,
+     "user_supplied": true,
+     "candidates": [
+      "dn_lysqdvp001_endolysin"
+     ],
+     "note": "3313-4023; defaults to the Lysqdvp001 endolysin, replaced by whatever gene of interest you pick"
+    },
+    {
+     "role": "reporter",
+     "required": false,
+     "candidates": [
+      "dn_sfgfp_cds"
+     ],
+     "note": "4024-4737; GFP readout"
+    },
+    {
+     "role": "terminator",
+     "required": true,
+     "candidates": [
+      "dn_t7_terminator"
+     ],
+     "note": "4738-4791; the wrecked-stem variant, distinct from the intact dn_perr_terminator at 2245-2298. Named 'T7 Terminator' in the team's map but it is not the T7 terminator."
     }
-  ]
+   ]
+  },
+  {
+   "id": "ecoli_inducible",
+   "host": "E. coli",
+   "label": "E. coli inducible expression",
+   "assembly": "gibson",
+   "slots": [
+    {
+     "role": "ori",
+     "required": true,
+     "candidates": [
+      "sg_ori",
+      "sg_p15A_ori",
+      "sg_pSC101_ori"
+     ],
+     "requires": {
+      "sg_pSC101_ori": [
+       "sg_Rep101"
+      ]
+     },
+     "note": "ColE1 and p15A replicate autonomously; pSC101 needs Rep101 in trans"
+    },
+    {
+     "role": "marker",
+     "required": true,
+     "candidates": [
+      "sg_KanR",
+      "sg_CmR_(2)",
+      "sg_AmpR"
+     ]
+    },
+    {
+     "role": "promoter",
+     "required": true,
+     "candidates": [
+      "sg_araBAD_promoter_(2)",
+      "sg_lac_promoter"
+     ]
+    },
+    {
+     "role": "rbs",
+     "required": true,
+     "candidates": [
+      "sg_RBS_(2)",
+      "sg_Shine_Dalgarno_sequence"
+     ]
+    },
+    {
+     "role": "signal",
+     "required": false,
+     "candidates": []
+    },
+    {
+     "role": "cds",
+     "required": true,
+     "candidates": [],
+     "user_supplied": true
+    },
+    {
+     "role": "terminator",
+     "required": true,
+     "candidates": [
+      "sg_rrnB_T1_terminator",
+      "sg_T7Te_terminator"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vnat_broadhost",
+   "host": "V. natriegens",
+   "label": "V. natriegens broad-host-range expression",
+   "assembly": "gibson",
+   "notes": "pBBR1 oriV is non-functional without pBBR1 Rep in trans - both slots are required together. Same dependency pattern as ori1030+repA in B. subtilis.",
+   "slots": [
+    {
+     "role": "ori",
+     "required": true,
+     "candidates": [
+      "sg_pBBR1_oriV",
+      "sg_RSF1010_oriV",
+      "sg_pRO1600_oriV"
+     ],
+     "requires": {
+      "sg_pBBR1_oriV": [
+       "sg_pBBR1_Rep"
+      ],
+      "sg_RSF1010_oriV": [
+       "sg_RSF1010_RepA",
+       "sg_RSF1010_RepB",
+       "sg_RSF1010_RepC"
+      ],
+      "sg_pRO1600_oriV": [
+       "sg_pRO1600_Rep"
+      ]
+     },
+     "note": "each oriV needs its own cognate Rep; the rep slot must match the ori chosen here"
+    },
+    {
+     "role": "rep",
+     "required": true,
+     "candidates": [
+      "sg_pBBR1_Rep"
+     ],
+     "note": "cognate Rep protein for the chosen oriV"
+    },
+    {
+     "role": "orit",
+     "required": false,
+     "candidates": [
+      "sg_RSF1010_oriT",
+      "sg_oriT"
+     ],
+     "note": "only if moving the plasmid by conjugation"
+    },
+    {
+     "role": "marker",
+     "required": true,
+     "candidates": [
+      "sg_KanR",
+      "sg_CmR_(2)"
+     ],
+     "note": "avoid AmpR - V. natriegens has reported intrinsic beta-lactamase activity"
+    },
+    {
+     "role": "promoter",
+     "required": true,
+     "candidates": [
+      "sg_araBAD_promoter_(2)",
+      "sg_lac_promoter"
+     ],
+     "note": "E. coli sigma-70 promoters transfer to Vibrio (both gamma-proteobacteria)"
+    },
+    {
+     "role": "rbs",
+     "required": true,
+     "candidates": [
+      "sg_RBS_(2)",
+      "sg_Shine_Dalgarno_sequence"
+     ]
+    },
+    {
+     "role": "signal",
+     "required": false,
+     "candidates": []
+    },
+    {
+     "role": "cds",
+     "required": true,
+     "candidates": [],
+     "user_supplied": true
+    },
+    {
+     "role": "terminator",
+     "required": true,
+     "candidates": [
+      "sg_rrnB_T1_terminator",
+      "sg_T7Te_terminator"
+     ]
+    }
+   ]
+  }
+ ]
 }

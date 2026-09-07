@@ -158,13 +158,26 @@
       "host": "B. subtilis",
       "label": "B. subtilis secreted expression",
       "assembly": "gibson",
+      "notes": "pUB110 ori is a rolling-circle origin that needs RepU acting in cis - both slots are required together, same dependency pattern as pBBR1 oriV+Rep in V. natriegens.",
       "slots": [
         {
           "role": "ori",
           "required": true,
           "candidates": [
-            "TODO_ori1030_repA"
-          ]
+            "dn_pub110_ori"
+          ],
+          "requires": {
+            "dn_pub110_ori": ["dn_repu_pub110"]
+          },
+          "note": "pUB110 dso is still a placeholder pending exact nick-site boundary; RepU CDS is verified"
+        },
+        {
+          "role": "rep",
+          "required": true,
+          "candidates": [
+            "dn_repu_pub110"
+          ],
+          "note": "cognate RepU protein for the pUB110 ori"
         },
         {
           "role": "ori_shuttle",
@@ -178,15 +191,15 @@
           "role": "marker",
           "required": true,
           "candidates": [
-            "TODO_aad9_SpcR",
-            "TODO_ermC_ErmR"
+            "dn_spectinomycin_resistance_spcr",
+            "dn_ermc_resistance_ermr"
           ]
         },
         {
           "role": "promoter",
           "required": true,
           "candidates": [
-            "TODO_Pveg"
+            "dn_pveg_promoter"
           ]
         },
         {
@@ -200,7 +213,7 @@
           "role": "signal",
           "required": true,
           "candidates": [
-            "TODO_amyE_signal"
+            "dn_amye_signal_peptide"
           ],
           "note": "Sec pathway export"
         },
@@ -214,7 +227,7 @@
           "role": "terminator",
           "required": true,
           "candidates": [
-            "sg_rrnB_T1_terminator"
+            "dn_rrnb_t1_terminator"
           ]
         }
       ]

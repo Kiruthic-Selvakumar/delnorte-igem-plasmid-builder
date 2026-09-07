@@ -31,6 +31,7 @@
      "note": "cognate RepU protein for the pUB110 ori"
     },
     {
+<<<<<<< HEAD
      "role": "promoter_perr",
      "required": true,
      "candidates": [
@@ -119,6 +120,74 @@
       "dn_t7_terminator"
      ],
      "note": "4738-4791; the wrecked-stem variant, distinct from the intact dn_perr_terminator at 2245-2298. Named 'T7 Terminator' in the team's map but it is not the T7 terminator."
+=======
+      "id": "bsub_secretion",
+      "host": "B. subtilis",
+      "label": "B. subtilis secreted expression",
+      "assembly": "gibson",
+      "notes": "pUB110 ori fragment (dn_pub110_ori) already carries its own repB/RepU gene internally - no separate rep slot needed, unlike the pBBR1 oriV+Rep split used for V. natriegens.",
+      "slots": [
+        {
+          "role": "ori",
+          "required": true,
+          "candidates": [
+            "dn_pub110_ori"
+          ],
+          "note": "self-sufficient pUB110 dso+repB fragment; see dn_repu_pub110 in the catalog if you need the bare RepU CDS for a different backbone"
+        },
+        {
+          "role": "ori_shuttle",
+          "required": false,
+          "candidates": [
+            "sg_ori"
+          ],
+          "note": "E. coli ori for cloning steps"
+        },
+        {
+          "role": "marker",
+          "required": true,
+          "candidates": [
+            "dn_spectinomycin_resistance_spcr",
+            "dn_ermc_resistance_ermr"
+          ]
+        },
+        {
+          "role": "promoter",
+          "required": true,
+          "candidates": [
+            "dn_pveg_promoter"
+          ]
+        },
+        {
+          "role": "rbs",
+          "required": true,
+          "candidates": [
+            "sg_Shine_Dalgarno_sequence"
+          ]
+        },
+        {
+          "role": "signal",
+          "required": true,
+          "candidates": [
+            "dn_amye_signal_peptide"
+          ],
+          "note": "Sec pathway export"
+        },
+        {
+          "role": "cds",
+          "required": true,
+          "candidates": [],
+          "user_supplied": true
+        },
+        {
+          "role": "terminator",
+          "required": true,
+          "candidates": [
+            "dn_rrnb_t1_terminator"
+          ]
+        }
+      ]
+>>>>>>> ade6b71 (fixing warning messege, inserted last data set)
     }
    ]
   },

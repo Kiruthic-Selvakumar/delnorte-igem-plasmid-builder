@@ -17779,6 +17779,46 @@
    "hosts": {}
   },
   {
+   "id": "dn_pr_promoter",
+   "name": "pR Promoter (cI-regulated)",
+   "type": "promoter",
+   "snapgene_type": null,
+   "seq": "TAACACCGTGCGTGTTGACTATTTTACCTCTGGCGGTGATAATGGTTGC",
+   "length": 49,
+   "gc": 46.9,
+   "desc": "Bacteriophage lambda pR rightward promoter, repressed by cI. Canonical sigma70 promoter: -35 TTGACT at position 15, -10 GATAAT at position 38, 17 bp spacer. The OR1 and OR2 operators overlap the -10 and -35 boxes, so cI or cI857 binding blocks RNAP - pair with dn_ci857_repressor for a thermo-inducible circuit. Note: 2 bp shorter at the 3' end than the copy in the team's own construct, which continues ...GGTTGCTA.",
+   "src": "Bacteriophage lambda pR promoter; iGEM Registry BBa_R0051, the cI-repressible promoter used in the Elowitz repressilator. Sequence supplied by the Del Norte iGEM team and matched exactly (49/49 bp) against positions 2424-2472 of the team's own cI/endolysin construct.",
+   "evidence": "verified",
+   "hosts": {}
+  },
+  {
+   "id": "dn_perr_promoter",
+   "name": "perR Promoter",
+   "type": "promoter",
+   "snapgene_type": null,
+   "seq": "TGATAGGTGGTATGTTTTCGCTTGAACTTTTAAATACAGCCATTGAACATACGGTTGATTTAATAACTGACAAACATCACCCTCTTGCTAAAGCGGCCAAGGACGCTGCCGCCGGGGCTGTTTGCGTTTTTGCCGTGATTTCGTGTATCATTGGTTTACTTATTTTTTTGCCAAAGCTGTAATGGCTGAAAATTCTTACATTTATTTTACATTTTTAGAAATGGGCGTGAAAAAAAGCGCGCGATTATGTAAAATATAAAGTGATAGCGGTACCATTATAGTAAGAGAGGAATGTACACATGCGCAACTTGACCAAGACATCTCTATTACTGGCCGGCTTATGCACAGCGGCCCAAATGGTTTTTGTAACACATGCCTCAGCTAGC",
+   "length": 386,
+   "gc": 40.7,
+   "desc": "386 bp region supplied as the perR promoter. It is NOT a bare promoter - it is a composite expression cassette: 299 bp of 5' region, a GAGG Shine-Dalgarno at 287 with a 9 nt spacer, an ATG at 300, and an 87 bp / 29 aa Sec signal peptide (MRNLTKTSLLLAGLCTAAQMVFVTHASAS) that ends in frame at an NheI site (GCTAGC, position 381) for N-terminal fusion. KpnI at 269.",
+   "src": "Sequence supplied by the Del Norte iGEM team as the perR promoter. Composition determined by sequence analysis; promoter identity not confirmed.",
+   "evidence": "placeholder",
+   "hosts": {},
+   "todo": "TODO: (1) This part contains a promoter region, an RBS and a signal peptide in one 386 bp block - assembling it upstream of a CDS part will give you a duplicate RBS and an unintended 29 aa N-terminal signal peptide. Consider splitting it into three parts. (2) No PerR box (7-1-7 AT-rich inverted repeat) was found anywhere in the 386 bp, which is unexpected for a PerR-autoregulated promoter - compare with dn_pkata_promoter, which has a perfect one. (3) No canonical sigma-A -35/-10 pair was found. Confirm the promoter identity before use."
+  },
+  {
+   "id": "dn_pkata_promoter",
+   "name": "PkatA Promoter",
+   "type": "promoter",
+   "snapgene_type": null,
+   "seq": "ATAACTATTTTATAATAATTATAAAATAATATTGACTTTTTACTTAGAGATGATATTATGTTCTTA",
+   "length": 66,
+   "gc": 13.6,
+   "desc": "katA promoter from Bacillus subtilis, PerR-repressed and hydrogen-peroxide inducible. Contains a PERFECT 7-of-7 PerR box at positions 10-24 (TTATAAT-A-ATTATAA), the canonical Fur/PerR-family 7-1-7 inverted repeat, plus a sigma-A promoter: -35 TTGACT at 32, 16 bp spacer, -10 TATTAT at 54 (5/6 to the TATAAT consensus). Very AT-rich at 13.6% GC, as expected for a Gram-positive promoter. Derepressed when PerR is oxidised by H2O2.",
+   "src": "Bacillus subtilis katA (catalase) promoter, a core member of the PerR regulon. Sequence supplied by the Del Norte iGEM team; PerR box and sigma-A -35/-10 architecture confirmed by sequence analysis.",
+   "evidence": "verified",
+   "hosts": {}
+  },
+  {
    "id": "dn_b0034_rbs",
    "name": "B0034 RBS",
    "type": "rbs",
@@ -17805,22 +17845,62 @@
    "hosts": {}
   },
   {
+   "id": "dn_rbs_st7",
+   "name": "RBS st7",
+   "type": "rbs",
+   "snapgene_type": null,
+   "seq": "TACTAAAAATAAGGAGGAAAAAAAATG",
+   "length": 27,
+   "gc": 22.2,
+   "desc": "Strong ribosome binding site. Perfect Shine-Dalgarno consensus AAGGAGG at positions 11-17 with a canonical 7 nt spacer to the start codon. Sits immediately downstream of dn_pr_promoter with no gap or overlap. NOTE: this part INCLUDES the ATG start codon as its last 3 bases - do not append it directly to a CDS part that also begins with ATG (dn_ci857_repressor, dn_lysqdvp001_endolysin) or you will get a duplicated Met codon.",
+   "src": "Ribosome binding site from the Del Norte iGEM team's lambda cI / endolysin construct, positions 2473-2499, immediately 3' of the pR promoter and 5' of the signal-peptide-KanR fusion. Sequence supplied by the team; name assigned by the team.",
+   "evidence": "verified",
+   "hosts": {}
+  },
+  {
    "id": "dn_lysqdvp001_endolysin",
    "name": "Lysqdvp001 Endolysin",
    "type": "cds",
    "snapgene_type": null,
-   "seq": null,
-   "length": null,
-   "gc": null,
-   "desc": "Modular endolysin from phage qdvp001. Cleaves MurNAc-L-Ala bond in Vibrio peptidoglycan. Replace with your lab-verified sequence before synthesis.",
-   "src": "paste your verified sequence from qdvp001 phage genome / PMC11022554",
-   "evidence": "placeholder",
+   "seq": "ATGACTTTAATTCGTAAGGGTAGTCGTGGTTATGATGTAAAAATTATCCAAGAATATCTAACAAAATGTGGTTATGATACTAACGGGGTAGATGGTATTTTCGGCGGTGGTTCTGATAAAGCAACTCGTGACTTTCAGAAAGATTTTGGACTAGGGGTAGATGGAATCGTTGGTAATGGGACAGCATCTAAATTACTAGATATTTACTGGACAGATATCTCTGATAAAGCGGAAGACCTACCTTGGATGCAAGAAGCTTTTAAGGATTACTTTGTGTCAGAGGTTAAAGGTGTTAAACATTCACCTAAAGTATTAGCTTTCTGGAAAGATGCAAAGTTAGGCGGTATAAAGGATGATGAGACACCATACTGTTCGGGAGCAGTGAGTGCTTGGCTGGAACGCTCAGGTATTCGTTCACAAAGAACAGCTTGGGCACGTAATTACCTTAACCAAGGAGTTAAATTAGAAGAACCTAAGTTCGGTGCTATTGTGGTATTTTCACGAGGGAAAGGGGGTCATGTTGGTTTTGTTACTGGAGTAACTAAAGATGGCTCACAGATCCGTGTTTTAGGTGCAAATCAATCGGATTCCGTCAATGAACGTATGTTTGATGTTAATAGAGTATTAGGTTATCGAAATCCACATCAAGATTCCACACTTCCTGATGCCCCTATAACTGATTCAGATGTAACTAGTAATAACGAAGCTTAA",
+   "length": 711,
+   "gc": 39.4,
+   "desc": "Modular endolysin from phage qdvp001. Cleaves the MurNAc-L-Ala bond in Vibrio peptidoglycan. 711 bp CDS, 236 aa, single terminal stop codon.",
+   "src": "Lysqdvp001 endolysin CDS, phage qdvp001 genome (PMC11022554); sequence supplied by the Del Norte iGEM team",
+   "evidence": "verified",
    "hosts": {
     "V. natrigens": {
      "seq": null
     }
    },
-   "todo": "TODO: replace with a verified sequence before ordering synthesis. Source: paste your verified sequence from qdvp001 phage genome / PMC11022554 TODO: host variant for V. natrigens (was seq_vn) also needs a verified codon-optimized sequence."
+   "todo": "TODO: host variant for V. natrigens (was seq_vn) still needs a verified codon-optimized sequence."
+  },
+  {
+   "id": "dn_ckb_s2_endolysin",
+   "name": "CKB-S2 Endolysin",
+   "type": "cds",
+   "snapgene_type": null,
+   "seq": "ATGTTAGAACGTTACGCGAAGAGAGCGCAAACGCAGATTTCCACACGGGCTTCACAAGACCAACAGCAAGCTTTGAACTATCAGCACCAAATGGAACGACAAGCACTGAGCACCACACAAACGGCGCTCAATCAAGTTGTGGACGGTGTTTCTAGAATTGCTGGCGGAGTGGCTCAGTATAACGCGAAGCAGCAAGCCGTTGAAGATAAGAAAATGATCGAACAGGGAATGCAGGATGGTGAGCTCTCCGTTTCTTTCGGCCAGTATCAAGCTGATCTGAAAGACGGCGACGATCCGTATTCAAAAGCCTTCAACGAAGCGGCCCAGGCTAAAATATTCTCAAACATCAAGATAACCACAGACAATCGAATTGCAGAGATTGCGGCAGAGTTTGCAGATGACCCGACAGAGTTTAGGGCCAGAATGTCAGCCCTTGGTGATGCAGTTGTTGAAGAATTAGAGCTGGGCGAAAAAGGACGTTTAGTGGTATCCCGTACGCTCGATGAAGGGTATGCACGTTATGCGCCTCAAGTAGTGAAGAACGGCTACCAGAAAGCCAAAAAGGAAGAGGTAGCGGCCTATAATAATGTGTTAGATCATACAATCAACACGTCGCTAACCGATATTCGCAATGGAAATTATGATAGGCTTGAGTCCCTCTATGAGGATTTTTCGGTTATCTATGATGAAGGTGTAGAACGCGGGCATTACTCCGAAGCCGATAAAGCAAAAGTATTTAAAGGCGTCCTGCTGGAGGCCAACGAACAACAGGTAATGAGCTACGTCGACGCCGCGACGACCACAAAAGATTTTGCTGGGGGCATGGCGACTATTGACGCATGGCGCGATAGTACAGAGCAGACGGGACAATTTTCCCCTGACCAATTAGATCTGATCGAAGACAAAGCCAAGGCCGACCTTAAACGTGAAGAGTTCGCATACAAATCTCAGTTGAAGGAGCAAAAGAAAGCACTTGAAAAGGCTAATAAGCTTGAGGGCCAAATCAACGCCGTCAACTACTCAATCGATAATAATATTGCTATGCCTAAAACAACGGACAATCAGAAAGCGATCGATGTGTATTTTGCTAACATGCCGACACAATTCAATATTCAGGATCCACAGCACCGCCAGTCATTGAGCCAGATTGTGAGCCGCACAAAATTAATCCCGACGCAAGTCATCGAAACACTTGATCGGGCGTCACTGAGTAACAACACCGATTCAATCGCGGGCGCGGCTGAAATGTATGCACAGCTTAAAGAGCTGTCACCGAGAACATTAATCAACAGCACAAACCCGGATACAGCAGCATATTATGAAGGATATGCACGGTTGGTGAGAGCGGGACTTACTCCGGAAGAAGCGCAGGAGCAATCTTTCGCCAATGTCTACAAACAAGACGATGCTCAAACACAAGTCTTAAAGTCTCGCATGGAACGCAAAGATTATCAGGAAGAACGACATAACTTTGCACAGAGTGCTATCGACGACAGGGTGACAGGCTGGTTTTCTAGTATGGGCGATCTAAGCGAACTGGGAGCTGCGGGTATCGAATACGAAGCTGATTATAACACCTTGTTTGATGCTAATTACCAAAAAACGGGCGGAGACTTAGAAGCGGCACAAAGTCTGACTGATATGCAAATACAACGCAAATGGTCAGCCACAGATATCAATGGGGACTGGCAGCCGATGCGATATAGCCCTGAATCGCTTTACGGAGGTGATGGGGATAACAGTTGGATTTCTGAACAGTGGCAAGACATTGACATGCCAGTTATTAAAGAGACACTGGGACTTGGTGAAGATGCAGAGCTTATCTTGCAGCCTCATACTATGACAGGGCGGGGGCTTCCTACTTGGAAAGTGTTGCAAGTTATCAGAGATGAAGATGGCGCGCTGAATGAACTGAGAGACGTCCAGGTAGACGGAGTCTCCCAGACTTGGTATCCAGACTGGAAAACCTACGCTGATAAGATGGGAATTTCCGACAAGGCAGAAAAGCGGCTCGAACGTGCTAAACGGGAGTGGGAAGCGAACCAAGTAATGGACAGACAAGGCGCAAGCATTCCGAAATCATACGGCTATTTCCCAGCTGCCGAGCAGAAATTTTCCACCAAACACATAAGGGGTTGGTAA",
+   "length": 2142,
+   "gc": 47.3,
+   "desc": "CKB-S2 endolysin. 2142 bp / 713 aa CDS: ATG start, TAA stop, in frame, no internal stops - structurally clean. Much larger than a typical endolysin (150-400 aa), with a long charged/coiled-coil N-terminal region, which is more consistent with a tail-associated lysin or a multi-domain lysin than with a compact globular endolysin. Contains an XbaI site at position 151, which is RFC10-illegal and will need a silent mutation before BioBrick 3A assembly. At 2.1 kb this is a costly synthesis order.",
+   "src": "Supplied by the Del Norte iGEM team as the CKB-S2 endolysin. Sequence integrity verified in place (reading frame, start/stop, absence of internal stops). Protein identity not independently confirmed: no similarity to any of the 741 CDS entries in this database, including dn_lysqdvp001_endolysin - expected for a novel phage protein, so this is not evidence against the assignment.",
+   "evidence": "verified",
+   "hosts": {}
+  },
+  {
+   "id": "dn_sfgfp_cds",
+   "name": "sfGFP CDS",
+   "type": "cds",
+   "snapgene_type": null,
+   "seq": "ATGAGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGCGATGTCAATGGGCAAAAATTCTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGGAAGCTACCTGTTCCATGGCCAACACTTGTCACTACTTTCTCTTATGGTGTTCAATGCTTTTCAAGATACCCAGATCATATGAAGCAGCACGACTTTTTTAAGAGTGCCATGCCCGAAGGTTATGTACAGGAAAGAACTATATTTTACAAAGATGACGGGAACTACAAGACACGTGCTGAAGTCAAGTTTGAAGGCGATACGTTAGTAAACCGTATAGAATTAAAAGGCATTGATTTTAAAGAGGACGGAAACATCCTGGGACATAAAATGGAGTATAACTATAATAGCCATAACGTGTATATCATGGCTGACAAACCGAAAAACGGAATCAAAGTGAACTTCAAAATCAGACATAATATCAAAGACGGAAGCGTCCAATTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCGGTCTTGCTTCCAGACAACCATTACCTGTCCACACAATCTGCCTTGAGTAAGGATCCCAACGAAAAGAGAGATCACATGATCCTTCTTGAGTTTGTAACAGCTGCTGGGATTACACATGGCATGGATGAACTATACAAATAA",
+   "length": 717,
+   "gc": 40.2,
+   "desc": "Green fluorescent protein CDS, 717 bp / 238 aa. WARNING: this is NOT superfolder GFP. It carries the wild-type chromophore environment (Phe64, Ser65) and lacks all eleven sfGFP signature substitutions. Closest database match is plain GFP (sg_GFP_(2), 97.1% aa); superfolder GFP is a much poorer match (92.4% aa, 18 residue differences). Wild-type-chromophore GFP folds poorly at 37 C and is dim relative to sfGFP or EGFP - and critically, it generally does NOT fold after Sec export, so pairing it with dn_amye_signal_peptide is unlikely to give secreted fluorescence.",
+   "src": "Sequence supplied by the Del Norte iGEM team as sfGFP; the ATG start codon was absent from the supplied sequence and has been restored, matching positions 4132-4848 of the team's own construct. Identity assignment is from alignment against the SnapGene GFP-family entries in this database.",
+   "evidence": "placeholder",
+   "hosts": {},
+   "todo": "TODO: name and sequence disagree. This is wild-type-chromophore avGFP, not sfGFP - all eleven sfGFP signatures are absent: F64L, S65T, F99S, M153T, V163A, S30R, Y39N, N105T, Y145F, I171V, A206V. Either (a) rename this part to 'GFP' and mark it verified, or (b) replace the sequence with a genuine superfolder GFP. Decide before ordering synthesis, especially if it is to be secreted via dn_amye_signal_peptide."
   },
   {
    "id": "dn_rrnb_t1_terminator",
@@ -17849,6 +17929,33 @@
    "hosts": {}
   },
   {
+   "id": "dn_t7_terminator",
+   "name": "T7 Terminator",
+   "type": "terminator",
+   "snapgene_type": null,
+   "seq": "AAGAAGAAGTGTGAAAAAGAGGAGTTAAAATAGCTGCGCTTTTTTGTGTCATAA",
+   "length": 54,
+   "gc": 33.3,
+   "desc": "Rho-independent transcription terminator sitting immediately 3' of the GFP stop codon in the team's construct. Structure: 6 bp AT-rich stem (AAAAAG/CTTTTT) with a 19 nt loop, followed by a TTTTTT tract at position 40. The short, AT-rich stem suggests only weak-to-moderate termination efficiency. WARNING: this is NOT the T7 terminator. The real T7 terminator is already in this database as sg_T7_terminator and dn_t7_te_terminator (CTAGCATAACCCCTTGGGGCCTCTAAACGGGTCTTGAGGGGTTTTTTG); this sequence shares no meaningful similarity with it - the best match across all terminator parts in the database is 50%, which is noise.",
+   "src": "Sequence supplied by the Del Norte iGEM team as the T7 terminator; corresponds to positions 4849-4902 of the team's own cI/endolysin/GFP construct. Identity not established - no database match above noise level.",
+   "evidence": "placeholder",
+   "hosts": {},
+   "todo": "TODO: name and sequence disagree. This is not the T7 terminator, and the database already holds the genuine T7 terminator twice (sg_T7_terminator, dn_t7_te_terminator), so having a third part under this name will cause mis-picks in the builder. Either rename it to something descriptive (e.g. 'GFP 3-prime terminator') and mark it verified, or replace the sequence with the real T7 terminator. BLAST it to establish what it actually is."
+  },
+  {
+   "id": "dn_perr_terminator",
+   "name": "perR Terminator",
+   "type": "terminator",
+   "snapgene_type": null,
+   "seq": "AAGAAGAAGTGTGAAAAAGCGCAGCTGAAATAGCTGCGCTTTTTTGTGTCATAA",
+   "length": 54,
+   "gc": 38.9,
+   "desc": "Strong Rho-independent transcription terminator. 13 bp GC-containing stem (AAAAAGCGCAGCT / AGCTGCGCTTTTT) with a 5 nt loop, followed by a TTTTTT tract at position 40 - textbook intrinsic terminator architecture. NOTE: dn_t7_terminator is the same 54 bp element with 4 substitutions at positions 20, 22, 25 and 27 that collapse this 13 bp stem down to a weak 6 bp AT-rich one; this version is almost certainly the intact original.",
+   "src": "Sequence supplied by the Del Norte iGEM team. Terminator architecture confirmed by inverted-repeat and poly-T analysis; 50/54 identical to dn_t7_terminator.",
+   "evidence": "verified",
+   "hosts": {}
+  },
+  {
    "id": "dn_spectinomycin_resistance_spcr",
    "name": "Spectinomycin Resistance (SpcR)",
    "type": "marker",
@@ -17866,14 +17973,13 @@
    "name": "Kanamycin Resistance (KanR)",
    "type": "marker",
    "snapgene_type": null,
-   "seq": null,
-   "length": null,
-   "gc": null,
-   "desc": "Kanamycin resistance via aminoglycoside 3'-phosphotransferase. Standard selection in Vibrio natrigens.",
-   "src": "APH(3')-Ia; Beck et al. 1982 / Tn903",
-   "evidence": "placeholder",
-   "hosts": {},
-   "todo": "TODO: replace with a verified sequence before ordering synthesis. Source: APH(3')-Ia; Beck et al. 1982 / Tn903"
+   "seq": "ATGAGCCATATTCAACGGGAAACGTCGAGGCCGCGATTAAATTCCAACATGGATGCTGATTTATATGGGTATAAATGGGCTCGCGATAATGTCGGGCAATCAGGTGCGACAATCTATCGCTTGTATGGGAAGCCCGATGCGCCAGAGTTGTTTCTGAAACATGGCAAAGGTAGCGTTGCCAATGATGTTACAGATGAGATGGTCAGACTAAACTGGCTGACGGAATTTATGCCTCTTCCGACCATCAAGCATTTTATCCGTACTCCTGATGATGCATGGTTACTCACCACTGCGATCCCCGGAAAAACAGCATTCCAGGTATTAGAAGAATATCCTGATTCAGGTGAAAATATTGTTGATGCGCTGGCAGTGTTCCTGCGCCGGTTGCATTCGATTCCTGTTTGTAATTGTCCTTTTAACAGCGATCGCGTATTTCGTCTCGCTCAGGCGCAATCACGAATGAATAACGGTTTGGTTGATGCGAGTGATTTTGATGACGAGCGTAATGGCTGGCCTGTTGAACAAGTCTGGAAAGAAATGCATAAACTTTTGCCATTCTCACCGGATTCAGTCGTCACTCATGGTGATTTCTCACTTGATAACCTTATTTTTGACGAGGGGAAATTAATAGGTTGTATTGATGTTGGACGAGTCGGAATCGCAGACCGATACCAGGATCTTGCCATCCTATGGAACTGCCTCGGTGAGTTTTCTCCTTCATTACAGAAACGGCTTTTTCAAAAATATGGTATTGATAATCCTGATATGAATAAATTGCAGTTTCATTTGATGCTCGATGAGTTTTTCTAA",
+   "length": 810,
+   "gc": 43.7,
+   "desc": "Kanamycin resistance via aminoglycoside 3'-phosphotransferase APH(3')-Ia. 810 bp CDS, 269 aa. Standard selection in Vibrio natrigens. Stored on the coding strand.",
+   "src": "APH(3')-Ia; Tn903 (Beck et al. 1982). Sequence supplied by the Del Norte iGEM team as the antisense strand; stored here reverse-complemented to the coding strand. Identical to sg_KanR_(3) (SnapGene common features, via pLannotate v2.0.0).",
+   "evidence": "verified",
+   "hosts": {}
   },
   {
    "id": "dn_pub110_ori",
@@ -17927,6 +18033,59 @@
    "src": "amyE gene, B. subtilis 168; Yang et al. 1983 Nucleic Acids Res 11:237-249 (GenBank NC_000964.3:327618-327740, gene BSU03040; signal/pro-peptide boundary per UniProt P00691)",
    "evidence": "verified",
    "hosts": {}
+  },
+  {
+   "id": "dn_amye_signal_peptide_sp33",
+   "name": "amyE Signal Peptide (SP33)",
+   "type": "signal",
+   "snapgene_type": null,
+   "seq": "ATGTTTGCAAAACGATTCAAAACCTCTTTACTGCCGTTATTCGCTGGATTTTTATTGCTGTTTCATTTGGTTCTGGCAGGACCGGCGGCTGCGAGTGCG",
+   "length": 99,
+   "gc": 46.5,
+   "desc": "Bacillus subtilis amyE (alpha-amylase) Sec-dependent signal peptide. 99 bp / 33 aa: MFAKRFKTSLLPLFAGFLLLFHLVLAGPAAASA. Positively charged n-region, 14/22 hydrophobic h-region core, and an A-X-A signal peptidase I motif (Ala-Ser-Ala) so cleavage occurs after Ala33, leaving no residual tag on the mature protein. Directs secretion to the medium in Gram-positive hosts. N-terminal fusion tag: no stop codon, must be fused in frame to the mature CDS. Note that dn_rbs_st7 already ends in ATG, so chaining st7 + this part gives ATG-ATG (an extra Met) - which is what the team's own construct contains. Variant note: dn_amye_signal_peptide (123 bp) is the same signal peptide plus the first 8 residues of mature AmyE (ETANKSNE); this 99 bp version stops exactly at the signal peptidase I cleavage site.",
+   "src": "Bacillus subtilis alpha-amylase (amyE) signal peptide, a standard Sec secretion tag for Gram-positive expression. Sequence supplied by the Del Norte iGEM team; matches positions 2500-2598 of the team's own cI/endolysin construct, with a synonymous difference at codon 33 (GCC vs GCG, both Ala). Distinct from sg_alpha_amylase_signal_sequence, which is a fungal alpha-amylase signal.",
+   "evidence": "verified",
+   "hosts": {}
+  },
+  {
+   "id": "dn_mcs",
+   "name": "MCS",
+   "type": "other",
+   "snapgene_type": null,
+   "seq": "GCTTGTAGTGCT",
+   "length": 12,
+   "gc": 50.0,
+   "desc": "12 bp in-frame junction between dn_amye_signal_peptide and the mature KanR coding sequence, encoding Ala-Cys-Ser-Ala. WARNING: despite the name, this contains NO restriction sites - it was screened against 18 common enzymes (EcoRI, XbaI, SpeI, PstI, NotI, NheI, BamHI, SalI, XhoI, HindIII, BglII, KpnI, SacI, SphI, NcoI, AatII, ApaI, SmaI) with zero hits, so it cannot be used for restriction cloning. It functions as a short peptide linker, not a multiple cloning site. Length is a multiple of 3; keep it in frame.",
+   "src": "Sequence supplied by the Del Norte iGEM team as the non-KanR remainder of an 822 bp signal-peptide-KanR fusion; occupies positions 1-12, immediately 5' of the KanR start codon.",
+   "evidence": "verified",
+   "hosts": {}
+  },
+  {
+   "id": "dn_ci857_repressor",
+   "name": "cI857 Repressor",
+   "type": "cds",
+   "snapgene_type": null,
+   "seq": "ATGAGCACAAAAAAGAAACCATTAACACAAGAGCAGCTTGAGGACGCACGTCGCCTTAAAGCAATTTATGAAAAAAAGAAAAATGAACTTGGCTTATCCCAGGAATCTGTCGCAGACAAGATGGGGATGGGGCAGTCAGGCGTTGGTGCTTTATTTAATGGCATCAATGCATTAAATGCTTATAACGCCGCATTGCTTACAAAAATTCTCAAAGTTAGCGTTGAAGAATTTAGCCCTTCAATCGCCACAGAAATCTACGAGATGTATGAAGCGGTTAGTATGCAGCCGTCACTTAGAAGTGAGTATGAGTACCCTGTTTTTTCTCATGTTCAGGCAGGGATGTTCTCACCTAAGCTTAGAACCTTTACCAAAGGTGATGCGGAGAGATGGGTAAGCACAACCAAAAAAGCCAGTGATTCTGCATTCTGGCTTGAGGTTGAAGGTAATTCCATGACCGCACCAACAGGCTCCAAGCCAAGCTTTCCTGACGGAATGTTAATTCTCGTTGACCCTGAGCAGGCTGTTGAGCCAGGTGATTTCTGCATAGCCAGACTTGGGGGTGATGAGTTTACCTTCAAGAAACTGATCAGGGATAGCGGTCAGGTGTTTTTACAACCACTAAACCCACAGTACCCAATGATCCCATGCAATGAGAGTTGTTCCGTTGTGGGGAAAGTTATGGCTAGTCAGTGGCCTGAAGAGACGTTTGGCTGA",
+   "length": 714,
+   "gc": 45.0,
+   "desc": "Bacteriophage lambda cI857 temperature-sensitive repressor. 714 bp CDS, 237 aa + stop. Binds OR1/OR2 in the lambda pR promoter; the Thr67 substitution destabilises the dimer so repression is released at 42 C. Differs from wild-type lambda cI at R83T, E118K and I227M.",
+   "src": "Bacteriophage lambda cI857 (ts) allele. Base sequence supplied by the Del Norte iGEM team; A67T restored at nt 199 (G>A) and the TGA stop appended. Cross-checked against sg_lambda_repressor_(ts) (SnapGene common features, via pLannotate v2.0.0 database bundle).",
+   "evidence": "verified",
+   "hosts": {}
+  },
+  {
+   "id": "dn_perr_protein",
+   "name": "perR Protein (truncated)",
+   "type": "cds",
+   "snapgene_type": null,
+   "seq": "ATGGCGCACCCGACCGCAGACGACATTTACAAAGCTTTAGAAGGAAAATTCCCGAACATGTCTGTTGCTACCGTTTATAATAACCTACGTGTATTTCGAGAAAGTGGCTTAGTGAAAGAGTTAACGTACGGAGATGCTAGTTCTCGGTTTGACTTCGTGACGTCGGATCATTATCATGCTATCTGCGAAAACTGCGGCAAAATTGTGGATTTCCACTATCCGGGTCTGGATGAAGTAGAACAATTAGCCGCCCATGTAACCGGCTTTAAAGTTAGTCACCATAGGTTGGAGATATATGGGGTCTGTCAGGAATGTTCAAAAAAGGAGAATCAC",
+   "length": 333,
+   "gc": 43.8,
+   "desc": "Peroxide operon regulator PerR, Fur-family metalloregulator. 333 bp / 111 aa, in frame, no internal stops. Both Fur-family CXXC structural zinc motifs are present (CENC at aa 62, CQEC at aa 102). WARNING: this is an N-terminally TRUNCATED PerR - it is an exact match to residues 35-145 of UniProt P71086 (B. subtilis PerR, 145 aa) and is missing residues 1-34 (MAAHELKEALETLKETGVRITPQRHAILEYLVNS), which form the N-terminal winged-helix DNA-binding domain. It also has no stop codon.",
+   "src": "Bacillus subtilis PerR (peroxide operon regulator), UniProt P71086. Sequence supplied by the Del Norte iGEM team; a stray leading G before the ATG was removed to give a clean 333 bp / 111-codon reading frame. Verified as an exact match to P71086 residues 35-145.",
+   "evidence": "placeholder",
+   "hosts": {},
+   "todo": "TODO: truncated and non-functional as a repressor. (1) Restore the missing 34 N-terminal residues (MAAHELKEALETLKETGVRITPQRHAILEYLVNS) - without the winged-helix domain this protein cannot bind the PerR box in dn_pkata_promoter, so it will not repress. (2) Add a stop codon; there is none, so translation will read through into whatever follows."
   },
   {
    "id": "dn_pvsv105_ori",

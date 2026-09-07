@@ -5,9 +5,9 @@
   {
    "id": "bsub_delnorte",
    "host": "B. subtilis",
-   "label": "B. subtilis \u2014 Del Norte project plasmid (PerR/PkatA)",
+   "label": "B. subtilis — Del Norte project plasmid (PerR/PkatA)",
    "assembly": "gibson",
-   "notes": "Mirrors the team's own 4,791 bp B. subtilis plasmid. PerR is expressed from its own promoter and represses PkatA; peroxide oxidises PerR, derepressing PkatA, which drives RBS_st7 -> amyE signal peptide -> KanR -> endolysin -> GFP as one secreted cassette. pUB110 is a rolling-circle origin and needs RepU in cis, so both slots are required together.",
+   "notes": "Mirrors the team's own 4,791 bp B. subtilis plasmid. PerR is expressed from its own promoter and represses PkatA; peroxide oxidises PerR, derepressing PkatA, which drives RBS_st7 -> amyE signal peptide -> KanR -> endolysin -> GFP as one secreted cassette. pUB110 ori (dn_pub110_ori) already carries its own repB/RepU gene internally - no separate rep slot needed.",
    "slots": [
     {
      "role": "ori",
@@ -15,23 +15,9 @@
      "candidates": [
       "dn_pub110_ori"
      ],
-     "requires": {
-      "dn_pub110_ori": [
-       "dn_repu_pub110"
-      ]
-     },
-     "note": "positions 1-1524 in the team's plasmid, together with RepU; ori sequence still unresolved"
+     "note": "positions 1-1524 in the team's plasmid; self-sufficient pUB110 dso+repB fragment (verified, GenBank OP555912.1:1305-2834)"
     },
     {
-     "role": "rep",
-     "required": true,
-     "candidates": [
-      "dn_repu_pub110"
-     ],
-     "note": "cognate RepU protein for the pUB110 ori"
-    },
-    {
-<<<<<<< HEAD
      "role": "promoter_perr",
      "required": true,
      "candidates": [
@@ -120,74 +106,6 @@
       "dn_t7_terminator"
      ],
      "note": "4738-4791; the wrecked-stem variant, distinct from the intact dn_perr_terminator at 2245-2298. Named 'T7 Terminator' in the team's map but it is not the T7 terminator."
-=======
-      "id": "bsub_secretion",
-      "host": "B. subtilis",
-      "label": "B. subtilis secreted expression",
-      "assembly": "gibson",
-      "notes": "pUB110 ori fragment (dn_pub110_ori) already carries its own repB/RepU gene internally - no separate rep slot needed, unlike the pBBR1 oriV+Rep split used for V. natriegens.",
-      "slots": [
-        {
-          "role": "ori",
-          "required": true,
-          "candidates": [
-            "dn_pub110_ori"
-          ],
-          "note": "self-sufficient pUB110 dso+repB fragment; see dn_repu_pub110 in the catalog if you need the bare RepU CDS for a different backbone"
-        },
-        {
-          "role": "ori_shuttle",
-          "required": false,
-          "candidates": [
-            "sg_ori"
-          ],
-          "note": "E. coli ori for cloning steps"
-        },
-        {
-          "role": "marker",
-          "required": true,
-          "candidates": [
-            "dn_spectinomycin_resistance_spcr",
-            "dn_ermc_resistance_ermr"
-          ]
-        },
-        {
-          "role": "promoter",
-          "required": true,
-          "candidates": [
-            "dn_pveg_promoter"
-          ]
-        },
-        {
-          "role": "rbs",
-          "required": true,
-          "candidates": [
-            "sg_Shine_Dalgarno_sequence"
-          ]
-        },
-        {
-          "role": "signal",
-          "required": true,
-          "candidates": [
-            "dn_amye_signal_peptide"
-          ],
-          "note": "Sec pathway export"
-        },
-        {
-          "role": "cds",
-          "required": true,
-          "candidates": [],
-          "user_supplied": true
-        },
-        {
-          "role": "terminator",
-          "required": true,
-          "candidates": [
-            "dn_rrnb_t1_terminator"
-          ]
-        }
-      ]
->>>>>>> ade6b71 (fixing warning messege, inserted last data set)
     }
    ]
   },
@@ -196,7 +114,7 @@
    "host": "B. subtilis",
    "label": "B. subtilis secreted expression (generic backbone)",
    "assembly": "gibson",
-   "notes": "pUB110 ori is a rolling-circle origin that needs RepU acting in cis - both slots are required together, same dependency pattern as pBBR1 oriV+Rep in V. natriegens.",
+   "notes": "pUB110 ori fragment (dn_pub110_ori) already carries its own repB/RepU gene internally - no separate rep slot needed, unlike the pBBR1 oriV+Rep split used for V. natriegens.",
    "slots": [
     {
      "role": "ori",
@@ -204,20 +122,7 @@
      "candidates": [
       "dn_pub110_ori"
      ],
-     "requires": {
-      "dn_pub110_ori": [
-       "dn_repu_pub110"
-      ]
-     },
-     "note": "pUB110 dso is still a placeholder pending exact nick-site boundary; RepU CDS is verified"
-    },
-    {
-     "role": "rep",
-     "required": true,
-     "candidates": [
-      "dn_repu_pub110"
-     ],
-     "note": "cognate RepU protein for the pUB110 ori"
+     "note": "self-sufficient pUB110 dso+repB fragment; see dn_repu_pub110 in the catalog if you need the bare RepU CDS for a different backbone"
     },
     {
      "role": "ori_shuttle",

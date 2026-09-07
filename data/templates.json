@@ -3,9 +3,9 @@
  "note": "Slot order defines transcription order 5'->3'. Backbone slots (ori, marker) sit outside the expression cassette but are part of the circular plasmid.",
  "templates": [
   {
-   "id": "bsub_secretion",
+   "id": "bsub_delnorte",
    "host": "B. subtilis",
-   "label": "B. subtilis PerR/PkatA peroxide-inducible secretion (Del Norte)",
+   "label": "B. subtilis \u2014 Del Norte project plasmid (PerR/PkatA)",
    "assembly": "gibson",
    "notes": "Mirrors the team's own 4,791 bp B. subtilis plasmid. PerR is expressed from its own promoter and represses PkatA; peroxide oxidises PerR, derepressing PkatA, which drives RBS_st7 -> amyE signal peptide -> KanR -> endolysin -> GFP as one secreted cassette. pUB110 is a rolling-circle origin and needs RepU in cis, so both slots are required together.",
    "slots": [
@@ -119,6 +119,87 @@
       "dn_t7_terminator"
      ],
      "note": "4738-4791; the wrecked-stem variant, distinct from the intact dn_perr_terminator at 2245-2298. Named 'T7 Terminator' in the team's map but it is not the T7 terminator."
+    }
+   ]
+  },
+  {
+   "id": "bsub_secretion",
+   "host": "B. subtilis",
+   "label": "B. subtilis secreted expression (generic backbone)",
+   "assembly": "gibson",
+   "notes": "pUB110 ori is a rolling-circle origin that needs RepU acting in cis - both slots are required together, same dependency pattern as pBBR1 oriV+Rep in V. natriegens.",
+   "slots": [
+    {
+     "role": "ori",
+     "required": true,
+     "candidates": [
+      "dn_pub110_ori"
+     ],
+     "requires": {
+      "dn_pub110_ori": [
+       "dn_repu_pub110"
+      ]
+     },
+     "note": "pUB110 dso is still a placeholder pending exact nick-site boundary; RepU CDS is verified"
+    },
+    {
+     "role": "rep",
+     "required": true,
+     "candidates": [
+      "dn_repu_pub110"
+     ],
+     "note": "cognate RepU protein for the pUB110 ori"
+    },
+    {
+     "role": "ori_shuttle",
+     "required": false,
+     "candidates": [
+      "sg_ori"
+     ],
+     "note": "E. coli ori for cloning steps"
+    },
+    {
+     "role": "marker",
+     "required": true,
+     "candidates": [
+      "dn_spectinomycin_resistance_spcr",
+      "dn_ermc_resistance_ermr"
+     ]
+    },
+    {
+     "role": "promoter",
+     "required": true,
+     "candidates": [
+      "dn_pveg_promoter"
+     ]
+    },
+    {
+     "role": "rbs",
+     "required": true,
+     "candidates": [
+      "sg_Shine_Dalgarno_sequence"
+     ]
+    },
+    {
+     "role": "signal",
+     "required": true,
+     "candidates": [
+      "dn_amye_signal_peptide"
+     ],
+     "note": "Sec pathway export"
+    },
+    {
+     "role": "cds",
+     "required": true,
+     "candidates": [],
+     "user_supplied": true
+    },
+    {
+     "role": "terminator",
+     "required": true,
+     "candidates": [
+      "dn_rrnb_t1_terminator"
+     ]
     }
    ]
   },

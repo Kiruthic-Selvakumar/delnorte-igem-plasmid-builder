@@ -1,0 +1,38 @@
+{
+  "schema_version": 2,
+  "note": "Synthetic unit/branch-coverage fixtures for designer.js. Each fixture supplies its OWN inline template + parts catalog -- it does NOT read data/templates.json or data/parts.json. These exist solely to reach branches of fillTemplate() that no real (template, gene) combination in this repository can currently reach. They are executed by the same designer.js functions as the real benchmark, but are reported completely separately and NEVER contribute to core ECC or the B. subtilis readiness tally. No fixture here makes or implies any biological claim -- part names below are synthetic placeholders invented purely to exercise code paths, not real genetic parts.",
+  "claude_md_compliance": "schema_version 1 of this file contained fabricated literal nucleotide strings labeled evidence:'verified'. That violated CLAUDE.md's hard rule ('NEVER write a literal DNA sequence into any file. Sequences come only from data/parts.json.') and its evidence rule ('Never mark something verified unless it has a real source.'). schema_version 2 fixes this: every synthetic part below uses seq:null with evidence:'placeholder' and a todo note, per CLAUDE.md's own prescribed pattern for unknown sequences. One fixture (a synthetic 'goldengate' template used to test scanSites()'s restriction-site matching) was removed entirely, because a genuine positive site-match test requires real sequence characters in some file, which the rule does not permit outside data/parts.json. See run_benchmark.mjs's remaining_untested_branches list and benchmark/README.md for the resulting coverage gap.",
+  "fixtures": [
+    {
+      "fixture_id": "trans_dependency_failure_01",
+      "covers": "fillTemplate(): the trans-dependency-FAILURE branch (designer.js, the 'cognate replication protein missing' gap). No real template+catalog combination in data/templates.json / data/parts.json currently reaches this branch, because vnat_broadhost's first-choice ori (sg_pBBR1_oriV) always finds its cognate Rep (sg_pBBR1_Rep) present. This fixture deliberately omits the required cognate part so the ori slot resolves to a candidate whose 'requires' list cannot be satisfied. This test needs no sequence content at all -- it exercises slot/candidate/requires-graph logic, not sequence arithmetic -- so every part uses seq:null, matching CLAUDE.md's own convention for unknown sequences.",
+      "template": {
+        "id": "synthetic_trans_dependency",
+        "host": "Synthetic",
+        "assembly": "gibson",
+        "slots": [
+          { "role": "ori", "required": true, "candidates": ["synth_oriX"], "requires": { "synth_oriX": ["synth_repX"] } },
+          { "role": "marker", "required": true, "candidates": ["synth_markerX"] },
+          { "role": "cds", "required": true, "candidates": [], "user_supplied": true },
+          { "role": "terminator", "required": true, "candidates": ["synth_termX"] }
+        ]
+      },
+      "parts": [
+        { "id": "synth_oriX", "name": "Synthetic OriX", "type": "origin", "seq": null, "length": null, "gc": null, "evidence": "placeholder", "todo": "Synthetic fixture part, not a real biological part. No sequence by design -- this fixture tests fillTemplate()'s dependency-graph logic only." },
+        { "id": "synth_markerX", "name": "Synthetic MarkerX", "type": "marker", "seq": null, "length": null, "gc": null, "evidence": "placeholder", "todo": "Synthetic fixture part, not a real biological part. No sequence by design." },
+        { "id": "synth_termX", "name": "Synthetic TermX", "type": "terminator", "seq": null, "length": null, "gc": null, "evidence": "placeholder", "todo": "Synthetic fixture part, not a real biological part. No sequence by design." },
+        { "id": "synth_cds1", "name": "Synthetic CDS1", "type": "cds", "seq": null, "length": null, "gc": null, "evidence": "placeholder", "todo": "Synthetic fixture part, not a real biological part. No sequence by design." }
+      ],
+      "cds_input": { "mode": "existing_part", "id": "synth_cds1" },
+      "expected": {
+        "buildable": false,
+        "order_ids": ["synth_oriX", "synth_markerX", "synth_cds1", "synth_termX"],
+        "gaps": [{ "role": "ori", "missing": ["synth_repX"] }],
+        "placeholders": ["synth_oriX", "synth_markerX", "synth_cds1", "synth_termX"],
+        "site_conflicts": [],
+        "total_length": 0
+      },
+      "derivation": "Hand-traced against fillTemplate()'s dependency-check loop: present={synth_oriX,synth_markerX,synth_cds1,synth_termX} never includes synth_repX (intentionally absent from the parts list), so the requires-clause check on the resolved ori candidate must fail, regardless of sequence content. Separately, since every part has evidence:'placeholder' (none are evidence:'verified'), design()'s placeholders filter must list all 4 by name, and total_length must be 0 since Array.prototype.join coerces every null seq to ''."
+    }
+  ]
+}

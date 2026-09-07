@@ -1,0 +1,430 @@
+{
+  "schema_version": 2,
+  "benchmark": "Del Norte iGEM Plasmid Builder - designer.js correctness benchmark",
+  "frozen_note": "This file is frozen input data. Expected values were derived by manually cross-referencing data/templates.json's slot/candidate lists against data/parts.json's id set, NOT by executing designer.js's fillTemplate()/design(). Do not regenerate this file from the tool's own output.",
+  "scoring_note": "Only scope=='core' cases count toward Exact Construct Correctness (ECC) and the other primary/secondary metrics. scope=='bsub_readiness' cases are smoke tests reported separately under 'B. subtilis readiness' and never affect the core percentage. B. subtilis (bsub_secretion) validation is deferred until Task 1 adds real backbone parts. Synthetic branch-coverage fixtures for designer.js code paths that cannot be reached with real repository data live separately in synthetic_fixtures.json and are also excluded from every score in this file.",
+  "revision_note": "schema_version 2: reduced from 8 to 4 core cases per template (dropped 4 near-duplicate verified-CDS cases per template that exercised no additional fillTemplate() branch beyond ecoli_inducible__gfp_normal__01 / vnat_broadhost__gfp_normal__01), added the 'covers' field to every case, and added benchmark/synthetic_fixtures.json for branches unreachable via real data (trans-dependency failure; goldengate/biobrick enzyme selection + scanSites' actual site-matching logic, both untested by the real templates which all use assembly:'gibson').",
+  "cases": [
+    {
+      "case_id": "ecoli_inducible__gfp_normal__01",
+      "scope": "core",
+      "template_id": "ecoli_inducible",
+      "host": "E. coli",
+      "cds_input": {
+        "mode": "existing_part",
+        "id": "sg_GFP"
+      },
+      "covers": "fillTemplate() normal path: every non-user-supplied required slot (ori,marker,promoter,rbs,terminator) resolves to its first-listed present candidate; optional signal slot has zero candidates and is correctly omitted from order_ids with no gap; verified user-supplied CDS is spliced into the cds slot; buildable=true; design()'s total_length/GC arithmetic and gibsonPrimers()'s Marmur-Doty Tm branch (20nt anneal region, >=14nt) all fire on real backbone-length sequences.",
+      "expected": {
+        "buildable": true,
+        "order_ids": [
+          "sg_ori",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_GFP",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [],
+        "placeholders": [],
+        "total_length": 2380
+      },
+      "derivation": {
+        "method": "manual_jq_inspection",
+        "notes": "First candidate per slot cross-checked present in data/parts.json; total_length = sum of resolved parts' length fields."
+      }
+    },
+    {
+      "case_id": "ecoli_inducible__lacI_sanity__02",
+      "scope": "core",
+      "template_id": "ecoli_inducible",
+      "host": "E. coli",
+      "cds_input": {
+        "mode": "existing_part",
+        "id": "sg_lacI"
+      },
+      "covers": "Same resolved-backbone path as case 01, substituting a second, differently-sized verified CDS (1083bp vs GFP's 714bp) purely as an arithmetic sanity check on total_length/GC -- guards against a bug in case 01 that happens to cancel out for GFP's specific length. Does not exercise a different branch of fillTemplate().",
+      "expected": {
+        "buildable": true,
+        "order_ids": [
+          "sg_ori",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_lacI",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [],
+        "placeholders": [],
+        "total_length": 2749
+      },
+      "derivation": {
+        "method": "manual_jq_inspection",
+        "notes": "Same derivation method as case 01, different CDS id."
+      }
+    },
+    {
+      "case_id": "ecoli_inducible__placeholder_cds__03",
+      "scope": "core",
+      "template_id": "ecoli_inducible",
+      "host": "E. coli",
+      "cds_input": {
+        "mode": "existing_part",
+        "id": "dn_lysqdvp001_endolysin"
+      },
+      "covers": "fillTemplate() user-supplied branch when the supplied CDS record itself has evidence=placeholder and seq=null: chosen.push() still occurs (the slot resolves, no gap), but design()'s placeholders filter and buildable=false gate must fire anyway. Also exercises Array.prototype.join's null->'' coercion when concatenating the final sequence.",
+      "expected": {
+        "buildable": false,
+        "order_ids": [
+          "sg_ori",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "dn_lysqdvp001_endolysin",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [],
+        "placeholders": [
+          "dn_lysqdvp001_endolysin"
+        ],
+        "total_length": 1666
+      },
+      "derivation": {
+        "method": "manual_jq_inspection",
+        "notes": "dn_lysqdvp001_endolysin confirmed evidence=placeholder, seq=null in data/parts.json; backbone unaffected."
+      }
+    },
+    {
+      "case_id": "ecoli_inducible__no_cds__04",
+      "scope": "core",
+      "template_id": "ecoli_inducible",
+      "host": "E. coli",
+      "cds_input": {
+        "mode": "none"
+      },
+      "covers": "fillTemplate() required+user_supplied slot with no CDS provided: gap correctly recorded for role=cds; buildable=false; backbone parts still resolve and appear in order_ids (proves the cds gap does not suppress unrelated slot resolution).",
+      "expected": {
+        "buildable": false,
+        "order_ids": [
+          "sg_ori",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [
+          {
+            "role": "cds"
+          }
+        ],
+        "placeholders": [],
+        "total_length": 1666
+      },
+      "derivation": {
+        "method": "manual_jq_inspection",
+        "notes": "cds slot has required:true, user_supplied:true in data/templates.json; no candidates list applies to it."
+      }
+    },
+    {
+      "case_id": "vnat_broadhost__gfp_normal__01",
+      "scope": "core",
+      "template_id": "vnat_broadhost",
+      "host": "V. natriegens",
+      "cds_input": {
+        "mode": "existing_part",
+        "id": "sg_GFP"
+      },
+      "covers": "fillTemplate() normal path PLUS the trans-dependency SUCCESS branch: ori candidate sg_pBBR1_oriV requires sg_pBBR1_Rep in trans per templates.json's 'requires' clause, and the rep slot resolves to exactly that part, so the dependency check passes with no gap. orit is optional but resolves to sg_RSF1010_oriT. Verified CDS -> buildable=true.",
+      "expected": {
+        "buildable": true,
+        "order_ids": [
+          "sg_pBBR1_oriV",
+          "sg_pBBR1_Rep",
+          "sg_RSF1010_oriT",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_GFP",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [],
+        "placeholders": [],
+        "total_length": 3312
+      },
+      "derivation": {
+        "method": "manual_jq_inspection",
+        "notes": "First candidate per slot cross-checked present in data/parts.json; dependency satisfied by inspection of the 'requires' map."
+      }
+    },
+    {
+      "case_id": "vnat_broadhost__lacI_sanity__02",
+      "scope": "core",
+      "template_id": "vnat_broadhost",
+      "host": "V. natriegens",
+      "cds_input": {
+        "mode": "existing_part",
+        "id": "sg_lacI"
+      },
+      "covers": "Same resolved-backbone + satisfied-dependency path as case 01, second verified CDS as an arithmetic sanity check only (same rationale as ecoli_inducible__lacI_sanity__02).",
+      "expected": {
+        "buildable": true,
+        "order_ids": [
+          "sg_pBBR1_oriV",
+          "sg_pBBR1_Rep",
+          "sg_RSF1010_oriT",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_lacI",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [],
+        "placeholders": [],
+        "total_length": 3681
+      },
+      "derivation": {
+        "method": "manual_jq_inspection",
+        "notes": "Same derivation method as case 01, different CDS id."
+      }
+    },
+    {
+      "case_id": "vnat_broadhost__placeholder_cds__03",
+      "scope": "core",
+      "template_id": "vnat_broadhost",
+      "host": "V. natriegens",
+      "cds_input": {
+        "mode": "existing_part",
+        "id": "dn_lysqdvp001_endolysin"
+      },
+      "covers": "This is the project's actual intended gene for this host per data/parts.json's 'V. natrigens' hosts entry, but it remains evidence=placeholder/seq=null: same placeholder-CDS branch as ecoli_inducible__placeholder_cds__03, now combined with the vnat_broadhost dependency-resolution path.",
+      "expected": {
+        "buildable": false,
+        "order_ids": [
+          "sg_pBBR1_oriV",
+          "sg_pBBR1_Rep",
+          "sg_RSF1010_oriT",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "dn_lysqdvp001_endolysin",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [],
+        "placeholders": [
+          "dn_lysqdvp001_endolysin"
+        ],
+        "total_length": 2598
+      },
+      "derivation": {
+        "method": "manual_jq_inspection",
+        "notes": "dn_lysqdvp001_endolysin confirmed evidence=placeholder, seq=null; backbone/dependency unaffected."
+      }
+    },
+    {
+      "case_id": "vnat_broadhost__no_cds__04",
+      "scope": "core",
+      "template_id": "vnat_broadhost",
+      "host": "V. natriegens",
+      "cds_input": {
+        "mode": "none"
+      },
+      "covers": "Same no-CDS gap check as ecoli_inducible__no_cds__04, applied to the vnat_broadhost template (also confirms the dependency-satisfied ori/rep resolution is independent of whether a CDS was supplied).",
+      "expected": {
+        "buildable": false,
+        "order_ids": [
+          "sg_pBBR1_oriV",
+          "sg_pBBR1_Rep",
+          "sg_RSF1010_oriT",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [
+          {
+            "role": "cds"
+          }
+        ],
+        "placeholders": [],
+        "total_length": 2598
+      },
+      "derivation": {
+        "method": "manual_jq_inspection",
+        "notes": "Same derivation method as ecoli_inducible__no_cds__04."
+      }
+    },
+    {
+      "case_id": "bsub_secretion__endolysin__01",
+      "scope": "bsub_readiness",
+      "template_id": "bsub_secretion",
+      "host": "B. subtilis",
+      "cds_input": {
+        "mode": "existing_part",
+        "id": "dn_lysqdvp001_endolysin"
+      },
+      "covers": "Gap-detection smoke test with the project's real intended gene: confirms all 4 backbone TODO_* roles are reported missing today, and (post_task1) confirms buildable should remain false even after the backbone is fixed, since the CDS itself is a separate unresolved placeholder outside Task 1's scope.",
+      "milestone_expected": {
+        "baseline": {
+          "buildable": false,
+          "gap_roles": [
+            "ori",
+            "marker",
+            "promoter",
+            "signal"
+          ],
+          "placeholder_ids": [
+            "dn_lysqdvp001_endolysin"
+          ],
+          "order_ids": [
+            "sg_ori",
+            "sg_Shine_Dalgarno_sequence",
+            "dn_lysqdvp001_endolysin",
+            "sg_rrnB_T1_terminator"
+          ],
+          "total_length": 670
+        },
+        "post_task1": {
+          "buildable": false,
+          "gap_roles": [],
+          "placeholder_ids": [
+            "dn_lysqdvp001_endolysin"
+          ],
+          "order_ids": null,
+          "total_length": null
+        }
+      },
+      "derivation": {
+        "method": "manual_jq_inspection",
+        "notes": "Project's real intended gene. All 4 backbone TODO_* roles confirmed absent from data/parts.json today."
+      },
+      "readiness_note": "Smoke test only: verifies the tool correctly reports the CURRENTLY missing B. subtilis backbone parts. Not a validated buildable construct. Excluded from core ECC."
+    },
+    {
+      "case_id": "bsub_secretion__gfp__02",
+      "scope": "bsub_readiness",
+      "template_id": "bsub_secretion",
+      "host": "B. subtilis",
+      "cds_input": {
+        "mode": "existing_part",
+        "id": "sg_GFP"
+      },
+      "covers": "Gap-detection smoke test with a verified, unrelated CDS: same 4 backbone gaps as case 01 with no placeholder flag, proving the gaps are structural (missing backbone) and independent of gene choice. Post-task1, this case should flip to fully buildable.",
+      "milestone_expected": {
+        "baseline": {
+          "buildable": false,
+          "gap_roles": [
+            "ori",
+            "marker",
+            "promoter",
+            "signal"
+          ],
+          "placeholder_ids": [],
+          "order_ids": [
+            "sg_ori",
+            "sg_Shine_Dalgarno_sequence",
+            "sg_GFP",
+            "sg_rrnB_T1_terminator"
+          ],
+          "total_length": 1384
+        },
+        "post_task1": {
+          "buildable": true,
+          "gap_roles": [],
+          "placeholder_ids": [],
+          "order_ids": null,
+          "total_length": null
+        }
+      },
+      "derivation": {
+        "method": "manual_jq_inspection",
+        "notes": "Verified CDS substituted for the project gene; same backbone gap set expected."
+      },
+      "readiness_note": "Smoke test only: verifies the tool correctly reports the CURRENTLY missing B. subtilis backbone parts. Not a validated buildable construct. Excluded from core ECC."
+    },
+    {
+      "case_id": "bsub_secretion__lacI__03",
+      "scope": "bsub_readiness",
+      "template_id": "bsub_secretion",
+      "host": "B. subtilis",
+      "cds_input": {
+        "mode": "existing_part",
+        "id": "sg_lacI"
+      },
+      "covers": "Second verified generic CDS, reinforcing that the gap set is independent of gene choice. Post-task1 this case should also become fully buildable.",
+      "milestone_expected": {
+        "baseline": {
+          "buildable": false,
+          "gap_roles": [
+            "ori",
+            "marker",
+            "promoter",
+            "signal"
+          ],
+          "placeholder_ids": [],
+          "order_ids": [
+            "sg_ori",
+            "sg_Shine_Dalgarno_sequence",
+            "sg_lacI",
+            "sg_rrnB_T1_terminator"
+          ],
+          "total_length": 1753
+        },
+        "post_task1": {
+          "buildable": true,
+          "gap_roles": [],
+          "placeholder_ids": [],
+          "order_ids": null,
+          "total_length": null
+        }
+      },
+      "derivation": {
+        "method": "manual_jq_inspection",
+        "notes": "Second verified CDS as a redundancy check specific to the readiness tier (kept small: 2 verified genes total)."
+      },
+      "readiness_note": "Smoke test only: verifies the tool correctly reports the CURRENTLY missing B. subtilis backbone parts. Not a validated buildable construct. Excluded from core ECC."
+    },
+    {
+      "case_id": "bsub_secretion__no_cds__04",
+      "scope": "bsub_readiness",
+      "template_id": "bsub_secretion",
+      "host": "B. subtilis",
+      "cds_input": {
+        "mode": "none"
+      },
+      "covers": "No CDS supplied: expect the same 4 backbone gaps plus a 5th gap for the required user-supplied cds role. Post-task1 the backbone gaps resolve but the cds gap remains since no gene was supplied.",
+      "milestone_expected": {
+        "baseline": {
+          "buildable": false,
+          "gap_roles": [
+            "ori",
+            "marker",
+            "promoter",
+            "signal",
+            "cds"
+          ],
+          "placeholder_ids": [],
+          "order_ids": [
+            "sg_ori",
+            "sg_Shine_Dalgarno_sequence",
+            "sg_rrnB_T1_terminator"
+          ],
+          "total_length": 670
+        },
+        "post_task1": {
+          "buildable": false,
+          "gap_roles": [
+            "cds"
+          ],
+          "placeholder_ids": [],
+          "order_ids": null,
+          "total_length": null
+        }
+      },
+      "derivation": {
+        "method": "manual_jq_inspection",
+        "notes": "Same no-CDS gap-detection rationale as the core no_cds cases, applied to bsub_secretion."
+      },
+      "readiness_note": "Smoke test only: verifies the tool correctly reports the CURRENTLY missing B. subtilis backbone parts. Not a validated buildable construct. Excluded from core ECC."
+    }
+  ]
+}

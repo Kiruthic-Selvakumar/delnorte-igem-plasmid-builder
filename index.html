@@ -21,7 +21,10 @@ input,select,button,textarea{font-family:inherit}
 <script type="module">
   import * as Designer from "./designer.js";
   window.Designer = Designer;
+  import * as Automatic from "./automatic/index.js";
+  window.Automatic = Automatic;
 </script>
+<script type="text/babel" src="./automatic/AutomaticModeUI.jsx"></script>
 <script type="text/babel">
 const { useState, useEffect, useLayoutEffect, useMemo, useRef } = React;
 
@@ -308,6 +311,7 @@ function cRuns(str, start, m) {
 
 /* ── Main App ────────────────────────────────────────────────────────── */
 function App() {
+  const [mode, setMode] = useState("template");   // "template" | "automatic"
   const [host, setHost] = useState("");
   const [parts, setParts] = useState([]);       // {id, name, type, seq, len}
   const [result, setResult] = useState(null);
@@ -320,6 +324,16 @@ function App() {
   const [templates, setTemplates] = useState(null);
   const [tplId, setTplId] = useState("");
   const [cdsPart, setCdsPart] = useState(null);     // chosen gene of interest
+  // Phase 5B item 13: fillTemplate()/design() already accept ANY part-shaped
+  // userCds object as-is (see designer.js -- it never requires the object to
+  // exist in partsById), so a part registered through the same session-local
+  // customPartRegistry.js Automatic Design Mode uses can be dropped in here
+  // unchanged. One registry instance, created lazily, shared by every
+  // "gene of interest" registration this session.
+  const customRegistryRef = useRef(null);
+  if (!customRegistryRef.current && window.Automatic && window.Automatic.createCustomPartRegistry) {
+    customRegistryRef.current = window.Automatic.createCustomPartRegistry();
+  }
   const [asmErr, setAsmErr] = useState(null);   // names of parts with no sequence
 
   useEffect(() => {
@@ -449,6 +463,29 @@ function App() {
     setCopied(true); setTimeout(()=>setCopied(false),2000);
   };
 
+  // Phase 6, item 3: "Use This Design" -- convert an Automatic Design
+  // candidate into the SAME parts/host/result shape this Template-Guided
+  // workflow already produces from its own template+CDS pipeline, then open
+  // the existing (unmodified) Map/Parts/Sequence/Delivery tabs on it. Reuses
+  // window.Automatic.buildWorkspaceHandoff() for the actual conversion --
+  // this function only assigns the resulting values into App()'s own state.
+  // tplId is cleared to "" (template resolves to null) so the template-
+  // driven re-seed effect above (keyed on plan/template) never fires and
+  // silently overwrites the handed-off parts with a template's own defaults.
+  const handoffToWorkspace = ({ candidate, anchorPart, host: h, assemblyMethod: am, partsById: pBid }) => {
+    if (!window.Automatic) return;
+    const handoff = window.Automatic.buildWorkspaceHandoff(candidate, { partsById: pBid || partsById, anchorPart, host: h, assemblyMethod: am });
+    setTplId("");
+    setCdsPart(null);
+    setParts(handoff.parts.map(p => ({ id: ++_uid, srcId: p.srcId, name: p.name, type: p.type, role: p.role, seq: p.seq, len: p.len })));
+    setHost(handoff.host || "");
+    setResult({ assembled: handoff.assembledSequence, gc: handoff.gc, total: handoff.totalBp, proto: protocolFor(handoff.host) });
+    setAsmErr(null);
+    setExpanded(null);
+    setTab("map");
+    setMode("template");
+  };
+
   const stepN = !host?1:!result?2:3;
   const S = {
     card:{background:"#1e293b",border:"1px solid #334155",borderRadius:12,overflow:"hidden",marginBottom:16},
@@ -490,6 +527,32 @@ function App() {
 
       <div style={{padding:"20px",maxWidth:860,margin:"0 auto"}}>
 
+        {/* Template-Guided Mode (existing workflow, unchanged) vs. Automatic Design Mode (new).
+            Phase 6, item 1: make the product distinction explicit, in plain language --
+            never "AI"/exaggerated framing, just what each mode actually does. */}
+        <div style={{display:"flex",gap:8,marginBottom:6,background:"#1e293b",border:"1px solid #334155",borderRadius:10,padding:4}}>
+          {[["template","🧭 Template-Guided"],["automatic","🧮 Automatic Design"]].map(([id,label])=>(
+            <button key={id} onClick={()=>setMode(id)}
+              style={{flex:1,padding:"9px 10px",borderRadius:7,border:"none",cursor:"pointer",fontSize:12,fontWeight:mode===id?700:500,
+                background:mode===id?"linear-gradient(90deg,#0369a1,#0ea5e9)":"transparent",color:mode===id?"#fff":"#94a3b8"}}>
+              {label}
+            </button>
+          ))}
+        </div>
+        <div style={{fontSize:11,color:"#64748b",lineHeight:1.5,marginBottom:16,padding:"0 4px"}}>
+          {mode==="template"
+            ? <span><b style={{color:"#93c5fd"}}>Build from a known architecture.</b> You choose the template and components; this mode helps you assemble, inspect, and export the plasmid.</span>
+            : <span><b style={{color:"#93c5fd"}}>Design around a biological part.</b> You supply a part, host, and design objective (plus any components that must stay fixed); a constraint-based computational design engine determines the architecture, supporting parts, and valid alternatives.</span>}
+        </div>
+
+        {mode==="automatic" && (
+          window.AutomaticModeUI
+            ? <window.AutomaticModeUI db={db} templates={templates} partsById={partsById} onUseDesign={handoffToWorkspace} />
+            : <div style={{color:"#fca5a5",fontSize:12,padding:12}}>./automatic/AutomaticModeUI.jsx did not load — the page must be served over http, not opened as a file.</div>
+        )}
+
+        {mode==="template" && <React.Fragment>
+
         {/* 01 - template, gene, and the editable part list */}
         <div style={{marginBottom:16}}>
           <span style={S.label}>01 — Design</span>
@@ -516,7 +579,19 @@ function App() {
                 ) : (
                   <div style={{display:"flex"}}>
                     <PartCombo pool={cdsPool} placeholder="Search CDS by name, or paste a DNA sequence…"
-                      onPick={rec=>setCdsPart(rec)} hint="no CDS match"/>
+                      onPick={rec=>setCdsPart(rec)} hint="no CDS match"
+                      onCustom={raw => {
+                        // Phase 5B item 13: a pasted sequence with no catalog match (PartCombo's
+                        // own exact/substring/revcomp search already found nothing, or this
+                        // isn't a name at all) -- register it as a genuine, session-local
+                        // custom CDS (never silently written to data/parts.json) instead of
+                        // discarding the input, the same way Automatic Design Mode's "Register
+                        // Custom Part" flow does.
+                        const seq = asDNA(raw);
+                        if (!seq || !customRegistryRef.current) return;
+                        const res = customRegistryRef.current.registerCustomPart({ name: `Custom CDS (${seq.length} bp)`, seq, role: "cds" });
+                        if (res.ok) setCdsPart(res.part);
+                      }}/>
                   </div>
                 )}
               </div>
@@ -826,6 +901,8 @@ function App() {
             </div>
           </div>
         )}
+
+        </React.Fragment>}
       </div>
     </div>
   );

@@ -1,0 +1,82 @@
+{
+  "host": "E. coli",
+  "topK": 3,
+  "report": [
+    {
+      "referenceId": "BBa_J04450",
+      "title": "RFP Coding Device",
+      "reconstructable": false,
+      "reason": "CDS component \"BBa_E1010\" is not present in this project's cached Registry part snapshot (data/registry_cache.json#parts) -- its real sequence was never fetched, so it cannot be supplied as a held-out anchor without fabricating DNA."
+    },
+    {
+      "referenceId": "BBa_E0840",
+      "title": "GFP generator",
+      "reconstructable": true,
+      "ran": true,
+      "hasCertifiedBuildableCandidate": true,
+      "certificationNote": "A hard-valid, certified-buildable candidate was produced.",
+      "goalUsed": "reporter expression",
+      "goalDerivedFrom": "title \"GFP generator\" (the record's own \"purpose\" field is a part-composition string, not descriptive text, so it was not usable verbatim)",
+      "anchorMode": "novel_sequence",
+      "referenceRoleSequence": [
+        "rbs",
+        "cds",
+        "terminator",
+        "terminator"
+      ],
+      "requiredRoleRecall": 1,
+      "constraintViolationRate": 0.09,
+      "candidateDiversity": 10,
+      "topK": [
+        {
+          "candidateId": "beam__1",
+          "origin": "beam_search",
+          "valid": true,
+          "roleOrderSimilarity": 0.5,
+          "recoveredKnownParts": [],
+          "rank": 1
+        }
+      ],
+      "bestRoleOrderSimilarityInTopK": 0.5,
+      "anyKnownPartRecoveredInTopK": false
+    },
+    {
+      "referenceId": "BBa_I13521",
+      "title": "Ptet mRFP",
+      "reconstructable": false,
+      "reason": "CDS component \"BBa_E1010\" is not present in this project's cached Registry part snapshot (data/registry_cache.json#parts) -- its real sequence was never fetched, so it cannot be supplied as a held-out anchor without fabricating DNA."
+    },
+    {
+      "referenceId": "BBa_I13522",
+      "title": "pTet GFP",
+      "reconstructable": true,
+      "ran": true,
+      "hasCertifiedBuildableCandidate": true,
+      "certificationNote": "A hard-valid, certified-buildable candidate was produced.",
+      "goalUsed": "Untagged GFP behind a constitutive promoter.",
+      "goalDerivedFrom": "verbatim from the record's own \"purpose\" field",
+      "anchorMode": "novel_sequence",
+      "referenceRoleSequence": [
+        "rbs",
+        "cds",
+        "terminator",
+        "terminator"
+      ],
+      "requiredRoleRecall": 1,
+      "constraintViolationRate": 0.09,
+      "candidateDiversity": 11,
+      "topK": [
+        {
+          "candidateId": "beam__1",
+          "origin": "beam_search",
+          "valid": true,
+          "roleOrderSimilarity": 0.5,
+          "recoveredKnownParts": [],
+          "rank": 1
+        }
+      ],
+      "bestRoleOrderSimilarityInTopK": 0.5,
+      "anyKnownPartRecoveredInTopK": false
+    }
+  ]
+}

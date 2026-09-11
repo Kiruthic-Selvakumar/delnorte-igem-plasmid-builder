@@ -72,9 +72,9 @@
         "mode": "existing_part",
         "id": "dn_lysqdvp001_endolysin"
       },
-      "covers": "fillTemplate() user-supplied branch when the supplied CDS record itself has evidence=placeholder and seq=null: chosen.push() still occurs (the slot resolves, no gap), but design()'s placeholders filter and buildable=false gate must fire anyway. Also exercises Array.prototype.join's null->'' coercion when concatenating the final sequence.",
+      "covers": "REFRESHED (was the placeholder-evidence-gating branch; see stale_fixture_update note): dn_lysqdvp001_endolysin is now evidence=verified/seq=711bp in data/parts.json, so this case exercises the same resolved-backbone path as ecoli_inducible__gfp_normal__01/lacI_sanity__02, not the placeholder-gating branch. The placeholder/buildable=false gate this case was written to test is no longer reachable by any core-scope case on real data (see run_benchmark.mjs's REMAINING_UNTESTED_BRANCHES).",
       "expected": {
-        "buildable": false,
+        "buildable": true,
         "order_ids": [
           "sg_ori",
           "sg_KanR",
@@ -84,14 +84,12 @@
           "sg_rrnB_T1_terminator"
         ],
         "gaps": [],
-        "placeholders": [
-          "dn_lysqdvp001_endolysin"
-        ],
-        "total_length": 1666
+        "placeholders": [],
+        "total_length": 2377
       },
       "derivation": {
         "method": "manual_jq_inspection",
-        "notes": "dn_lysqdvp001_endolysin confirmed evidence=placeholder, seq=null in data/parts.json; backbone unaffected."
+        "notes": "stale_fixture_update (this session): dn_lysqdvp001_endolysin re-confirmed in data/parts.json as evidence=verified, seq length 711 (previously placeholder/null). total_length = ecoli_inducible backbone sum 1666 (unchanged, cross-checked against the still-valid ecoli_inducible__no_cds__04 backbone-only total) + 711."
       }
     },
     {
@@ -196,9 +194,9 @@
         "mode": "existing_part",
         "id": "dn_lysqdvp001_endolysin"
       },
-      "covers": "This is the project's actual intended gene for this host per data/parts.json's 'V. natrigens' hosts entry, but it remains evidence=placeholder/seq=null: same placeholder-CDS branch as ecoli_inducible__placeholder_cds__03, now combined with the vnat_broadhost dependency-resolution path.",
+      "covers": "REFRESHED (was the placeholder-evidence-gating branch; see stale_fixture_update note): dn_lysqdvp001_endolysin is now evidence=verified/seq=711bp in data/parts.json, so this case exercises the same resolved-backbone + satisfied-dependency path as vnat_broadhost__gfp_normal__01/lacI_sanity__02, not the placeholder-gating branch. The placeholder/buildable=false gate this case was written to test is no longer reachable by any core-scope case on real data (see run_benchmark.mjs's REMAINING_UNTESTED_BRANCHES).",
       "expected": {
-        "buildable": false,
+        "buildable": true,
         "order_ids": [
           "sg_pBBR1_oriV",
           "sg_pBBR1_Rep",
@@ -210,14 +208,12 @@
           "sg_rrnB_T1_terminator"
         ],
         "gaps": [],
-        "placeholders": [
-          "dn_lysqdvp001_endolysin"
-        ],
-        "total_length": 2598
+        "placeholders": [],
+        "total_length": 3309
       },
       "derivation": {
         "method": "manual_jq_inspection",
-        "notes": "dn_lysqdvp001_endolysin confirmed evidence=placeholder, seq=null; backbone/dependency unaffected."
+        "notes": "stale_fixture_update (this session): dn_lysqdvp001_endolysin re-confirmed in data/parts.json as evidence=verified, seq length 711 (previously placeholder/null). total_length = vnat_broadhost backbone sum 2598 (unchanged, cross-checked against the still-valid vnat_broadhost__no_cds__04 backbone-only total) + 711."
       }
     },
     {
@@ -262,42 +258,46 @@
         "mode": "existing_part",
         "id": "dn_lysqdvp001_endolysin"
       },
-      "covers": "Gap-detection smoke test with the project's real intended gene: confirms all 4 backbone TODO_* roles are reported missing today, and (post_task1) confirms buildable should remain false even after the backbone is fixed, since the CDS itself is a separate unresolved placeholder outside Task 1's scope.",
+      "covers": "REFRESHED (Task 1 landed, and further, the gene itself became verified too): bsub_secretion's ori/marker/promoter/signal candidates are now real dn_* parts (no more TODO_*), and dn_lysqdvp001_endolysin -- the project's real intended gene -- is itself now evidence=verified/seq=711bp (previously placeholder/null). Both the original 'baseline' 4-gap prediction and the original 'post_task1' prediction (buildable should remain false because the gene stays a placeholder) are stale: reality moved past what post_task1 anticipated. This case is now a straightforward fully-resolved-construct smoke test. Still scope=bsub_readiness per the team's instruction to preserve the core/readiness split -- not promoted to core ECC.",
       "milestone_expected": {
         "baseline": {
-          "buildable": false,
-          "gap_roles": [
-            "ori",
-            "marker",
-            "promoter",
-            "signal"
-          ],
-          "placeholder_ids": [
-            "dn_lysqdvp001_endolysin"
-          ],
+          "buildable": true,
+          "gap_roles": [],
+          "placeholder_ids": [],
           "order_ids": [
+            "dn_pub110_ori",
             "sg_ori",
+            "dn_spectinomycin_resistance_spcr",
+            "dn_pveg_promoter",
             "sg_Shine_Dalgarno_sequence",
+            "dn_amye_signal_peptide",
             "dn_lysqdvp001_endolysin",
-            "sg_rrnB_T1_terminator"
+            "dn_rrnb_t1_terminator"
           ],
-          "total_length": 670
+          "total_length": 3929
         },
         "post_task1": {
-          "buildable": false,
+          "buildable": true,
           "gap_roles": [],
-          "placeholder_ids": [
-            "dn_lysqdvp001_endolysin"
+          "placeholder_ids": [],
+          "order_ids": [
+            "dn_pub110_ori",
+            "sg_ori",
+            "dn_spectinomycin_resistance_spcr",
+            "dn_pveg_promoter",
+            "sg_Shine_Dalgarno_sequence",
+            "dn_amye_signal_peptide",
+            "dn_lysqdvp001_endolysin",
+            "dn_rrnb_t1_terminator"
           ],
-          "order_ids": null,
-          "total_length": null
+          "total_length": 3929
         }
       },
       "derivation": {
         "method": "manual_jq_inspection",
-        "notes": "Project's real intended gene. All 4 backbone TODO_* roles confirmed absent from data/parts.json today."
+        "notes": "stale_fixture_update (this session): all 7 non-cds bsub_secretion slot candidates (dn_pub110_ori, sg_ori, dn_spectinomycin_resistance_spcr, dn_pveg_promoter, sg_Shine_Dalgarno_sequence, dn_amye_signal_peptide, dn_rrnb_t1_terminator) re-confirmed present and evidence=verified in data/parts.json, summing to 3218bp (cross-checked against bsub_secretion__no_cds__04's backbone-only total below). dn_lysqdvp001_endolysin re-confirmed evidence=verified, 711bp. 3218+711=3929. post_task1's previously-null order_ids/total_length are now filled in from the same data; its buildable/placeholder_ids prediction is corrected from false/[dn_lysqdvp001_endolysin] to true/[] since the gene's own evidence upgrade was outside what Task 1 (backbone-only) originally anticipated."
       },
-      "readiness_note": "Smoke test only: verifies the tool correctly reports the CURRENTLY missing B. subtilis backbone parts. Not a validated buildable construct. Excluded from core ECC."
+      "readiness_note": "Smoke test only, scope=bsub_readiness (kept separate from core ECC per team instruction, even though this construct is now fully resolved). Buildable=true here reflects the deterministic slot-filling/evidence rules only -- not wet-lab validation of the plasmid."
     },
     {
       "case_id": "bsub_secretion__gfp__02",
@@ -308,38 +308,46 @@
         "mode": "existing_part",
         "id": "sg_GFP"
       },
-      "covers": "Gap-detection smoke test with a verified, unrelated CDS: same 4 backbone gaps as case 01 with no placeholder flag, proving the gaps are structural (missing backbone) and independent of gene choice. Post-task1, this case should flip to fully buildable.",
+      "covers": "REFRESHED (Task 1 landed): bsub_secretion's ori/marker/promoter/signal candidates are now real dn_* parts (no more TODO_*), so this case's original 'baseline' 4-gap prediction is stale. The original 'post_task1' prediction (fully buildable) was correct in shape -- filling in its previously-null order_ids/total_length now that the real part IDs are known.",
       "milestone_expected": {
         "baseline": {
-          "buildable": false,
-          "gap_roles": [
-            "ori",
-            "marker",
-            "promoter",
-            "signal"
-          ],
+          "buildable": true,
+          "gap_roles": [],
           "placeholder_ids": [],
           "order_ids": [
+            "dn_pub110_ori",
             "sg_ori",
+            "dn_spectinomycin_resistance_spcr",
+            "dn_pveg_promoter",
             "sg_Shine_Dalgarno_sequence",
+            "dn_amye_signal_peptide",
             "sg_GFP",
-            "sg_rrnB_T1_terminator"
+            "dn_rrnb_t1_terminator"
           ],
-          "total_length": 1384
+          "total_length": 3932
         },
         "post_task1": {
           "buildable": true,
           "gap_roles": [],
           "placeholder_ids": [],
-          "order_ids": null,
-          "total_length": null
+          "order_ids": [
+            "dn_pub110_ori",
+            "sg_ori",
+            "dn_spectinomycin_resistance_spcr",
+            "dn_pveg_promoter",
+            "sg_Shine_Dalgarno_sequence",
+            "dn_amye_signal_peptide",
+            "sg_GFP",
+            "dn_rrnb_t1_terminator"
+          ],
+          "total_length": 3932
         }
       },
       "derivation": {
         "method": "manual_jq_inspection",
-        "notes": "Verified CDS substituted for the project gene; same backbone gap set expected."
+        "notes": "stale_fixture_update (this session): backbone sum 3218bp re-confirmed (see bsub_secretion__endolysin__01's derivation note) + sg_GFP (714bp, evidence=verified, unchanged) = 3932."
       },
-      "readiness_note": "Smoke test only: verifies the tool correctly reports the CURRENTLY missing B. subtilis backbone parts. Not a validated buildable construct. Excluded from core ECC."
+      "readiness_note": "Smoke test only, scope=bsub_readiness (kept separate from core ECC per team instruction, even though this construct is now fully resolved). Buildable=true here reflects the deterministic slot-filling/evidence rules only -- not wet-lab validation of the plasmid."
     },
     {
       "case_id": "bsub_secretion__lacI__03",
@@ -350,38 +358,46 @@
         "mode": "existing_part",
         "id": "sg_lacI"
       },
-      "covers": "Second verified generic CDS, reinforcing that the gap set is independent of gene choice. Post-task1 this case should also become fully buildable.",
+      "covers": "REFRESHED (Task 1 landed): bsub_secretion's ori/marker/promoter/signal candidates are now real dn_* parts (no more TODO_*), so this case's original 'baseline' 4-gap prediction is stale. The original 'post_task1' prediction (fully buildable) was correct in shape -- filling in its previously-null order_ids/total_length now that the real part IDs are known.",
       "milestone_expected": {
         "baseline": {
-          "buildable": false,
-          "gap_roles": [
-            "ori",
-            "marker",
-            "promoter",
-            "signal"
-          ],
+          "buildable": true,
+          "gap_roles": [],
           "placeholder_ids": [],
           "order_ids": [
+            "dn_pub110_ori",
             "sg_ori",
+            "dn_spectinomycin_resistance_spcr",
+            "dn_pveg_promoter",
             "sg_Shine_Dalgarno_sequence",
+            "dn_amye_signal_peptide",
             "sg_lacI",
-            "sg_rrnB_T1_terminator"
+            "dn_rrnb_t1_terminator"
           ],
-          "total_length": 1753
+          "total_length": 4301
         },
         "post_task1": {
           "buildable": true,
           "gap_roles": [],
           "placeholder_ids": [],
-          "order_ids": null,
-          "total_length": null
+          "order_ids": [
+            "dn_pub110_ori",
+            "sg_ori",
+            "dn_spectinomycin_resistance_spcr",
+            "dn_pveg_promoter",
+            "sg_Shine_Dalgarno_sequence",
+            "dn_amye_signal_peptide",
+            "sg_lacI",
+            "dn_rrnb_t1_terminator"
+          ],
+          "total_length": 4301
         }
       },
       "derivation": {
         "method": "manual_jq_inspection",
-        "notes": "Second verified CDS as a redundancy check specific to the readiness tier (kept small: 2 verified genes total)."
+        "notes": "stale_fixture_update (this session): backbone sum 3218bp re-confirmed (see bsub_secretion__endolysin__01's derivation note) + sg_lacI (1083bp, evidence=verified, unchanged) = 4301."
       },
-      "readiness_note": "Smoke test only: verifies the tool correctly reports the CURRENTLY missing B. subtilis backbone parts. Not a validated buildable construct. Excluded from core ECC."
+      "readiness_note": "Smoke test only, scope=bsub_readiness (kept separate from core ECC per team instruction, even though this construct is now fully resolved). Buildable=true here reflects the deterministic slot-filling/evidence rules only -- not wet-lab validation of the plasmid."
     },
     {
       "case_id": "bsub_secretion__no_cds__04",
@@ -391,24 +407,24 @@
       "cds_input": {
         "mode": "none"
       },
-      "covers": "No CDS supplied: expect the same 4 backbone gaps plus a 5th gap for the required user-supplied cds role. Post-task1 the backbone gaps resolve but the cds gap remains since no gene was supplied.",
+      "covers": "REFRESHED (Task 1 landed): bsub_secretion's ori/marker/promoter/signal candidates are now real dn_* parts (no more TODO_*), so this case's original 'baseline' 5-gap prediction is stale -- only the cds gap remains, since no gene was supplied. The original 'post_task1' prediction (gap_roles=['cds'] only) was correct in shape -- filling in its previously-null order_ids/total_length now that the real part IDs are known.",
       "milestone_expected": {
         "baseline": {
           "buildable": false,
           "gap_roles": [
-            "ori",
-            "marker",
-            "promoter",
-            "signal",
             "cds"
           ],
           "placeholder_ids": [],
           "order_ids": [
+            "dn_pub110_ori",
             "sg_ori",
+            "dn_spectinomycin_resistance_spcr",
+            "dn_pveg_promoter",
             "sg_Shine_Dalgarno_sequence",
-            "sg_rrnB_T1_terminator"
+            "dn_amye_signal_peptide",
+            "dn_rrnb_t1_terminator"
           ],
-          "total_length": 670
+          "total_length": 3218
         },
         "post_task1": {
           "buildable": false,
@@ -416,15 +432,23 @@
             "cds"
           ],
           "placeholder_ids": [],
-          "order_ids": null,
-          "total_length": null
+          "order_ids": [
+            "dn_pub110_ori",
+            "sg_ori",
+            "dn_spectinomycin_resistance_spcr",
+            "dn_pveg_promoter",
+            "sg_Shine_Dalgarno_sequence",
+            "dn_amye_signal_peptide",
+            "dn_rrnb_t1_terminator"
+          ],
+          "total_length": 3218
         }
       },
       "derivation": {
         "method": "manual_jq_inspection",
-        "notes": "Same no-CDS gap-detection rationale as the core no_cds cases, applied to bsub_secretion."
+        "notes": "stale_fixture_update (this session): backbone sum 3218bp re-confirmed (see bsub_secretion__endolysin__01's derivation note); cds slot is required+user_supplied with no candidates of its own in bsub_secretion, so it stays a hard gap when no gene is supplied, same rule as the core no_cds cases."
       },
-      "readiness_note": "Smoke test only: verifies the tool correctly reports the CURRENTLY missing B. subtilis backbone parts. Not a validated buildable construct. Excluded from core ECC."
+      "readiness_note": "Smoke test only, scope=bsub_readiness (kept separate from core ECC per team instruction). Confirms the backbone is fully resolved but the required user-supplied cds slot correctly still gaps when nothing is provided."
     }
   ]
 }

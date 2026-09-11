@@ -1,0 +1,1444 @@
+{
+  "meta": {
+    "title": "Real B. subtilis / endolysin case study -- Automatic Design Mode (Phase 4B)",
+    "generatedAt": "2026-09-11T01:22:36.791Z",
+    "disclaimer": "Computational design proposal ONLY. No wet-lab validation, no claim of experimental success, no claim that this design has been built or tested. All 'evidence'/'verified'/'provenance' fields describe DATA PROVENANCE (a real catalog record, a real cached Registry record, a real project template) -- never biological/experimental confirmation."
+  },
+  "input": {
+    "anchorPartId": "dn_lysqdvp001_endolysin",
+    "anchorPartName": "Lysqdvp001 Endolysin",
+    "anchorEvidence": "verified",
+    "anchorLengthBp": 711,
+    "host": "B. subtilis",
+    "goalFamily": "secretion",
+    "assemblyMethod": "gibson",
+    "noTemplateOrBackboneNamed": true
+  },
+  "lockedComponents": [
+    {
+      "role": "cds",
+      "partName": "Lysqdvp001 Endolysin",
+      "partId": "dn_lysqdvp001_endolysin"
+    }
+  ],
+  "requirementPlan": {
+    "anchorRole": "cds",
+    "requiredRoles": [
+      "ori",
+      "marker",
+      "promoter",
+      "rbs",
+      "signal",
+      "terminator"
+    ],
+    "optionalRoles": [
+      "ori_shuttle",
+      "reporter",
+      "linker"
+    ],
+    "rationale": [
+      "Project-baseline required roles {ori, marker, promoter, rbs, terminator} -- required:true and non-user_supplied in every one of the 4 templates CURRENTLY in data/templates.json, independent of host. Not a claim these are universal requirements for all possible plasmids.",
+      "\"signal\" added as required for host \"B. subtilis\": required:true in all 2 of its documented template(s) (bsub_delnorte, bsub_secretion).",
+      "\"linker\" offered as optional for host \"B. subtilis\": declared optional in at least one of its documented template(s).",
+      "\"reporter\" offered as optional for host \"B. subtilis\": declared optional in at least one of its documented template(s).",
+      "\"ori_shuttle\" offered as optional for host \"B. subtilis\": declared optional in at least one of its documented template(s).",
+      "1 cached Registry reference construct(s) (BBa_J04450) independently show the same promoter/rbs/terminator pattern around a CDS -- corroborating evidence only, does not by itself add or remove a role.",
+      "Structured design goal \"Secretion\" selected explicitly and is supported for host \"B. subtilis\": both document \"Sec pathway export\" via an AmyE signal peptide (data/templates.json#bsub_secretion.slots[signal].note + bsub_delnorte.slots[signal].note)."
+    ],
+    "family": {
+      "id": "secretion",
+      "label": "Secretion"
+    },
+    "familyStatus": "Structured design goal \"Secretion\" selected explicitly and is supported for host \"B. subtilis\": both document \"Sec pathway export\" via an AmyE signal peptide (data/templates.json#bsub_secretion.slots[signal].note + bsub_delnorte.slots[signal].note).",
+    "goalInterpretation": {
+      "recognized": true,
+      "category": "secretion",
+      "matchedKeyword": null
+    },
+    "supportedGoalCategories": [
+      "inducible_regulated_expression",
+      "constitutive_expression",
+      "secretion",
+      "reporter_expression",
+      "conjugation_transfer"
+    ],
+    "supportedFamiliesForHost": [
+      {
+        "id": "inducible_regulated_expression",
+        "label": "Inducible / regulated expression"
+      },
+      {
+        "id": "constitutive_expression",
+        "label": "Constitutive expression"
+      },
+      {
+        "id": "secretion",
+        "label": "Secretion"
+      },
+      {
+        "id": "reporter_expression",
+        "label": "Reporter"
+      }
+    ]
+  },
+  "generationSummary": {
+    "templateBased": 4,
+    "beamSearch": 6
+  },
+  "partFirstStatus": "Generated 6 candidate(s) by beam search around 1 locked component(s) -- see requirementPlan for the derived role plan.",
+  "candidates": {
+    "valid": [
+      {
+        "candidateId": "bsub_secretion__default",
+        "origin": "template",
+        "templateLabel": "B. subtilis secreted expression (generic backbone)",
+        "valid": true,
+        "validationReasons": [],
+        "validationWarnings": [],
+        "roleOrder": [
+          {
+            "role": "ori",
+            "name": "pUB110 ori",
+            "id": "dn_pub110_ori",
+            "length": 1530
+          },
+          {
+            "role": "ori_shuttle",
+            "name": "ori",
+            "id": "sg_ori",
+            "length": 589
+          },
+          {
+            "role": "marker",
+            "name": "Spectinomycin Resistance (SpcR)",
+            "id": "dn_spectinomycin_resistance_spcr",
+            "length": 768
+          },
+          {
+            "role": "promoter",
+            "name": "Pveg Promoter",
+            "id": "dn_pveg_promoter",
+            "length": 101
+          },
+          {
+            "role": "rbs",
+            "name": "Shine-Dalgarno sequence",
+            "id": "sg_Shine_Dalgarno_sequence",
+            "length": 9
+          },
+          {
+            "role": "signal",
+            "name": "AmyE Signal Peptide",
+            "id": "dn_amye_signal_peptide",
+            "length": 123
+          },
+          {
+            "role": "cds",
+            "name": "Lysqdvp001 Endolysin",
+            "id": "dn_lysqdvp001_endolysin",
+            "length": 711
+          },
+          {
+            "role": "terminator",
+            "name": "rrnB T1 Terminator",
+            "id": "dn_rrnb_t1_terminator",
+            "length": 98
+          }
+        ],
+        "totalLength": 3929,
+        "gcPercent": 36.5,
+        "provenanceByRole": null,
+        "assemblyPlan": {
+          "method": "gibson",
+          "feasible": true,
+          "fragmentCount": 8,
+          "conflicts": []
+        },
+        "overallScore": 87,
+        "scoreBreakdown": {
+          "functionalCompleteness": 1,
+          "assemblyFeasibility": 1,
+          "verifiedPartSupport": 1,
+          "architectureEvidence": 1,
+          "sequenceQuality": 0.825,
+          "registrySupport": 0.25
+        },
+        "paretoOptimal": true
+      },
+      {
+        "candidateId": "bsub_secretion__swap-marker-dn_ermc_resistance_ermr",
+        "origin": "template",
+        "templateLabel": "B. subtilis secreted expression (generic backbone)",
+        "valid": true,
+        "validationReasons": [],
+        "validationWarnings": [],
+        "roleOrder": [
+          {
+            "role": "ori",
+            "name": "pUB110 ori",
+            "id": "dn_pub110_ori",
+            "length": 1530
+          },
+          {
+            "role": "ori_shuttle",
+            "name": "ori",
+            "id": "sg_ori",
+            "length": 589
+          },
+          {
+            "role": "marker",
+            "name": "Erythromycin Resistance (ErmR)",
+            "id": "dn_ermc_resistance_ermr",
+            "length": 735
+          },
+          {
+            "role": "promoter",
+            "name": "Pveg Promoter",
+            "id": "dn_pveg_promoter",
+            "length": 101
+          },
+          {
+            "role": "rbs",
+            "name": "Shine-Dalgarno sequence",
+            "id": "sg_Shine_Dalgarno_sequence",
+            "length": 9
+          },
+          {
+            "role": "signal",
+            "name": "AmyE Signal Peptide",
+            "id": "dn_amye_signal_peptide",
+            "length": 123
+          },
+          {
+            "role": "cds",
+            "name": "Lysqdvp001 Endolysin",
+            "id": "dn_lysqdvp001_endolysin",
+            "length": 711
+          },
+          {
+            "role": "terminator",
+            "name": "rrnB T1 Terminator",
+            "id": "dn_rrnb_t1_terminator",
+            "length": 98
+          }
+        ],
+        "totalLength": 3896,
+        "gcPercent": 35.7,
+        "provenanceByRole": null,
+        "assemblyPlan": {
+          "method": "gibson",
+          "feasible": true,
+          "fragmentCount": 8,
+          "conflicts": []
+        },
+        "overallScore": 86.3,
+        "scoreBreakdown": {
+          "functionalCompleteness": 1,
+          "assemblyFeasibility": 1,
+          "verifiedPartSupport": 1,
+          "architectureEvidence": 0.9785714285714286,
+          "sequenceQuality": 0.7850000000000001,
+          "registrySupport": 0.25
+        },
+        "paretoOptimal": false
+      },
+      {
+        "candidateId": "beam__1",
+        "origin": "beam_search",
+        "templateLabel": "Generated architecture #1",
+        "valid": true,
+        "validationReasons": [],
+        "validationWarnings": [],
+        "roleOrder": [
+          {
+            "role": "ori",
+            "name": "pUB110 ori",
+            "id": "dn_pub110_ori",
+            "length": 1530
+          },
+          {
+            "role": "ori_shuttle",
+            "name": "ori",
+            "id": "sg_ori",
+            "length": 589
+          },
+          {
+            "role": "marker",
+            "name": "Erythromycin Resistance (ErmR)",
+            "id": "dn_ermc_resistance_ermr",
+            "length": 735
+          },
+          {
+            "role": "promoter",
+            "name": "PkatA Promoter",
+            "id": "dn_pkata_promoter",
+            "length": 66
+          },
+          {
+            "role": "rbs",
+            "name": "RBS st7",
+            "id": "dn_rbs_st7",
+            "length": 27
+          },
+          {
+            "role": "signal",
+            "name": "AmyE Signal Peptide",
+            "id": "dn_amye_signal_peptide",
+            "length": 123
+          },
+          {
+            "role": "cds",
+            "name": "Lysqdvp001 Endolysin",
+            "id": "dn_lysqdvp001_endolysin",
+            "length": 711
+          },
+          {
+            "role": "terminator",
+            "name": "rrnB T1 Terminator",
+            "id": "dn_rrnb_t1_terminator",
+            "length": 98
+          }
+        ],
+        "totalLength": 3879,
+        "gcPercent": 35.7,
+        "provenanceByRole": {
+          "cds": "locked",
+          "ori": "host_curated",
+          "ori_shuttle": "host_curated",
+          "marker": "host_curated",
+          "promoter": "host_curated",
+          "rbs": "host_curated",
+          "signal": "family_recommended",
+          "terminator": "host_curated"
+        },
+        "assemblyPlan": {
+          "method": "gibson",
+          "feasible": true,
+          "fragmentCount": 8,
+          "conflicts": []
+        },
+        "overallScore": 80.6,
+        "scoreBreakdown": {
+          "functionalCompleteness": 0.8,
+          "assemblyFeasibility": 1,
+          "verifiedPartSupport": 1,
+          "architectureEvidence": 1,
+          "sequenceQuality": 0.7850000000000001,
+          "registrySupport": 0.25
+        },
+        "paretoOptimal": false
+      },
+      {
+        "candidateId": "beam__2",
+        "origin": "beam_search",
+        "templateLabel": "Generated architecture #2",
+        "valid": true,
+        "validationReasons": [],
+        "validationWarnings": [],
+        "roleOrder": [
+          {
+            "role": "ori",
+            "name": "pUB110 ori",
+            "id": "dn_pub110_ori",
+            "length": 1530
+          },
+          {
+            "role": "ori_shuttle",
+            "name": "ori",
+            "id": "sg_ori",
+            "length": 589
+          },
+          {
+            "role": "marker",
+            "name": "Erythromycin Resistance (ErmR)",
+            "id": "dn_ermc_resistance_ermr",
+            "length": 735
+          },
+          {
+            "role": "promoter",
+            "name": "PkatA Promoter",
+            "id": "dn_pkata_promoter",
+            "length": 66
+          },
+          {
+            "role": "rbs",
+            "name": "RBS st7",
+            "id": "dn_rbs_st7",
+            "length": 27
+          },
+          {
+            "role": "signal",
+            "name": "amyE Signal Peptide (SP33)",
+            "id": "dn_amye_signal_peptide_sp33",
+            "length": 99
+          },
+          {
+            "role": "cds",
+            "name": "Lysqdvp001 Endolysin",
+            "id": "dn_lysqdvp001_endolysin",
+            "length": 711
+          },
+          {
+            "role": "terminator",
+            "name": "rrnB T1 Terminator",
+            "id": "dn_rrnb_t1_terminator",
+            "length": 98
+          }
+        ],
+        "totalLength": 3855,
+        "gcPercent": 35.7,
+        "provenanceByRole": {
+          "cds": "locked",
+          "ori": "host_curated",
+          "ori_shuttle": "host_curated",
+          "marker": "host_curated",
+          "promoter": "host_curated",
+          "rbs": "host_curated",
+          "signal": "family_recommended",
+          "terminator": "host_curated"
+        },
+        "assemblyPlan": {
+          "method": "gibson",
+          "feasible": true,
+          "fragmentCount": 8,
+          "conflicts": []
+        },
+        "overallScore": 80.6,
+        "scoreBreakdown": {
+          "functionalCompleteness": 0.8,
+          "assemblyFeasibility": 1,
+          "verifiedPartSupport": 1,
+          "architectureEvidence": 1,
+          "sequenceQuality": 0.7850000000000001,
+          "registrySupport": 0.25
+        },
+        "paretoOptimal": false
+      },
+      {
+        "candidateId": "beam__3",
+        "origin": "beam_search",
+        "templateLabel": "Generated architecture #3",
+        "valid": true,
+        "validationReasons": [],
+        "validationWarnings": [],
+        "roleOrder": [
+          {
+            "role": "ori",
+            "name": "pUB110 ori",
+            "id": "dn_pub110_ori",
+            "length": 1530
+          },
+          {
+            "role": "ori_shuttle",
+            "name": "ori",
+            "id": "sg_ori",
+            "length": 589
+          },
+          {
+            "role": "marker",
+            "name": "Erythromycin Resistance (ErmR)",
+            "id": "dn_ermc_resistance_ermr",
+            "length": 735
+          },
+          {
+            "role": "promoter",
+            "name": "PkatA Promoter",
+            "id": "dn_pkata_promoter",
+            "length": 66
+          },
+          {
+            "role": "rbs",
+            "name": "Shine-Dalgarno sequence",
+            "id": "sg_Shine_Dalgarno_sequence",
+            "length": 9
+          },
+          {
+            "role": "signal",
+            "name": "AmyE Signal Peptide",
+            "id": "dn_amye_signal_peptide",
+            "length": 123
+          },
+          {
+            "role": "cds",
+            "name": "Lysqdvp001 Endolysin",
+            "id": "dn_lysqdvp001_endolysin",
+            "length": 711
+          },
+          {
+            "role": "terminator",
+            "name": "rrnB T1 Terminator",
+            "id": "dn_rrnb_t1_terminator",
+            "length": 98
+          }
+        ],
+        "totalLength": 3861,
+        "gcPercent": 35.8,
+        "provenanceByRole": {
+          "cds": "locked",
+          "ori": "host_curated",
+          "ori_shuttle": "host_curated",
+          "marker": "host_curated",
+          "promoter": "host_curated",
+          "rbs": "host_curated",
+          "signal": "family_recommended",
+          "terminator": "host_curated"
+        },
+        "assemblyPlan": {
+          "method": "gibson",
+          "feasible": true,
+          "fragmentCount": 8,
+          "conflicts": []
+        },
+        "overallScore": 80.7,
+        "scoreBreakdown": {
+          "functionalCompleteness": 0.8,
+          "assemblyFeasibility": 1,
+          "verifiedPartSupport": 1,
+          "architectureEvidence": 1,
+          "sequenceQuality": 0.7899999999999998,
+          "registrySupport": 0.25
+        },
+        "paretoOptimal": false
+      },
+      {
+        "candidateId": "beam__4",
+        "origin": "beam_search",
+        "templateLabel": "Generated architecture #4",
+        "valid": true,
+        "validationReasons": [],
+        "validationWarnings": [],
+        "roleOrder": [
+          {
+            "role": "ori",
+            "name": "pUB110 ori",
+            "id": "dn_pub110_ori",
+            "length": 1530
+          },
+          {
+            "role": "ori_shuttle",
+            "name": "ori",
+            "id": "sg_ori",
+            "length": 589
+          },
+          {
+            "role": "marker",
+            "name": "Erythromycin Resistance (ErmR)",
+            "id": "dn_ermc_resistance_ermr",
+            "length": 735
+          },
+          {
+            "role": "promoter",
+            "name": "PkatA Promoter",
+            "id": "dn_pkata_promoter",
+            "length": 66
+          },
+          {
+            "role": "rbs",
+            "name": "Shine-Dalgarno sequence",
+            "id": "sg_Shine_Dalgarno_sequence",
+            "length": 9
+          },
+          {
+            "role": "signal",
+            "name": "amyE Signal Peptide (SP33)",
+            "id": "dn_amye_signal_peptide_sp33",
+            "length": 99
+          },
+          {
+            "role": "cds",
+            "name": "Lysqdvp001 Endolysin",
+            "id": "dn_lysqdvp001_endolysin",
+            "length": 711
+          },
+          {
+            "role": "terminator",
+            "name": "rrnB T1 Terminator",
+            "id": "dn_rrnb_t1_terminator",
+            "length": 98
+          }
+        ],
+        "totalLength": 3837,
+        "gcPercent": 35.8,
+        "provenanceByRole": {
+          "cds": "locked",
+          "ori": "host_curated",
+          "ori_shuttle": "host_curated",
+          "marker": "host_curated",
+          "promoter": "host_curated",
+          "rbs": "host_curated",
+          "signal": "family_recommended",
+          "terminator": "host_curated"
+        },
+        "assemblyPlan": {
+          "method": "gibson",
+          "feasible": true,
+          "fragmentCount": 8,
+          "conflicts": []
+        },
+        "overallScore": 80.7,
+        "scoreBreakdown": {
+          "functionalCompleteness": 0.8,
+          "assemblyFeasibility": 1,
+          "verifiedPartSupport": 1,
+          "architectureEvidence": 1,
+          "sequenceQuality": 0.7899999999999998,
+          "registrySupport": 0.25
+        },
+        "paretoOptimal": false
+      },
+      {
+        "candidateId": "beam__5",
+        "origin": "beam_search",
+        "templateLabel": "Generated architecture #5",
+        "valid": true,
+        "validationReasons": [],
+        "validationWarnings": [],
+        "roleOrder": [
+          {
+            "role": "ori",
+            "name": "pUB110 ori",
+            "id": "dn_pub110_ori",
+            "length": 1530
+          },
+          {
+            "role": "ori_shuttle",
+            "name": "ori",
+            "id": "sg_ori",
+            "length": 589
+          },
+          {
+            "role": "marker",
+            "name": "Erythromycin Resistance (ErmR)",
+            "id": "dn_ermc_resistance_ermr",
+            "length": 735
+          },
+          {
+            "role": "promoter",
+            "name": "Pveg Promoter",
+            "id": "dn_pveg_promoter",
+            "length": 101
+          },
+          {
+            "role": "rbs",
+            "name": "RBS st7",
+            "id": "dn_rbs_st7",
+            "length": 27
+          },
+          {
+            "role": "signal",
+            "name": "AmyE Signal Peptide",
+            "id": "dn_amye_signal_peptide",
+            "length": 123
+          },
+          {
+            "role": "cds",
+            "name": "Lysqdvp001 Endolysin",
+            "id": "dn_lysqdvp001_endolysin",
+            "length": 711
+          },
+          {
+            "role": "terminator",
+            "name": "rrnB T1 Terminator",
+            "id": "dn_rrnb_t1_terminator",
+            "length": 98
+          }
+        ],
+        "totalLength": 3914,
+        "gcPercent": 35.6,
+        "provenanceByRole": {
+          "cds": "locked",
+          "ori": "host_curated",
+          "ori_shuttle": "host_curated",
+          "marker": "host_curated",
+          "promoter": "host_curated",
+          "rbs": "host_curated",
+          "signal": "family_recommended",
+          "terminator": "host_curated"
+        },
+        "assemblyPlan": {
+          "method": "gibson",
+          "feasible": true,
+          "fragmentCount": 8,
+          "conflicts": []
+        },
+        "overallScore": 80.5,
+        "scoreBreakdown": {
+          "functionalCompleteness": 0.8,
+          "assemblyFeasibility": 1,
+          "verifiedPartSupport": 1,
+          "architectureEvidence": 1,
+          "sequenceQuality": 0.78,
+          "registrySupport": 0.25
+        },
+        "paretoOptimal": false
+      },
+      {
+        "candidateId": "beam__6",
+        "origin": "beam_search",
+        "templateLabel": "Generated architecture #6",
+        "valid": true,
+        "validationReasons": [],
+        "validationWarnings": [],
+        "roleOrder": [
+          {
+            "role": "ori",
+            "name": "pUB110 ori",
+            "id": "dn_pub110_ori",
+            "length": 1530
+          },
+          {
+            "role": "ori_shuttle",
+            "name": "ori",
+            "id": "sg_ori",
+            "length": 589
+          },
+          {
+            "role": "marker",
+            "name": "Erythromycin Resistance (ErmR)",
+            "id": "dn_ermc_resistance_ermr",
+            "length": 735
+          },
+          {
+            "role": "promoter",
+            "name": "Pveg Promoter",
+            "id": "dn_pveg_promoter",
+            "length": 101
+          },
+          {
+            "role": "rbs",
+            "name": "RBS st7",
+            "id": "dn_rbs_st7",
+            "length": 27
+          },
+          {
+            "role": "signal",
+            "name": "amyE Signal Peptide (SP33)",
+            "id": "dn_amye_signal_peptide_sp33",
+            "length": 99
+          },
+          {
+            "role": "cds",
+            "name": "Lysqdvp001 Endolysin",
+            "id": "dn_lysqdvp001_endolysin",
+            "length": 711
+          },
+          {
+            "role": "terminator",
+            "name": "rrnB T1 Terminator",
+            "id": "dn_rrnb_t1_terminator",
+            "length": 98
+          }
+        ],
+        "totalLength": 3890,
+        "gcPercent": 35.6,
+        "provenanceByRole": {
+          "cds": "locked",
+          "ori": "host_curated",
+          "ori_shuttle": "host_curated",
+          "marker": "host_curated",
+          "promoter": "host_curated",
+          "rbs": "host_curated",
+          "signal": "family_recommended",
+          "terminator": "host_curated"
+        },
+        "assemblyPlan": {
+          "method": "gibson",
+          "feasible": true,
+          "fragmentCount": 8,
+          "conflicts": []
+        },
+        "overallScore": 80.5,
+        "scoreBreakdown": {
+          "functionalCompleteness": 0.8,
+          "assemblyFeasibility": 1,
+          "verifiedPartSupport": 1,
+          "architectureEvidence": 1,
+          "sequenceQuality": 0.78,
+          "registrySupport": 0.25
+        },
+        "paretoOptimal": false
+      }
+    ],
+    "rejected": [
+      {
+        "candidateId": "bsub_delnorte__default",
+        "origin": "template",
+        "templateLabel": "B. subtilis — Del Norte project plasmid (PerR/PkatA)",
+        "valid": false,
+        "validationReasons": [
+          "Part \"perR Promoter\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable.",
+          "Part \"perR Protein (truncated)\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable.",
+          "Part \"sfGFP CDS\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable.",
+          "Part \"T7 Terminator\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable."
+        ],
+        "validationWarnings": [],
+        "roleOrder": [
+          {
+            "role": "ori",
+            "name": "pUB110 ori",
+            "id": "dn_pub110_ori",
+            "length": 1530
+          },
+          {
+            "role": "promoter_perr",
+            "name": "perR Promoter",
+            "id": "dn_perr_promoter",
+            "length": 386
+          },
+          {
+            "role": "regulator",
+            "name": "perR Protein (truncated)",
+            "id": "dn_perr_protein",
+            "length": 333
+          },
+          {
+            "role": "terminator_perr",
+            "name": "perR Terminator",
+            "id": "dn_perr_terminator",
+            "length": 54
+          },
+          {
+            "role": "promoter",
+            "name": "PkatA Promoter",
+            "id": "dn_pkata_promoter",
+            "length": 66
+          },
+          {
+            "role": "rbs",
+            "name": "RBS st7",
+            "id": "dn_rbs_st7",
+            "length": 27
+          },
+          {
+            "role": "signal",
+            "name": "amyE Signal Peptide (SP33)",
+            "id": "dn_amye_signal_peptide_sp33",
+            "length": 99
+          },
+          {
+            "role": "linker",
+            "name": "MCS",
+            "id": "dn_mcs",
+            "length": 12
+          },
+          {
+            "role": "marker",
+            "name": "Kanamycin Resistance (KanR)",
+            "id": "dn_kanamycin_resistance_kanr",
+            "length": 810
+          },
+          {
+            "role": "cds",
+            "name": "Lysqdvp001 Endolysin",
+            "id": "dn_lysqdvp001_endolysin",
+            "length": 711
+          },
+          {
+            "role": "reporter",
+            "name": "sfGFP CDS",
+            "id": "dn_sfgfp_cds",
+            "length": 717
+          },
+          {
+            "role": "terminator",
+            "name": "T7 Terminator",
+            "id": "dn_t7_terminator",
+            "length": 54
+          }
+        ],
+        "totalLength": 4799,
+        "gcPercent": 38.1,
+        "provenanceByRole": null,
+        "assemblyPlan": null,
+        "overallScore": null,
+        "scoreBreakdown": null,
+        "paretoOptimal": null
+      },
+      {
+        "candidateId": "bsub_delnorte__swap-signal-dn_amye_signal_peptide",
+        "origin": "template",
+        "templateLabel": "B. subtilis — Del Norte project plasmid (PerR/PkatA)",
+        "valid": false,
+        "validationReasons": [
+          "Part \"perR Promoter\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable.",
+          "Part \"perR Protein (truncated)\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable.",
+          "Part \"sfGFP CDS\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable.",
+          "Part \"T7 Terminator\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable."
+        ],
+        "validationWarnings": [],
+        "roleOrder": [
+          {
+            "role": "ori",
+            "name": "pUB110 ori",
+            "id": "dn_pub110_ori",
+            "length": 1530
+          },
+          {
+            "role": "promoter_perr",
+            "name": "perR Promoter",
+            "id": "dn_perr_promoter",
+            "length": 386
+          },
+          {
+            "role": "regulator",
+            "name": "perR Protein (truncated)",
+            "id": "dn_perr_protein",
+            "length": 333
+          },
+          {
+            "role": "terminator_perr",
+            "name": "perR Terminator",
+            "id": "dn_perr_terminator",
+            "length": 54
+          },
+          {
+            "role": "promoter",
+            "name": "PkatA Promoter",
+            "id": "dn_pkata_promoter",
+            "length": 66
+          },
+          {
+            "role": "rbs",
+            "name": "RBS st7",
+            "id": "dn_rbs_st7",
+            "length": 27
+          },
+          {
+            "role": "signal",
+            "name": "AmyE Signal Peptide",
+            "id": "dn_amye_signal_peptide",
+            "length": 123
+          },
+          {
+            "role": "linker",
+            "name": "MCS",
+            "id": "dn_mcs",
+            "length": 12
+          },
+          {
+            "role": "marker",
+            "name": "Kanamycin Resistance (KanR)",
+            "id": "dn_kanamycin_resistance_kanr",
+            "length": 810
+          },
+          {
+            "role": "cds",
+            "name": "Lysqdvp001 Endolysin",
+            "id": "dn_lysqdvp001_endolysin",
+            "length": 711
+          },
+          {
+            "role": "reporter",
+            "name": "sfGFP CDS",
+            "id": "dn_sfgfp_cds",
+            "length": 717
+          },
+          {
+            "role": "terminator",
+            "name": "T7 Terminator",
+            "id": "dn_t7_terminator",
+            "length": 54
+          }
+        ],
+        "totalLength": 4823,
+        "gcPercent": 38.2,
+        "provenanceByRole": null,
+        "assemblyPlan": null,
+        "overallScore": null,
+        "scoreBreakdown": null,
+        "paretoOptimal": null
+      }
+    ]
+  },
+  "recommendation": {
+    "candidateId": "bsub_secretion__default",
+    "roleOrder": [
+      {
+        "role": "ori",
+        "name": "pUB110 ori",
+        "id": "dn_pub110_ori",
+        "length": 1530
+      },
+      {
+        "role": "ori_shuttle",
+        "name": "ori",
+        "id": "sg_ori",
+        "length": 589
+      },
+      {
+        "role": "marker",
+        "name": "Spectinomycin Resistance (SpcR)",
+        "id": "dn_spectinomycin_resistance_spcr",
+        "length": 768
+      },
+      {
+        "role": "promoter",
+        "name": "Pveg Promoter",
+        "id": "dn_pveg_promoter",
+        "length": 101
+      },
+      {
+        "role": "rbs",
+        "name": "Shine-Dalgarno sequence",
+        "id": "sg_Shine_Dalgarno_sequence",
+        "length": 9
+      },
+      {
+        "role": "signal",
+        "name": "AmyE Signal Peptide",
+        "id": "dn_amye_signal_peptide",
+        "length": 123
+      },
+      {
+        "role": "cds",
+        "name": "Lysqdvp001 Endolysin",
+        "id": "dn_lysqdvp001_endolysin",
+        "length": 711
+      },
+      {
+        "role": "terminator",
+        "name": "rrnB T1 Terminator",
+        "id": "dn_rrnb_t1_terminator",
+        "length": 98
+      }
+    ],
+    "totalLengthBp": 3929,
+    "gcPercent": 36.5,
+    "recommendationNote": "Top-ranked by scoreCandidate()'s weighted multi-objective formula among goal-compatible candidates (see `scoring` for the full breakdown, weights, and Pareto status) -- not a prediction of experimental success.",
+    "scoreBreakdown": {
+      "functionalCompleteness": 1,
+      "assemblyFeasibility": 1,
+      "verifiedPartSupport": 1,
+      "architectureEvidence": 1,
+      "sequenceQuality": 0.825,
+      "registrySupport": 0.25
+    },
+    "scoreNotes": {
+      "functionalCompleteness": "8/8 declared architecture slots resolved (required + optional).",
+      "assemblyFeasibility": "0 restriction-site conflict(s) across 8 resolved part(s).",
+      "verifiedPartSupport": "8/8 resolved parts are evidence:verified (weight 0.00 -- see file header: Phase 4C means this can now be <1.0 for a hard-valid candidate containing a registry_recorded/user_supplied part; weight left at 0 pending a deliberate decision on how much this should count).",
+      "architectureEvidence": "100% role-order agreement with the best-matching of the 4 real templates, 100% of resolved parts drawn from curated (non-fallback) sources.",
+      "sequenceQuality": "Assembled sequence is 36.5% GC (heuristic proxy: full credit 40-60%, linear falloff to 0 outside 20-80% -- a synthesis/PCR practicality proxy, not a function prediction).",
+      "registrySupport": "Registry-recorded structural support from 4 role-relevant reference construct(s): 0% exact-sequence part matches, best role-order similarity 50%, chassis unknown for every relevant reference. Structural/documented support only -- not a probability of experimental success."
+    },
+    "overallScore": 87,
+    "weightUsed": 1,
+    "paretoOptimal": true,
+    "strongestIn": [
+      "functionalCompleteness",
+      "assemblyFeasibility",
+      "verifiedPartSupport",
+      "architectureEvidence",
+      "sequenceQuality",
+      "registrySupport"
+    ],
+    "dominatedBy": [],
+    "registryComparison": [
+      {
+        "referenceId": "BBa_J04450",
+        "title": "RFP Coding Device",
+        "sourceUrl": "https://registry.igem.org/parts/bba-j04450",
+        "sharedExactParts": [],
+        "candidateRoleSequence": [
+          "ori",
+          "ori_shuttle",
+          "marker",
+          "promoter",
+          "rbs",
+          "signal",
+          "cds",
+          "terminator"
+        ],
+        "referenceRoleSequence": [
+          "promoter",
+          "rbs",
+          "cds",
+          "terminator"
+        ],
+        "roleOrderSimilarity": 0.5,
+        "chassisAgreement": "unknown",
+        "chassisDetail": "This reference documents no chassis (designedFor/characterisedIn/sourceOrganism are all empty) -- absence of data, not evidence of incompatibility.",
+        "structuralDifferences": {
+          "rolesOnlyInReference": [],
+          "rolesOnlyInCandidate": [
+            "ori",
+            "ori_shuttle",
+            "marker",
+            "signal"
+          ]
+        }
+      },
+      {
+        "referenceId": "BBa_E0840",
+        "title": "GFP generator",
+        "sourceUrl": "https://registry.igem.org/parts/bba-e0840",
+        "sharedExactParts": [],
+        "candidateRoleSequence": [
+          "ori",
+          "ori_shuttle",
+          "marker",
+          "promoter",
+          "rbs",
+          "signal",
+          "cds",
+          "terminator"
+        ],
+        "referenceRoleSequence": [
+          "rbs",
+          "cds",
+          "terminator",
+          "terminator"
+        ],
+        "roleOrderSimilarity": 0.38,
+        "chassisAgreement": "unknown",
+        "chassisDetail": "This reference documents no chassis (designedFor/characterisedIn/sourceOrganism are all empty) -- absence of data, not evidence of incompatibility.",
+        "structuralDifferences": {
+          "rolesOnlyInReference": [],
+          "rolesOnlyInCandidate": [
+            "ori",
+            "ori_shuttle",
+            "marker",
+            "promoter",
+            "signal"
+          ]
+        }
+      },
+      {
+        "referenceId": "BBa_I13521",
+        "title": "Ptet mRFP",
+        "sourceUrl": "https://registry.igem.org/parts/bba-i13521",
+        "sharedExactParts": [],
+        "candidateRoleSequence": [
+          "ori",
+          "ori_shuttle",
+          "marker",
+          "promoter",
+          "rbs",
+          "signal",
+          "cds",
+          "terminator"
+        ],
+        "referenceRoleSequence": [
+          "rbs",
+          "cds",
+          "terminator",
+          "terminator"
+        ],
+        "roleOrderSimilarity": 0.38,
+        "chassisAgreement": "unknown",
+        "chassisDetail": "This reference documents no chassis (designedFor/characterisedIn/sourceOrganism are all empty) -- absence of data, not evidence of incompatibility.",
+        "structuralDifferences": {
+          "rolesOnlyInReference": [],
+          "rolesOnlyInCandidate": [
+            "ori",
+            "ori_shuttle",
+            "marker",
+            "promoter",
+            "signal"
+          ]
+        }
+      },
+      {
+        "referenceId": "BBa_I13522",
+        "title": "pTet GFP",
+        "sourceUrl": "https://registry.igem.org/parts/bba-i13522",
+        "sharedExactParts": [],
+        "candidateRoleSequence": [
+          "ori",
+          "ori_shuttle",
+          "marker",
+          "promoter",
+          "rbs",
+          "signal",
+          "cds",
+          "terminator"
+        ],
+        "referenceRoleSequence": [
+          "rbs",
+          "cds",
+          "terminator",
+          "terminator"
+        ],
+        "roleOrderSimilarity": 0.38,
+        "chassisAgreement": "unknown",
+        "chassisDetail": "This reference documents no chassis (designedFor/characterisedIn/sourceOrganism are all empty) -- absence of data, not evidence of incompatibility.",
+        "structuralDifferences": {
+          "rolesOnlyInReference": [],
+          "rolesOnlyInCandidate": [
+            "ori",
+            "ori_shuttle",
+            "marker",
+            "promoter",
+            "signal"
+          ]
+        }
+      }
+    ],
+    "comparisonToRunnerUp": {
+      "deltas": [
+        {
+          "dimension": "functionalCompleteness",
+          "winner": 1,
+          "loser": 1,
+          "delta": 0
+        },
+        {
+          "dimension": "assemblyFeasibility",
+          "winner": 1,
+          "loser": 1,
+          "delta": 0
+        },
+        {
+          "dimension": "verifiedPartSupport",
+          "winner": 1,
+          "loser": 1,
+          "delta": 0
+        },
+        {
+          "dimension": "architectureEvidence",
+          "winner": 1,
+          "loser": 0.9785714285714286,
+          "delta": 0.021428571428571352
+        },
+        {
+          "dimension": "sequenceQuality",
+          "winner": 0.825,
+          "loser": 0.7850000000000001,
+          "delta": 0.039999999999999813
+        },
+        {
+          "dimension": "registrySupport",
+          "winner": 0.25,
+          "loser": 0.25,
+          "delta": 0
+        }
+      ],
+      "summary": "bsub_secretion__default outranks bsub_secretion__swap-marker-dn_ermc_resistance_ermr (overall 87 vs 86.3), driven mainly by sequenceQuality (83% vs 79%)."
+    }
+  },
+  "robustness": {
+    "trials": 1000,
+    "seed": 20260910,
+    "perturbationFraction": 0.2,
+    "perturbableDimensions": [
+      "functionalCompleteness",
+      "assemblyFeasibility",
+      "architectureEvidence",
+      "sequenceQuality",
+      "registrySupport"
+    ],
+    "perCandidate": {
+      "bsub_secretion__default": {
+        "topRankFrequency": 1,
+        "meanRank": 1,
+        "rankStdDev": 0,
+        "worstRank": 1,
+        "bestRank": 1
+      },
+      "bsub_secretion__swap-marker-dn_ermc_resistance_ermr": {
+        "topRankFrequency": 0,
+        "meanRank": 2,
+        "rankStdDev": 0,
+        "worstRank": 2,
+        "bestRank": 2
+      },
+      "beam__3": {
+        "topRankFrequency": 0,
+        "meanRank": 3.94,
+        "rankStdDev": 1,
+        "worstRank": 5,
+        "bestRank": 3
+      },
+      "beam__4": {
+        "topRankFrequency": 0,
+        "meanRank": 4.94,
+        "rankStdDev": 1,
+        "worstRank": 6,
+        "bestRank": 4
+      },
+      "beam__1": {
+        "topRankFrequency": 0,
+        "meanRank": 4.06,
+        "rankStdDev": 1,
+        "worstRank": 5,
+        "bestRank": 3
+      },
+      "beam__2": {
+        "topRankFrequency": 0,
+        "meanRank": 5.06,
+        "rankStdDev": 1,
+        "worstRank": 6,
+        "bestRank": 4
+      },
+      "beam__5": {
+        "topRankFrequency": 0,
+        "meanRank": 7,
+        "rankStdDev": 0,
+        "worstRank": 7,
+        "bestRank": 7
+      },
+      "beam__6": {
+        "topRankFrequency": 0,
+        "meanRank": 8,
+        "rankStdDev": 0,
+        "worstRank": 8,
+        "bestRank": 8
+      }
+    },
+    "recommended": {
+      "candidateId": "bsub_secretion__default",
+      "recommendationStability": 1,
+      "marginToSecond": 0.7,
+      "stabilityLabel": "highly stable",
+      "paretoStatus": "pareto_optimal",
+      "dominatedBy": [],
+      "tradeoffAlternatives": []
+    }
+  },
+  "assemblyPlan": {
+    "method": "gibson",
+    "feasible": true,
+    "fragmentCount": 8,
+    "junctionCount": 8,
+    "conflicts": [],
+    "primers": [
+      {
+        "part": "pUB110 ori",
+        "fwd": "AAATAAAATCATTATTTGATTTGGAGAGCACCGTTCTTAT",
+        "fwd_tm": 50.9,
+        "rev": "AAGGAACGTACAGACGGCTTGCAGAAAAAAAGGATCTCAA",
+        "rev_tm": 52.9
+      },
+      {
+        "part": "ori",
+        "fwd": "AAGCCGTCTGTACGTTCCTTTTGAGATCCTTTTTTTCTGC",
+        "fwd_tm": 46.8,
+        "rev": "TTTCCATAGGCTCCGCCCCCTTCAAATATATCCTCCTCAC",
+        "rev_tm": 59.1
+      },
+      {
+        "part": "Spectinomycin Resistance (SpcR)",
+        "fwd": "GGGGGCGGAGCCTATGGAAAGTGAGGAGGATATATTTGAA",
+        "fwd_tm": 46.8,
+        "rev": "TTATAATTTTTTTAATCTGTATATAAAAAATCTTTTTGTT",
+        "rev_tm": 36.5
+      },
+      {
+        "part": "Pveg Promoter",
+        "fwd": "ACAGATTAAAAAAATTATAAAACAAAAAGATTTTTTATAT",
+        "fwd_tm": 36.5,
+        "rev": "ACAAGAAAAAAATGCCTGCAACCTCCTTA",
+        "rev_tm": 46.8
+      },
+      {
+        "part": "Shine-Dalgarno sequence",
+        "fwd": "TGCAGGCATTTTTTTCTTGTTAAGGAGGT",
+        "fwd_tm": 26,
+        "rev": "ACCTCCTTATTGAATCGTTTTGCAAACAT",
+        "rev_tm": 26
+      },
+      {
+        "part": "AmyE Signal Peptide",
+        "fwd": "TAAGGAGGTATGTTTGCAAAACGATTCAA",
+        "fwd_tm": 44.7,
+        "rev": "CTCATTCGATTTGTTCGCCGCCCTTACGAATTAAAGTCAT",
+        "rev_tm": 52.9
+      },
+      {
+        "part": "Lysqdvp001 Endolysin",
+        "fwd": "CGGCGAACAAATCGAATGAGATGACTTTAATTCGTAAGGG",
+        "fwd_tm": 46.8,
+        "rev": "TTAAGCTTCGTTATTACTAGCAACTTAGTATAAAAAAAGC",
+        "rev_tm": 44.7
+      },
+      {
+        "part": "rrnB T1 Terminator",
+        "fwd": "CTAGTAATAACGAAGCTTAAGCTTTTTTTATACTAAGTTG",
+        "fwd_tm": 42.7,
+        "rev": "ATCAAATAATGATTTTATTTATAAGAACGGTGCTCTCCAA",
+        "rev_tm": 36.5
+      }
+    ],
+    "primerSupport": true,
+    "complexityProxy": 0.8,
+    "rationale": [
+      "Full support: every real template in this project uses gibson, and designer.js's gibsonPrimers() generates real 20bp-anneal + 20bp-overlap primers for every junction.",
+      "8 Gibson primer pair(s) generated (designer.js#gibsonPrimers, unmodified).",
+      "Gibson assembly uses homology overlaps, not a fixed restriction-enzyme set, so there is no enzyme-conflict check for this method (by design, see designGrammar.js's assembly-gibson-enzymes rule)."
+    ],
+    "missingSequenceParts": []
+  },
+  "explanation": {
+    "lines": [
+      {
+        "q": "Why was this architecture family selected?",
+        "a": "Structured design goal \"Secretion\" selected explicitly and is supported for host \"B. subtilis\": both document \"Sec pathway export\" via an AmyE signal peptide (data/templates.json#bsub_secretion.slots[signal].note + bsub_delnorte.slots[signal].note)."
+      },
+      {
+        "q": "Why are these biological roles required?",
+        "a": "Project-baseline required roles {ori, marker, promoter, rbs, terminator} -- required:true and non-user_supplied in every one of the 4 templates CURRENTLY in data/templates.json, independent of host. Not a claim these are universal requirements for all possible plasmids. \"signal\" added as required for host \"B. subtilis\": required:true in all 2 of its documented template(s) (bsub_delnorte, bsub_secretion). \"linker\" offered as optional for host \"B. subtilis\": declared optional in at least one of its documented template(s). \"reporter\" offered as optional for host \"B. subtilis\": declared optional in at least one of its documented template(s). \"ori_shuttle\" offered as optional for host \"B. subtilis\": declared optional in at least one of its documented template(s). 1 cached Registry reference construct(s) (BBa_J04450) independently show the same promoter/rbs/terminator pattern around a CDS -- corroborating evidence only, does not by itself add or remove a role. Structured design goal \"Secretion\" selected explicitly and is supported for host \"B. subtilis\": both document \"Sec pathway export\" via an AmyE signal peptide (data/templates.json#bsub_secretion.slots[signal].note + bsub_delnorte.slots[signal].note)."
+      },
+      {
+        "q": "Which decisions were based on project templates?",
+        "a": "Selected \"B. subtilis — Del Norte project plasmid (PerR/PkatA)\" (bsub_delnorte) for host \"B. subtilis\", role \"cds\": backbone fully resolved; anchor matches this template's own default candidate for the role; 4 backbone part(s) are evidence:placeholder (not yet buildable). Considered 1 alternative(s) for the same host/role: \"B. subtilis secreted expression (generic backbone)\" (bsub_secretion) -- backbone fully resolved; anchor is not this template's documented default for the role; all backbone parts are evidence:verified."
+      },
+      {
+        "q": "Why was each part selected (B. subtilis secreted expression (generic backbone))?",
+        "a": "pUB110 ori (role: ori, retrieval: host_curated, provenanceStatus: project_verified); ori (role: ori_shuttle, retrieval: host_curated, provenanceStatus: project_verified); Spectinomycin Resistance (SpcR) (role: marker, retrieval: host_curated, provenanceStatus: project_verified); Pveg Promoter (role: promoter, retrieval: host_curated, provenanceStatus: project_verified); Shine-Dalgarno sequence (role: rbs, retrieval: host_curated, provenanceStatus: project_verified); AmyE Signal Peptide (role: signal, retrieval: host_curated, provenanceStatus: project_verified); Lysqdvp001 Endolysin (role: cds, retrieval: host_curated, provenanceStatus: project_verified); rrnB T1 Terminator (role: terminator, retrieval: host_curated, provenanceStatus: project_verified)"
+      },
+      {
+        "q": "Which decisions were supported by Registry references?",
+        "a": "BBa_J04450 (RFP Coding Device): role-order similarity 50%, chassis unknown; BBa_E0840 (GFP generator): role-order similarity 38%, chassis unknown; BBa_I13521 (Ptet mRFP): role-order similarity 38%, chassis unknown; BBa_I13522 (pTet GFP): role-order similarity 38%, chassis unknown"
+      },
+      {
+        "q": "Which evidence is unknown?",
+        "a": "None -- every scored dimension had a value."
+      },
+      {
+        "q": "What alternatives were considered, and why was #2 ranked below #1?",
+        "a": "bsub_secretion__default outranks bsub_secretion__swap-marker-dn_ermc_resistance_ermr (overall 87 vs 86.3), driven mainly by sequenceQuality (83% vs 79%)."
+      },
+      {
+        "q": "How stable is this recommendation?",
+        "a": "100% top-rank frequency across 1000 weight-perturbation trials (highly stable). This is ranking-stability, not a probability of experimental success."
+      },
+      {
+        "q": "What hard constraints rejected other candidates?",
+        "a": "bsub_delnorte__default: Part \"perR Promoter\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable.; Part \"perR Protein (truncated)\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable.; Part \"sfGFP CDS\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable.; Part \"T7 Terminator\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable. | bsub_delnorte__swap-signal-dn_amye_signal_peptide: Part \"perR Promoter\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable.; Part \"perR Protein (truncated)\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable.; Part \"sfGFP CDS\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable.; Part \"T7 Terminator\" is evidence:placeholder (not yet resolved to this project's own verification standard) -- cannot be hard-validated as buildable."
+      },
+      {
+        "q": "What assembly considerations affected the result?",
+        "a": "Method \"gibson\": feasible, 8 fragments, 0 restriction-site conflict(s). Full support: every real template in this project uses gibson, and designer.js's gibsonPrimers() generates real 20bp-anneal + 20bp-overlap primers for every junction. 8 Gibson primer pair(s) generated (designer.js#gibsonPrimers, unmodified). Gibson assembly uses homology overlaps, not a fixed restriction-enzyme set, so there is no enzyme-conflict check for this method (by design, see designGrammar.js's assembly-gibson-enzymes rule)."
+      }
+    ]
+  },
+  "limitationsAndUnknownEvidence": {
+    "unscoredDimensions": [],
+    "placeholderEvidenceParts": [],
+    "registryPartsUsed": [],
+    "hostChassisNoteForRegistryComparison": [
+      {
+        "referenceId": "BBa_J04450",
+        "chassisAgreement": "unknown",
+        "chassisDetail": "This reference documents no chassis (designedFor/characterisedIn/sourceOrganism are all empty) -- absence of data, not evidence of incompatibility."
+      },
+      {
+        "referenceId": "BBa_E0840",
+        "chassisAgreement": "unknown",
+        "chassisDetail": "This reference documents no chassis (designedFor/characterisedIn/sourceOrganism are all empty) -- absence of data, not evidence of incompatibility."
+      },
+      {
+        "referenceId": "BBa_I13521",
+        "chassisAgreement": "unknown",
+        "chassisDetail": "This reference documents no chassis (designedFor/characterisedIn/sourceOrganism are all empty) -- absence of data, not evidence of incompatibility."
+      },
+      {
+        "referenceId": "BBa_I13522",
+        "chassisAgreement": "unknown",
+        "chassisDetail": "This reference documents no chassis (designedFor/characterisedIn/sourceOrganism are all empty) -- absence of data, not evidence of incompatibility."
+      }
+    ],
+    "assemblyMethodCaveat": "Gibson assembly is fully supported (real primer design via designer.js#gibsonPrimers) -- no caveat.",
+    "explicitStatement": "This design has NOT been synthesized or tested. Recommendation robustness (see 'robustness' above) measures RANKING STABILITY under scoring-weight perturbation only -- it is explicitly NOT a probability of experimental/wet-lab success."
+  }
+}

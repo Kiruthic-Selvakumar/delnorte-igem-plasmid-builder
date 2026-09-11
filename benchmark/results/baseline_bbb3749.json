@@ -1,0 +1,714 @@
+{
+  "milestone": "baseline",
+  "generated_at": "2026-09-11T04:09:31.394Z",
+  "disclaimer": "designer.js contains no trained model. This is a pass-rate benchmark of deterministic, rule-based logic (fillTemplate/scanSites/gibsonPrimers/design in designer.js) against hand-derived expected outputs -- not a machine-learning accuracy metric.",
+  "core_scope_note": "CORE SCORE -- milestone=baseline -- scope=core -- N=8 -- templates: ecoli_inducible(4), vnat_broadhost(4). B. subtilis (bsub_secretion) is NOT included in this score.",
+  "core": {
+    "n": 8,
+    "pass": 8,
+    "pct": 100,
+    "byTemplate": {
+      "ecoli_inducible": {
+        "n": 4,
+        "pass": 4
+      },
+      "vnat_broadhost": {
+        "n": 4,
+        "pass": 4
+      }
+    },
+    "secondary": {
+      "buildability_accuracy": 100,
+      "part_precision_macro": 1,
+      "part_recall_macro": 1,
+      "gap_precision_macro": 1,
+      "gap_recall_macro": 1,
+      "placeholder_precision_macro": 1,
+      "placeholder_recall_macro": 1
+    }
+  },
+  "bsub_readiness_note": "B. SUBTILIS READINESS (unscored smoke tests) -- milestone=baseline -- N=4. Verifies known-gap detection only, not a validated buildable construct. Deferred pending Task 1.",
+  "bsub_readiness": {
+    "n": 4,
+    "pass": 4,
+    "pct": 100,
+    "byTemplate": {
+      "bsub_secretion": {
+        "n": 4,
+        "pass": 4
+      }
+    },
+    "secondary": {
+      "buildability_accuracy": 100,
+      "part_precision_macro": 1,
+      "part_recall_macro": 1,
+      "gap_precision_macro": 1,
+      "gap_recall_macro": 1,
+      "placeholder_precision_macro": 1,
+      "placeholder_recall_macro": 1
+    }
+  },
+  "synthetic_note": "SYNTHETIC BRANCH-COVERAGE FIXTURES (unscored, own inline data, never counted in any score above) -- N=1, pass=1.",
+  "synthetic": {
+    "n": 1,
+    "pass": 1
+  },
+  "remaining_untested_branches": [
+    "CLAUDE.md-driven gap: scanSites()'s actual restriction-site pattern-matching (forward-site indexOf, reverse-complement via rc(), the per-part Set dedup) is untested by this entire benchmark. A meaningful positive-match test requires a part with a real sequence containing an enzyme recognition site, and CLAUDE.md prohibits writing literal DNA sequences into any file other than data/parts.json. A previous revision of this benchmark tested this with a synthetic sequence and was reverted for that reason -- see synthetic_fixtures.json's claude_md_compliance note.",
+    "CLAUDE.md-driven gap: design()'s enzyme-selection branches for assembly:'goldengate' and assembly:'biobrick' are untested for the same reason -- all 3 real templates use 'gibson', and a meaningful goldengate/biobrick test needs the same site-matching sequence content the item above rules out.",
+    "CLAUDE.md-driven gap: tm()'s Wallace-rule branch (anneal region <14nt) in gibsonPrimers() is untested -- every real part used in a buildable core/readiness/synthetic case is >=20bp, and building a shorter synthetic part to reach it would again require literal sequence content.",
+    "fillTemplate(): the 'user_supplied && !userCds && !required' no-op branch -- no template in data/templates.json currently declares a user_supplied slot with required:false, so this line is dead code under real data today. Low risk (single no-op branch), and not sequence-content-related so could be added later without any CLAUDE.md concern.",
+    "scanSites(): the 'if (!p.seq) continue' null-seq guard IS exercised (every synthetic part in trans_dependency_failure_01 has seq:null, and it runs under an empty enzyme list since that fixture uses assembly:'gibson'), but only with an empty enzyme list, so the guard's crash-prevention effect under a non-empty enzyme list remains unobserved -- same root cause as the two scanSites items above.",
+    "gibsonPrimers(): the modulo wrap-around indexing '(i - 1 + parts.length) % parts.length' has only been exercised with >=4 parts (real core/readiness cases). trans_dependency_failure_01 never calls gibsonPrimers at all (buildable=false). The 1-part and 2-part edge cases are untested and not sequence-content-related, so could be added later without any CLAUDE.md concern.",
+    "Free-text gap 'reason' strings (e.g. 'no candidate in catalog' vs 'no CDS provided' vs 'cognate replication protein missing') are intentionally never asserted verbatim by this benchmark -- a wording change would not be caught. Documented tradeoff, not a bug."
+  ],
+  "results": [
+    {
+      "case_id": "ecoli_inducible__gfp_normal__01",
+      "scope": "core",
+      "template_id": "ecoli_inducible",
+      "covers": "fillTemplate() normal path: every non-user-supplied required slot (ori,marker,promoter,rbs,terminator) resolves to its first-listed present candidate; optional signal slot has zero candidates and is correctly omitted from order_ids with no gap; verified user-supplied CDS is spliced into the cds slot; buildable=true; design()'s total_length/GC arithmetic and gibsonPrimers()'s Marmur-Doty Tm branch (20nt anneal region, >=14nt) all fire on real backbone-length sequences.",
+      "milestone": "baseline",
+      "pass": true,
+      "checks": {
+        "buildableMatch": true,
+        "orderMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "gcMatches": true,
+        "onlyATCG": true,
+        "primerCountMatches": true,
+        "lengthMatches": true
+      },
+      "actual": {
+        "buildable": true,
+        "order_ids": [
+          "sg_ori",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_GFP",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gap_roles": [],
+        "placeholder_names": [],
+        "total_length": 2380,
+        "gc": 45
+      },
+      "expected_used": {
+        "buildable": true,
+        "order_ids": [
+          "sg_ori",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_GFP",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [],
+        "placeholders": [],
+        "total_length": 2380
+      }
+    },
+    {
+      "case_id": "ecoli_inducible__lacI_sanity__02",
+      "scope": "core",
+      "template_id": "ecoli_inducible",
+      "covers": "Same resolved-backbone path as case 01, substituting a second, differently-sized verified CDS (1083bp vs GFP's 714bp) purely as an arithmetic sanity check on total_length/GC -- guards against a bug in case 01 that happens to cancel out for GFP's specific length. Does not exercise a different branch of fillTemplate().",
+      "milestone": "baseline",
+      "pass": true,
+      "checks": {
+        "buildableMatch": true,
+        "orderMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "gcMatches": true,
+        "onlyATCG": true,
+        "primerCountMatches": true,
+        "lengthMatches": true
+      },
+      "actual": {
+        "buildable": true,
+        "order_ids": [
+          "sg_ori",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_lacI",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gap_roles": [],
+        "placeholder_names": [],
+        "total_length": 2749,
+        "gc": 51
+      },
+      "expected_used": {
+        "buildable": true,
+        "order_ids": [
+          "sg_ori",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_lacI",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [],
+        "placeholders": [],
+        "total_length": 2749
+      }
+    },
+    {
+      "case_id": "ecoli_inducible__placeholder_cds__03",
+      "scope": "core",
+      "template_id": "ecoli_inducible",
+      "covers": "REFRESHED (was the placeholder-evidence-gating branch; see stale_fixture_update note): dn_lysqdvp001_endolysin is now evidence=verified/seq=711bp in data/parts.json, so this case exercises the same resolved-backbone path as ecoli_inducible__gfp_normal__01/lacI_sanity__02, not the placeholder-gating branch. The placeholder/buildable=false gate this case was written to test is no longer reachable by any core-scope case on real data (see run_benchmark.mjs's REMAINING_UNTESTED_BRANCHES).",
+      "milestone": "baseline",
+      "pass": true,
+      "checks": {
+        "buildableMatch": true,
+        "orderMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "gcMatches": true,
+        "onlyATCG": true,
+        "primerCountMatches": true,
+        "lengthMatches": true
+      },
+      "actual": {
+        "buildable": true,
+        "order_ids": [
+          "sg_ori",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "dn_lysqdvp001_endolysin",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gap_roles": [],
+        "placeholder_names": [],
+        "total_length": 2377,
+        "gc": 45.2
+      },
+      "expected_used": {
+        "buildable": true,
+        "order_ids": [
+          "sg_ori",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "dn_lysqdvp001_endolysin",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [],
+        "placeholders": [],
+        "total_length": 2377
+      }
+    },
+    {
+      "case_id": "ecoli_inducible__no_cds__04",
+      "scope": "core",
+      "template_id": "ecoli_inducible",
+      "covers": "fillTemplate() required+user_supplied slot with no CDS provided: gap correctly recorded for role=cds; buildable=false; backbone parts still resolve and appear in order_ids (proves the cds gap does not suppress unrelated slot resolution).",
+      "milestone": "baseline",
+      "pass": true,
+      "checks": {
+        "buildableMatch": true,
+        "orderMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "gcMatches": true,
+        "onlyATCG": true,
+        "primerCountMatches": true,
+        "lengthMatches": true
+      },
+      "actual": {
+        "buildable": false,
+        "order_ids": [
+          "sg_ori",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gap_roles": [
+          "cds"
+        ],
+        "placeholder_names": [],
+        "total_length": 1666,
+        "gc": 47.7
+      },
+      "expected_used": {
+        "buildable": false,
+        "order_ids": [
+          "sg_ori",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [
+          {
+            "role": "cds"
+          }
+        ],
+        "placeholders": [],
+        "total_length": 1666
+      }
+    },
+    {
+      "case_id": "vnat_broadhost__gfp_normal__01",
+      "scope": "core",
+      "template_id": "vnat_broadhost",
+      "covers": "fillTemplate() normal path PLUS the trans-dependency SUCCESS branch: ori candidate sg_pBBR1_oriV requires sg_pBBR1_Rep in trans per templates.json's 'requires' clause, and the rep slot resolves to exactly that part, so the dependency check passes with no gap. orit is optional but resolves to sg_RSF1010_oriT. Verified CDS -> buildable=true.",
+      "milestone": "baseline",
+      "pass": true,
+      "checks": {
+        "buildableMatch": true,
+        "orderMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "gcMatches": true,
+        "onlyATCG": true,
+        "primerCountMatches": true,
+        "lengthMatches": true
+      },
+      "actual": {
+        "buildable": true,
+        "order_ids": [
+          "sg_pBBR1_oriV",
+          "sg_pBBR1_Rep",
+          "sg_RSF1010_oriT",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_GFP",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gap_roles": [],
+        "placeholder_names": [],
+        "total_length": 3312,
+        "gc": 51.8
+      },
+      "expected_used": {
+        "buildable": true,
+        "order_ids": [
+          "sg_pBBR1_oriV",
+          "sg_pBBR1_Rep",
+          "sg_RSF1010_oriT",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_GFP",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [],
+        "placeholders": [],
+        "total_length": 3312
+      }
+    },
+    {
+      "case_id": "vnat_broadhost__lacI_sanity__02",
+      "scope": "core",
+      "template_id": "vnat_broadhost",
+      "covers": "Same resolved-backbone + satisfied-dependency path as case 01, second verified CDS as an arithmetic sanity check only (same rationale as ecoli_inducible__lacI_sanity__02).",
+      "milestone": "baseline",
+      "pass": true,
+      "checks": {
+        "buildableMatch": true,
+        "orderMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "gcMatches": true,
+        "onlyATCG": true,
+        "primerCountMatches": true,
+        "lengthMatches": true
+      },
+      "actual": {
+        "buildable": true,
+        "order_ids": [
+          "sg_pBBR1_oriV",
+          "sg_pBBR1_Rep",
+          "sg_RSF1010_oriT",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_lacI",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gap_roles": [],
+        "placeholder_names": [],
+        "total_length": 3681,
+        "gc": 55.6
+      },
+      "expected_used": {
+        "buildable": true,
+        "order_ids": [
+          "sg_pBBR1_oriV",
+          "sg_pBBR1_Rep",
+          "sg_RSF1010_oriT",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_lacI",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [],
+        "placeholders": [],
+        "total_length": 3681
+      }
+    },
+    {
+      "case_id": "vnat_broadhost__placeholder_cds__03",
+      "scope": "core",
+      "template_id": "vnat_broadhost",
+      "covers": "REFRESHED (was the placeholder-evidence-gating branch; see stale_fixture_update note): dn_lysqdvp001_endolysin is now evidence=verified/seq=711bp in data/parts.json, so this case exercises the same resolved-backbone + satisfied-dependency path as vnat_broadhost__gfp_normal__01/lacI_sanity__02, not the placeholder-gating branch. The placeholder/buildable=false gate this case was written to test is no longer reachable by any core-scope case on real data (see run_benchmark.mjs's REMAINING_UNTESTED_BRANCHES).",
+      "milestone": "baseline",
+      "pass": true,
+      "checks": {
+        "buildableMatch": true,
+        "orderMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "gcMatches": true,
+        "onlyATCG": true,
+        "primerCountMatches": true,
+        "lengthMatches": true
+      },
+      "actual": {
+        "buildable": true,
+        "order_ids": [
+          "sg_pBBR1_oriV",
+          "sg_pBBR1_Rep",
+          "sg_RSF1010_oriT",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "dn_lysqdvp001_endolysin",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gap_roles": [],
+        "placeholder_names": [],
+        "total_length": 3309,
+        "gc": 51.9
+      },
+      "expected_used": {
+        "buildable": true,
+        "order_ids": [
+          "sg_pBBR1_oriV",
+          "sg_pBBR1_Rep",
+          "sg_RSF1010_oriT",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "dn_lysqdvp001_endolysin",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [],
+        "placeholders": [],
+        "total_length": 3309
+      }
+    },
+    {
+      "case_id": "vnat_broadhost__no_cds__04",
+      "scope": "core",
+      "template_id": "vnat_broadhost",
+      "covers": "Same no-CDS gap check as ecoli_inducible__no_cds__04, applied to the vnat_broadhost template (also confirms the dependency-satisfied ori/rep resolution is independent of whether a CDS was supplied).",
+      "milestone": "baseline",
+      "pass": true,
+      "checks": {
+        "buildableMatch": true,
+        "orderMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "gcMatches": true,
+        "onlyATCG": true,
+        "primerCountMatches": true,
+        "lengthMatches": true
+      },
+      "actual": {
+        "buildable": false,
+        "order_ids": [
+          "sg_pBBR1_oriV",
+          "sg_pBBR1_Rep",
+          "sg_RSF1010_oriT",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gap_roles": [
+          "cds"
+        ],
+        "placeholder_names": [],
+        "total_length": 2598,
+        "gc": 55.4
+      },
+      "expected_used": {
+        "buildable": false,
+        "order_ids": [
+          "sg_pBBR1_oriV",
+          "sg_pBBR1_Rep",
+          "sg_RSF1010_oriT",
+          "sg_KanR",
+          "sg_araBAD_promoter_(2)",
+          "sg_RBS_(2)",
+          "sg_rrnB_T1_terminator"
+        ],
+        "gaps": [
+          {
+            "role": "cds"
+          }
+        ],
+        "placeholders": [],
+        "total_length": 2598
+      }
+    },
+    {
+      "case_id": "bsub_secretion__endolysin__01",
+      "scope": "bsub_readiness",
+      "template_id": "bsub_secretion",
+      "covers": "REFRESHED (Task 1 landed, and further, the gene itself became verified too): bsub_secretion's ori/marker/promoter/signal candidates are now real dn_* parts (no more TODO_*), and dn_lysqdvp001_endolysin -- the project's real intended gene -- is itself now evidence=verified/seq=711bp (previously placeholder/null). Both the original 'baseline' 4-gap prediction and the original 'post_task1' prediction (buildable should remain false because the gene stays a placeholder) are stale: reality moved past what post_task1 anticipated. This case is now a straightforward fully-resolved-construct smoke test. Still scope=bsub_readiness per the team's instruction to preserve the core/readiness split -- not promoted to core ECC.",
+      "milestone": "baseline",
+      "pass": true,
+      "checks": {
+        "buildableMatch": true,
+        "orderMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "gcMatches": true,
+        "onlyATCG": true,
+        "primerCountMatches": true,
+        "lengthMatches": true
+      },
+      "actual": {
+        "buildable": true,
+        "order_ids": [
+          "dn_pub110_ori",
+          "sg_ori",
+          "dn_spectinomycin_resistance_spcr",
+          "dn_pveg_promoter",
+          "sg_Shine_Dalgarno_sequence",
+          "dn_amye_signal_peptide",
+          "dn_lysqdvp001_endolysin",
+          "dn_rrnb_t1_terminator"
+        ],
+        "gap_roles": [],
+        "placeholder_names": [],
+        "total_length": 3929,
+        "gc": 36.5
+      },
+      "expected_used": {
+        "buildable": true,
+        "gap_roles": [],
+        "placeholder_ids": [],
+        "order_ids": [
+          "dn_pub110_ori",
+          "sg_ori",
+          "dn_spectinomycin_resistance_spcr",
+          "dn_pveg_promoter",
+          "sg_Shine_Dalgarno_sequence",
+          "dn_amye_signal_peptide",
+          "dn_lysqdvp001_endolysin",
+          "dn_rrnb_t1_terminator"
+        ],
+        "total_length": 3929
+      }
+    },
+    {
+      "case_id": "bsub_secretion__gfp__02",
+      "scope": "bsub_readiness",
+      "template_id": "bsub_secretion",
+      "covers": "REFRESHED (Task 1 landed): bsub_secretion's ori/marker/promoter/signal candidates are now real dn_* parts (no more TODO_*), so this case's original 'baseline' 4-gap prediction is stale. The original 'post_task1' prediction (fully buildable) was correct in shape -- filling in its previously-null order_ids/total_length now that the real part IDs are known.",
+      "milestone": "baseline",
+      "pass": true,
+      "checks": {
+        "buildableMatch": true,
+        "orderMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "gcMatches": true,
+        "onlyATCG": true,
+        "primerCountMatches": true,
+        "lengthMatches": true
+      },
+      "actual": {
+        "buildable": true,
+        "order_ids": [
+          "dn_pub110_ori",
+          "sg_ori",
+          "dn_spectinomycin_resistance_spcr",
+          "dn_pveg_promoter",
+          "sg_Shine_Dalgarno_sequence",
+          "dn_amye_signal_peptide",
+          "sg_GFP",
+          "dn_rrnb_t1_terminator"
+        ],
+        "gap_roles": [],
+        "placeholder_names": [],
+        "total_length": 3932,
+        "gc": 36.4
+      },
+      "expected_used": {
+        "buildable": true,
+        "gap_roles": [],
+        "placeholder_ids": [],
+        "order_ids": [
+          "dn_pub110_ori",
+          "sg_ori",
+          "dn_spectinomycin_resistance_spcr",
+          "dn_pveg_promoter",
+          "sg_Shine_Dalgarno_sequence",
+          "dn_amye_signal_peptide",
+          "sg_GFP",
+          "dn_rrnb_t1_terminator"
+        ],
+        "total_length": 3932
+      }
+    },
+    {
+      "case_id": "bsub_secretion__lacI__03",
+      "scope": "bsub_readiness",
+      "template_id": "bsub_secretion",
+      "covers": "REFRESHED (Task 1 landed): bsub_secretion's ori/marker/promoter/signal candidates are now real dn_* parts (no more TODO_*), so this case's original 'baseline' 4-gap prediction is stale. The original 'post_task1' prediction (fully buildable) was correct in shape -- filling in its previously-null order_ids/total_length now that the real part IDs are known.",
+      "milestone": "baseline",
+      "pass": true,
+      "checks": {
+        "buildableMatch": true,
+        "orderMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "gcMatches": true,
+        "onlyATCG": true,
+        "primerCountMatches": true,
+        "lengthMatches": true
+      },
+      "actual": {
+        "buildable": true,
+        "order_ids": [
+          "dn_pub110_ori",
+          "sg_ori",
+          "dn_spectinomycin_resistance_spcr",
+          "dn_pveg_promoter",
+          "sg_Shine_Dalgarno_sequence",
+          "dn_amye_signal_peptide",
+          "sg_lacI",
+          "dn_rrnb_t1_terminator"
+        ],
+        "gap_roles": [],
+        "placeholder_names": [],
+        "total_length": 4301,
+        "gc": 41
+      },
+      "expected_used": {
+        "buildable": true,
+        "gap_roles": [],
+        "placeholder_ids": [],
+        "order_ids": [
+          "dn_pub110_ori",
+          "sg_ori",
+          "dn_spectinomycin_resistance_spcr",
+          "dn_pveg_promoter",
+          "sg_Shine_Dalgarno_sequence",
+          "dn_amye_signal_peptide",
+          "sg_lacI",
+          "dn_rrnb_t1_terminator"
+        ],
+        "total_length": 4301
+      }
+    },
+    {
+      "case_id": "bsub_secretion__no_cds__04",
+      "scope": "bsub_readiness",
+      "template_id": "bsub_secretion",
+      "covers": "REFRESHED (Task 1 landed): bsub_secretion's ori/marker/promoter/signal candidates are now real dn_* parts (no more TODO_*), so this case's original 'baseline' 5-gap prediction is stale -- only the cds gap remains, since no gene was supplied. The original 'post_task1' prediction (gap_roles=['cds'] only) was correct in shape -- filling in its previously-null order_ids/total_length now that the real part IDs are known.",
+      "milestone": "baseline",
+      "pass": true,
+      "checks": {
+        "buildableMatch": true,
+        "orderMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "gcMatches": true,
+        "onlyATCG": true,
+        "primerCountMatches": true,
+        "lengthMatches": true
+      },
+      "actual": {
+        "buildable": false,
+        "order_ids": [
+          "dn_pub110_ori",
+          "sg_ori",
+          "dn_spectinomycin_resistance_spcr",
+          "dn_pveg_promoter",
+          "sg_Shine_Dalgarno_sequence",
+          "dn_amye_signal_peptide",
+          "dn_rrnb_t1_terminator"
+        ],
+        "gap_roles": [
+          "cds"
+        ],
+        "placeholder_names": [],
+        "total_length": 3218,
+        "gc": 35.9
+      },
+      "expected_used": {
+        "buildable": false,
+        "gap_roles": [
+          "cds"
+        ],
+        "placeholder_ids": [],
+        "order_ids": [
+          "dn_pub110_ori",
+          "sg_ori",
+          "dn_spectinomycin_resistance_spcr",
+          "dn_pveg_promoter",
+          "sg_Shine_Dalgarno_sequence",
+          "dn_amye_signal_peptide",
+          "dn_rrnb_t1_terminator"
+        ],
+        "total_length": 3218
+      }
+    }
+  ],
+  "synthetic_results": [
+    {
+      "fixture_id": "trans_dependency_failure_01",
+      "covers": "fillTemplate(): the trans-dependency-FAILURE branch (designer.js, the 'cognate replication protein missing' gap). No real template+catalog combination in data/templates.json / data/parts.json currently reaches this branch, because vnat_broadhost's first-choice ori (sg_pBBR1_oriV) always finds its cognate Rep (sg_pBBR1_Rep) present. This fixture deliberately omits the required cognate part so the ori slot resolves to a candidate whose 'requires' list cannot be satisfied. This test needs no sequence content at all -- it exercises slot/candidate/requires-graph logic, not sequence arithmetic -- so every part uses seq:null, matching CLAUDE.md's own convention for unknown sequences.",
+      "pass": true,
+      "checks": {
+        "orderMatch": true,
+        "buildableMatch": true,
+        "gapsMatch": true,
+        "placeholdersMatch": true,
+        "siteConflictsMatch": true,
+        "lengthMatch": true
+      },
+      "actual": {
+        "buildable": false,
+        "order_ids": [
+          "synth_oriX",
+          "synth_markerX",
+          "synth_cds1",
+          "synth_termX"
+        ],
+        "gaps": [
+          {
+            "role": "ori",
+            "reason": "cognate replication protein missing",
+            "missing": [
+              "synth_repX"
+            ]
+          }
+        ],
+        "placeholders": [
+          "Synthetic OriX",
+          "Synthetic MarkerX",
+          "Synthetic CDS1",
+          "Synthetic TermX"
+        ],
+        "siteConflicts": [],
+        "total_length": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,221 @@
+{
+  "measuredAt": "2026-09-11T00:24:55.336Z",
+  "nodeVersion": "v24.0.0",
+  "cases": [
+    {
+      "case": "E. coli / sg_GFP / inducible_regulated_expression (typical case)",
+      "endToEndRuntimeMs": 104.49,
+      "partialsConsidered": 39,
+      "prunedByIncompatibility": 0,
+      "prunedByDependency": 1,
+      "beamSizeByStage": [
+        {
+          "role": "ori",
+          "beamSize": 2,
+          "nextBeamBeforeTrim": 2
+        },
+        {
+          "role": "marker",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 6
+        },
+        {
+          "role": "promoter",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 10
+        },
+        {
+          "role": "rbs",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 10
+        },
+        {
+          "role": "signal",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 5
+        },
+        {
+          "role": "terminator",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 10
+        }
+      ],
+      "beamSearchCandidatesGenerated": 5,
+      "beamSearchCandidatesValid": 5,
+      "templateCandidatesGenerated": 6,
+      "totalCandidatesGenerated": 11,
+      "robustnessTrials": 500,
+      "ok": true
+    },
+    {
+      "case": "B. subtilis / dn_lysqdvp001_endolysin / secretion (real Dry Lab case study, Step 13)",
+      "endToEndRuntimeMs": 46.45,
+      "partialsConsidered": 62,
+      "prunedByIncompatibility": 0,
+      "prunedByDependency": 0,
+      "beamSizeByStage": [
+        {
+          "role": "ori",
+          "beamSize": 1,
+          "nextBeamBeforeTrim": 1
+        },
+        {
+          "role": "ori_shuttle",
+          "beamSize": 2,
+          "nextBeamBeforeTrim": 2
+        },
+        {
+          "role": "marker",
+          "beamSize": 6,
+          "nextBeamBeforeTrim": 6
+        },
+        {
+          "role": "promoter",
+          "beamSize": 6,
+          "nextBeamBeforeTrim": 12
+        },
+        {
+          "role": "rbs",
+          "beamSize": 6,
+          "nextBeamBeforeTrim": 12
+        },
+        {
+          "role": "signal",
+          "beamSize": 6,
+          "nextBeamBeforeTrim": 12
+        },
+        {
+          "role": "reporter",
+          "beamSize": 6,
+          "nextBeamBeforeTrim": 12
+        },
+        {
+          "role": "terminator",
+          "beamSize": 6,
+          "nextBeamBeforeTrim": 12
+        },
+        {
+          "role": "linker",
+          "beamSize": 6,
+          "nextBeamBeforeTrim": 6
+        }
+      ],
+      "beamSearchCandidatesGenerated": 6,
+      "beamSearchCandidatesValid": 6,
+      "templateCandidatesGenerated": 4,
+      "totalCandidatesGenerated": 10,
+      "robustnessTrials": 1000,
+      "ok": true
+    },
+    {
+      "case": "B. subtilis / PkatA promoter anchor + locked endolysin cds (non-CDS-anchor / multi-locked-component case)",
+      "endToEndRuntimeMs": 24.56,
+      "partialsConsidered": 43,
+      "prunedByIncompatibility": 0,
+      "prunedByDependency": 0,
+      "beamSizeByStage": [
+        {
+          "role": "ori",
+          "beamSize": 1,
+          "nextBeamBeforeTrim": 1
+        },
+        {
+          "role": "ori_shuttle",
+          "beamSize": 2,
+          "nextBeamBeforeTrim": 2
+        },
+        {
+          "role": "marker",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 6
+        },
+        {
+          "role": "rbs",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 10
+        },
+        {
+          "role": "signal",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 10
+        },
+        {
+          "role": "reporter",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 10
+        },
+        {
+          "role": "terminator",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 10
+        },
+        {
+          "role": "linker",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 5
+        }
+      ],
+      "beamSearchCandidatesGenerated": 5,
+      "beamSearchCandidatesValid": 5,
+      "templateCandidatesGenerated": 0,
+      "totalCandidatesGenerated": 5,
+      "robustnessTrials": 500,
+      "ok": true
+    },
+    {
+      "case": "V. natriegens / sg_GFP / conjugation_transfer (widest role set: ori_shuttle + orit + signal-less)",
+      "endToEndRuntimeMs": 31.37,
+      "partialsConsidered": 42,
+      "prunedByIncompatibility": 0,
+      "prunedByDependency": 2,
+      "beamSizeByStage": [
+        {
+          "role": "ori",
+          "beamSize": 1,
+          "nextBeamBeforeTrim": 1
+        },
+        {
+          "role": "rep",
+          "beamSize": 1,
+          "nextBeamBeforeTrim": 1
+        },
+        {
+          "role": "orit",
+          "beamSize": 3,
+          "nextBeamBeforeTrim": 3
+        },
+        {
+          "role": "marker",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 6
+        },
+        {
+          "role": "promoter",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 10
+        },
+        {
+          "role": "rbs",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 10
+        },
+        {
+          "role": "signal",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 5
+        },
+        {
+          "role": "terminator",
+          "beamSize": 5,
+          "nextBeamBeforeTrim": 10
+        }
+      ],
+      "beamSearchCandidatesGenerated": 5,
+      "beamSearchCandidatesValid": 5,
+      "templateCandidatesGenerated": 6,
+      "totalCandidatesGenerated": 11,
+      "robustnessTrials": 500,
+      "ok": true
+    }
+  ]
+}

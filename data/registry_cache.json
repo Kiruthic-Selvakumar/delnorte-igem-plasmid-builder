@@ -1,0 +1,519 @@
+{
+  "schema_version": 1,
+  "provenance": "Curated snapshot fetched by exact Registry ID from the official iGEM Registry API (https://api.registry.igem.org) on 2026-09-10T18:09:42.166Z. Every record is registry_recorded provenance only -- Registry presence, age, or usageCount is NOT treated as biological/experimental verification. \"establishedReference\" means only: created >= 365 days before fetch AND usageCount >= 5 within this Registry's own usage tracking -- a data-provenance signal, not a claim about wet-lab validation. \"Plasmid Vector\" role records are mapped to this project's local \"origin\" bucket as a simplification (a whole backbone bundles an origin + marker; the local vocabulary has no separate \"backbone\" role).",
+  "sourceApi": "https://api.registry.igem.org",
+  "fetchedAt": "2026-09-10T18:09:42.166Z",
+  "parts": [
+    {
+      "registryId": "BBa_J23100",
+      "uuid": "9b3b1fbd-1557-49a5-964a-7f8b491c9101",
+      "slug": "bba-j23100",
+      "title": "constitutive promoter family member",
+      "role": "Promoter",
+      "roleSO": "SO:0000167",
+      "mappedLocalRole": "promoter",
+      "sequence": "TTGACGGCTAGCTCAGTCCTAGGTACAGTGCTAGC",
+      "length": 35,
+      "chassis": {
+        "designedFor": [],
+        "characterisedIn": [],
+        "sourceOrganism": []
+      },
+      "compatibility": {
+        "rfc10": {
+          "compatible": true,
+          "motif": null,
+          "index": null
+        },
+        "rfc1000": {
+          "compatible": true,
+          "motif": null,
+          "index": null
+        }
+      },
+      "usageCount": 1304,
+      "createdAt": "2006-08-04T00:00:00.000Z",
+      "updatedAt": "2021-09-08T20:23:14.000Z",
+      "sourceUrl": "https://registry.igem.org/parts/bba-j23100",
+      "fetchedAt": "2026-09-10T18:09:42.166Z",
+      "provenanceStatus": "registry_recorded",
+      "establishedReference": true
+    },
+    {
+      "registryId": "BBa_B0034",
+      "uuid": "3c51179f-e370-4738-84b7-91773f750175",
+      "slug": "bba-b0034",
+      "title": "RBS (Elowitz 1999) -- defines RBS efficiency",
+      "role": "Ribosome Entry Site",
+      "roleSO": "SO:0000139",
+      "mappedLocalRole": "rbs",
+      "sequence": "AAAGAGGAGAAA",
+      "length": 12,
+      "chassis": {
+        "designedFor": [],
+        "characterisedIn": [],
+        "sourceOrganism": []
+      },
+      "compatibility": {
+        "rfc10": {
+          "compatible": true,
+          "motif": null,
+          "index": null
+        },
+        "rfc1000": {
+          "compatible": true,
+          "motif": null,
+          "index": null
+        }
+      },
+      "usageCount": 9725,
+      "createdAt": "2003-01-31T00:00:00.000Z",
+      "updatedAt": "2021-09-08T20:22:43.000Z",
+      "sourceUrl": "https://registry.igem.org/parts/bba-b0034",
+      "fetchedAt": "2026-09-10T18:09:42.166Z",
+      "provenanceStatus": "registry_recorded",
+      "establishedReference": true
+    },
+    {
+      "registryId": "BBa_B0032",
+      "uuid": "dd29b240-f03a-42ce-8612-6d562f74308e",
+      "slug": "bba-b0032",
+      "title": "RBS.3 (medium) -- derivative of BBa_0030",
+      "role": "Ribosome Entry Site",
+      "roleSO": "SO:0000139",
+      "mappedLocalRole": "rbs",
+      "sequence": "TCACACAGGAAAG",
+      "length": 13,
+      "chassis": {
+        "designedFor": [],
+        "characterisedIn": [],
+        "sourceOrganism": []
+      },
+      "compatibility": {
+        "rfc10": {
+          "compatible": true,
+          "motif": null,
+          "index": null
+        },
+        "rfc1000": {
+          "compatible": true,
+          "motif": null,
+          "index": null
+        }
+      },
+      "usageCount": 1712,
+      "createdAt": "2003-01-31T00:00:00.000Z",
+      "updatedAt": "2021-09-08T20:22:43.000Z",
+      "sourceUrl": "https://registry.igem.org/parts/bba-b0032",
+      "fetchedAt": "2026-09-10T18:09:42.166Z",
+      "provenanceStatus": "registry_recorded",
+      "establishedReference": true
+    },
+    {
+      "registryId": "BBa_E0040",
+      "uuid": "839dbacc-1089-4119-be94-b6d3767dc373",
+      "slug": "bba-e0040",
+      "title": " green fluorescent protein derived from jellyfish Aequeora victoria wild-type GFP (SwissProt: P42212",
+      "role": "CDS",
+      "roleSO": "SO:0000316",
+      "mappedLocalRole": "cds",
+      "sequence": "ATGCGTAAAGGAGAAGAACTTTTCACTGGAGTTGTCCCAATTCTTGTTGAATTAGATGGTGATGTTAATGGGCACAAATTTTCTGTCAGTGGAGAGGGTGAAGGTGATGCAACATACGGAAAACTTACCCTTAAATTTATTTGCACTACTGGAAAACTACCTGTTCCATGGCCAACACTTGTCACTACTTTCGGTTATGGTGTTCAATGCTTTGCGAGATACCCAGATCATATGAAACAGCATGACTTTTTCAAGAGTGCCATGCCCGAAGGTTATGTACAGGAAAGAACTATATTTTTCAAAGATGACGGGAACTACAAGACACGTGCTGAAGTCAAGTTTGAAGGTGATACCCTTGTTAATAGAATCGAGTTAAAAGGTATTGATTTTAAAGAAGATGGAAACATTCTTGGACACAAATTGGAATACAACTATAACTCACACAATGTATACATCATGGCAGACAAACAAAAGAATGGAATCAAAGTTAACTTCAAAATTAGACACAACATTGAAGATGGAAGCGTTCAACTAGCAGACCATTATCAACAAAATACTCCAATTGGCGATGGCCCTGTCCTTTTACCAGACAACCATTACCTGTCCACACAATCTGCCCTTTCGAAAGATCCCAACGAAAAGAGAGACCACATGGTCCTTCTTGAGTTTGTAACAGCTGCTGGGATTACACATGGCATGGATGAACTATACAAATAATAA",
+      "length": 720,
+      "chassis": {
+        "designedFor": [],
+        "characterisedIn": [],
+        "sourceOrganism": []
+      },
+      "compatibility": {
+        "rfc10": {
+          "compatible": true,
+          "motif": null,
+          "index": null
+        },
+        "rfc1000": {
+          "compatible": false,
+          "motif": "GGTCTC",
+          "index": 644
+        }
+      },
+      "usageCount": 2541,
+      "createdAt": "2004-09-30T00:00:00.000Z",
+      "updatedAt": "2021-09-08T20:22:45.000Z",
+      "sourceUrl": "https://registry.igem.org/parts/bba-e0040",
+      "fetchedAt": "2026-09-10T18:09:42.166Z",
+      "provenanceStatus": "registry_recorded",
+      "establishedReference": true
+    },
+    {
+      "registryId": "BBa_B0015",
+      "uuid": "a0ebeeab-3947-440e-9cf1-f0a47bbc4c33",
+      "slug": "bba-b0015",
+      "title": "double terminator (B0010-B0012)",
+      "role": "Terminator",
+      "roleSO": "SO:0000141",
+      "mappedLocalRole": "terminator",
+      "sequence": "CCAGGCATCAAATAAAACGAAAGGCTCAGTCGAAAGACTGGGCCTTTCGTTTTATCTGTTGTTTGTCGGTGAACGCTCTCTACTAGAGTCACACTGGCTCACCTTCGGGTGGGCCTTTCTGCGTTTATA",
+      "length": 129,
+      "chassis": {
+        "designedFor": [],
+        "characterisedIn": [],
+        "sourceOrganism": []
+      },
+      "compatibility": {
+        "rfc10": {
+          "compatible": true,
+          "motif": null,
+          "index": null
+        },
+        "rfc1000": {
+          "compatible": true,
+          "motif": null,
+          "index": null
+        }
+      },
+      "usageCount": 4962,
+      "createdAt": "2003-07-17T00:00:00.000Z",
+      "updatedAt": "2021-09-08T20:22:43.000Z",
+      "sourceUrl": "https://registry.igem.org/parts/bba-b0015",
+      "fetchedAt": "2026-09-10T18:09:42.166Z",
+      "provenanceStatus": "registry_recorded",
+      "establishedReference": true
+    },
+    {
+      "registryId": "pSB1C3",
+      "uuid": "86dfd927-9da4-4b46-8737-53630a2e588b",
+      "slug": "psb1c3",
+      "title": "High copy BioBrick assembly plasmid",
+      "role": "Plasmid Vector",
+      "roleSO": "SO:0000755",
+      "mappedLocalRole": "origin",
+      "sequence": "TACTAGTAGCGGCCGCTGCAGTCCGGCAAAAAAGGGCAAGGTGTCACCACCCTGCCCTTTTTCTTTAAAACCGAAAAGATTACTTCGCGTTATGCAGGCTTCCTCGCTCACTGACTCGCTGCGCTCGGTCGTTCGGCTGCGGCGAGCGGTATCAGCTCACTCAAAGGCGGTAATACGGTTATCCACAGAATCAGGGGATAACGCAGGAAAGAACATGTGAGCAAAAGGCCAGCAAAAGGCCAGGAACCGTAAAAAGGCCGCGTTGCTGGCGTTTTTCCACAGGCTCCGCCCCCCTGACGAGCATCACAAAAATCGACGCTCAAGTCAGAGGTGGCGAAACCCGACAGGACTATAAAGATACCAGGCGTTTCCCCCTGGAAGCTCCCTCGTGCGCTCTCCTGTTCCGACCCTGCCGCTTACCGGATACCTGTCCGCCTTTCTCCCTTCGGGAAGCGTGGCGCTTTCTCATAGCTCACGCTGTAGGTATCTCAGTTCGGTGTAGGTCGTTCGCTCCAAGCTGGGCTGTGTGCACGAACCCCCCGTTCAGCCCGACCGCTGCGCCTTATCCGGTAACTATCGTCTTGAGTCCAACCCGGTAAGACACGACTTATCGCCACTGGCAGCAGCCACTGGTAACAGGATTAGCAGAGCGAGGTATGTAGGCGGTGCTACAGAGTTCTTGAAGTGGTGGCCTAACTACGGCTACACTAGAAGAACAGTATTTGGTATCTGCGCTCTGCTGAAGCCAGTTACCTTCGGAAAAAGAGTTGGTAGCTCTTGATCCGGCAAACAAACCACCGCTGGTAGCGGTGGTTTTTTTGTTTGCAAGCAGCAGATTACGCGCAGAAAAAAAGGATCTCAAGAAGATCCTTTGATCTTTTCTACGGGGTCTGACGCTCAGTGGAACGAAAACTCACGTTAAGGGATTTTGGTCATGAGATTATCAAAAAGGATCTTCACCTAGATCCTTTTAAATTAAAAATGAAGTTTTAAATCAATCTAAAGTATATATGAGTAAACTTGGTCTGACAGCTCGAGGCTTGGATTCTCACCAATAAAAAACGCCCGGCGGCAACCGAGCGTTCTGAACAAATCCAGATGGAGTTCTGAGGTCATTACTGGATCTATCAACAGGAGTCCAAGCGAGCTCGATATCAAATTACGCCCCGCCCTGCCACTCATCGCAGTACTGTTGTAATTCATTAAGCATTCTGCCGACATGGAAGCCATCACAAACGGCATGATGAACCTGAATCGCCAGCGGCATCAGCACCTTGTCGCCTTGCGTATAATATTTGCCCATGGTGAAAACGGGGGCGAAGAAGTTGTCCATATTGGCCACGTTTAAATCAAAACTGGTGAAACTCACCCAGGGATTGGCTGAGACGAAAAACATATTCTCAATAAACCCTTTAGGGAAATAGGCCAGGTTTTCACCGTAACACGCCACATCTTGCGAATATATGTGTAGAAACTGCCGGAAATCGTCGTGGTATTCACTCCAGAGCGATGAAAACGTTTCAGTTTGCTCATGGAAAACGGTGTAACAAGGGTGAACACTATCCCATATCACCAGCTCACCGTCTTTCATTGCCATACGAAATTCCGGATGAGCATTCATCAGGCGGGCAAGAATGTGAATAAAGGCCGGATAAAACTTGTGCTTATTTTTCTTTACGGTCTTTAAAAAGGCCGTAATATCCAGCTGAACGGTCTGGTTATAGGTACATTGAGCAACTGACTGAAATGCCTCAAAATGTTCTTTACGATGCCATTGGGATATATCAACGGTGGTATATCCAGTGATTTTTTTCTCCATTTTAGCTTCCTTAGCTCCTGAAAATCTCGATAACTCAAAAAATACGCCCGGTAGTGATCTTATTTCATTATGGTGAAAGTTGGAACCTCTTACGTGCCCGATCAACTCGAGTGCCACCTGACGTCTAAGAAACCATTATTATCATGACATTAACCTATAAAAATAGGCGTATCACGAGGCAGAATTTCAGATAAAAAAAATCCTTAGCTTTCGCTAAGGATGATTTCTGGAATTCGCGGCCGCTTCTAGAG",
+      "length": 2070,
+      "chassis": {
+        "designedFor": [],
+        "characterisedIn": [],
+        "sourceOrganism": []
+      },
+      "compatibility": {
+        "rfc10": {
+          "compatible": false,
+          "motif": "GAATTC",
+          "index": 2049
+        },
+        "rfc1000": {
+          "compatible": true,
+          "motif": null,
+          "index": null
+        }
+      },
+      "usageCount": 21,
+      "createdAt": "2008-09-08T00:00:00.000Z",
+      "updatedAt": "2021-09-08T20:27:56.000Z",
+      "sourceUrl": "https://registry.igem.org/parts/psb1c3",
+      "fetchedAt": "2026-09-10T18:09:42.166Z",
+      "provenanceStatus": "registry_recorded",
+      "establishedReference": true
+    },
+    {
+      "registryId": "BBa_J31005",
+      "uuid": "af80297e-49c7-4320-85a3-84192c13457b",
+      "slug": "bba-j31005",
+      "title": "chloramphenicol acetyltransferase (forwards, CmF) [cf. BBa_J31004]",
+      "role": "CDS",
+      "roleSO": "SO:0000316",
+      "mappedLocalRole": "marker",
+      "sequence": "ATGGAGAAAAAAATCACTGGATATACCACCGTTGATATATCCCAATGGCATCGTAAAGAACATTTTGAGGCATTTCAGTCAGTTGCTCAATGTACCTATAACCAGACCGTTCAGCTGGATATTACGGCCTTTTTAAAGACCGTAAAGAAAAATAAGCACAAGTTTTATCCGGCCTTTATTCACATTCTTGCCCGCCTGATGAATGCTCATCCGGAATTTCGTATGGCAATGAAAGACGGTGAGCTGGTGATATGGGATAGTGTTCACCCTTGTTACACCGTTTTCCATGAGCAAACTGAAACGTTTTCATCGCTCTGGAGTGAATACCACGACGATTTCCGGCAGTTTCTACACATATATTCGCAAGATGTGGCGTGTTACGGTGAAAACCTGGCCTATTTCCCTAAAGGGTTTATTGAGAATATGTTTTTCGTCTCAGCCAATCCCTGGGTGAGTTTCACCAGTTTTGATTTAAACGTGGCCAATATGGACAACTTCTTCGCCCCCGTTTTCACCATGGGCAAATATTATACGCAAGGCGACAAGGTGCTGATGCCGCTGGCGATTCAGGTTCATCATGCCGTTTGTGATGGCTTCCATGTCGGCAGAATGCTTAATGAATTACAACAGTACTGCGATGAGTGGCAGGGCGGGGCGTAA",
+      "length": 660,
+      "chassis": {
+        "designedFor": [],
+        "characterisedIn": [],
+        "sourceOrganism": []
+      },
+      "compatibility": {
+        "rfc10": {
+          "compatible": true,
+          "motif": null,
+          "index": null
+        },
+        "rfc1000": {
+          "compatible": true,
+          "motif": null,
+          "index": null
+        }
+      },
+      "usageCount": 26,
+      "createdAt": "2006-07-12T00:00:00.000Z",
+      "updatedAt": "2021-09-08T20:23:16.000Z",
+      "sourceUrl": "https://registry.igem.org/parts/bba-j31005",
+      "fetchedAt": "2026-09-10T18:09:42.166Z",
+      "provenanceStatus": "registry_recorded",
+      "establishedReference": true
+    }
+  ],
+  "constructs": [
+    {
+      "registryId": "BBa_J04450",
+      "uuid": "058c03c8-870d-4889-b72e-04c101a37c74",
+      "title": "RFP Coding Device",
+      "description": "Contains an IPTG inducible promoter an RBS, RFP, and terminator.",
+      "purpose": "Contains an IPTG inducible promoter an RBS, RFP, and terminator.",
+      "sequenceLength": 1069,
+      "chassis": {
+        "designedFor": [],
+        "characterisedIn": [],
+        "sourceOrganism": []
+      },
+      "composition": [
+        {
+          "componentRegistryId": "BBa_R0010",
+          "role": "Promoter",
+          "roleSO": "SO:0000167",
+          "start": 1,
+          "end": 200,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_B0034",
+          "role": "Ribosome Entry Site",
+          "roleSO": "SO:0000139",
+          "start": 209,
+          "end": 220,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_E1010",
+          "role": "CDS",
+          "roleSO": "SO:0000316",
+          "start": 227,
+          "end": 932,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_B0015",
+          "role": "Terminator",
+          "roleSO": "SO:0000141",
+          "start": 941,
+          "end": 1069,
+          "strand": "forward"
+        }
+      ],
+      "knownParts": [
+        "BBa_R0010",
+        "BBa_B0034",
+        "BBa_E1010",
+        "BBa_B0015"
+      ],
+      "architectureRoles": [
+        "Promoter",
+        "Ribosome Entry Site",
+        "CDS",
+        "Terminator"
+      ],
+      "sourceUrl": "https://registry.igem.org/parts/bba-j04450",
+      "fetchedAt": "2026-09-10T18:09:42.166Z"
+    },
+    {
+      "registryId": "BBa_E0840",
+      "uuid": "bcc9ff5f-275f-4983-8227-3440124a1bea",
+      "title": "GFP generator",
+      "description": "B0030.E0040.B0015",
+      "purpose": "B0030.E0040.B0015",
+      "sequenceLength": 878,
+      "chassis": {
+        "designedFor": [],
+        "characterisedIn": [],
+        "sourceOrganism": []
+      },
+      "composition": [
+        {
+          "componentRegistryId": "BBa_B0030",
+          "role": "Ribosome Entry Site",
+          "roleSO": "SO:0000139",
+          "start": 1,
+          "end": 16,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_E0040",
+          "role": "CDS",
+          "roleSO": "SO:0000316",
+          "start": 22,
+          "end": 742,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_B0010",
+          "role": "Terminator",
+          "roleSO": "SO:0000141",
+          "start": 750,
+          "end": 830,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_B0012",
+          "role": "Terminator",
+          "roleSO": "SO:0000141",
+          "start": 838,
+          "end": 879,
+          "strand": "forward"
+        }
+      ],
+      "knownParts": [
+        "BBa_B0030",
+        "BBa_E0040",
+        "BBa_B0010",
+        "BBa_B0012"
+      ],
+      "architectureRoles": [
+        "Ribosome Entry Site",
+        "CDS",
+        "Terminator",
+        "Terminator"
+      ],
+      "sourceUrl": "https://registry.igem.org/parts/bba-e0840",
+      "fetchedAt": "2026-09-10T18:09:42.166Z"
+    },
+    {
+      "registryId": "BBa_I13521",
+      "uuid": "e2252920-2992-4a3a-9ed1-2ecda65440b6",
+      "title": "Ptet mRFP",
+      "description": "Constitutive on mRFP (positive control)",
+      "purpose": "Constitutive on mRFP (positive control)",
+      "sequenceLength": 923,
+      "chassis": {
+        "designedFor": [],
+        "characterisedIn": [],
+        "sourceOrganism": []
+      },
+      "composition": [
+        {
+          "componentRegistryId": "BBa_R0040",
+          "role": "Regulatory",
+          "roleSO": "IGEM:0000006",
+          "start": 1,
+          "end": 55,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_B0034",
+          "role": "Ribosome Entry Site",
+          "roleSO": "SO:0000139",
+          "start": 63,
+          "end": 75,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_E1010",
+          "role": "CDS",
+          "roleSO": "SO:0000316",
+          "start": 81,
+          "end": 762,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_B0010",
+          "role": "Terminator",
+          "roleSO": "SO:0000141",
+          "start": 795,
+          "end": 875,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_B0012",
+          "role": "Terminator",
+          "roleSO": "SO:0000141",
+          "start": 883,
+          "end": 924,
+          "strand": "forward"
+        }
+      ],
+      "knownParts": [
+        "BBa_R0040",
+        "BBa_B0034",
+        "BBa_E1010",
+        "BBa_B0010",
+        "BBa_B0012"
+      ],
+      "architectureRoles": [
+        "Regulatory",
+        "Ribosome Entry Site",
+        "CDS",
+        "Terminator",
+        "Terminator"
+      ],
+      "sourceUrl": "https://registry.igem.org/parts/bba-i13521",
+      "fetchedAt": "2026-09-10T18:09:42.166Z"
+    },
+    {
+      "registryId": "BBa_I13522",
+      "uuid": "e458fe66-044f-4a16-8bc5-e70f9923dfa0",
+      "title": "pTet GFP",
+      "description": "Untagged GFP behind a constitutive promoter.",
+      "purpose": "Untagged GFP behind a constitutive promoter.",
+      "sequenceLength": 937,
+      "chassis": {
+        "designedFor": [],
+        "characterisedIn": [],
+        "sourceOrganism": []
+      },
+      "composition": [
+        {
+          "componentRegistryId": "BBa_R0040",
+          "role": "Regulatory",
+          "roleSO": "IGEM:0000006",
+          "start": 1,
+          "end": 55,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_B0034",
+          "role": "Ribosome Entry Site",
+          "roleSO": "SO:0000139",
+          "start": 63,
+          "end": 75,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_E0040",
+          "role": "CDS",
+          "roleSO": "SO:0000316",
+          "start": 81,
+          "end": 801,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_B0010",
+          "role": "Terminator",
+          "roleSO": "SO:0000141",
+          "start": 809,
+          "end": 889,
+          "strand": "forward"
+        },
+        {
+          "componentRegistryId": "BBa_B0012",
+          "role": "Terminator",
+          "roleSO": "SO:0000141",
+          "start": 897,
+          "end": 938,
+          "strand": "forward"
+        }
+      ],
+      "knownParts": [
+        "BBa_R0040",
+        "BBa_B0034",
+        "BBa_E0040",
+        "BBa_B0010",
+        "BBa_B0012"
+      ],
+      "architectureRoles": [
+        "Regulatory",
+        "Ribosome Entry Site",
+        "CDS",
+        "Terminator",
+        "Terminator"
+      ],
+      "sourceUrl": "https://registry.igem.org/parts/bba-i13522",
+      "fetchedAt": "2026-09-10T18:09:42.166Z"
+    }
+  ]
+}

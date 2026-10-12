@@ -369,9 +369,12 @@ input,select,button,textarea{font-family:inherit}
 <script type="module">
   import * as Designer from "./designer.js";
   import * as Codon from "./codon.js";
+  import * as Automatic from "./automatic/index.js";
   window.Designer = Designer;
   window.Codon = Codon;
+  window.Automatic = Automatic;
 </script>
+<script type="text/babel" src="./automatic/AutomaticModeUI.jsx"></script>
 <script type="text/babel">
 const { useState, useEffect, useLayoutEffect, useMemo, useRef } = React;
 
@@ -1994,6 +1997,7 @@ function RcMethPane() {
 
 /* ── Main App ────────────────────────────────────────────────────────── */
 function App() {
+  const [mode, setMode] = useState("template");   // "template" | "automatic"
   const [host, setHost] = useState("");
   const [parts, setParts] = useState([]);       // {id, name, type, seq, len}
   const [result, setResult] = useState(null);
@@ -2006,6 +2010,16 @@ function App() {
   const [templates, setTemplates] = useState(null);
   const [tplId, setTplId] = useState("");
   const [cdsPart, setCdsPart] = useState(null);     // chosen gene of interest
+  // Phase 5B item 13: fillTemplate()/design() already accept ANY part-shaped
+  // userCds object as-is (see designer.js -- it never requires the object to
+  // exist in partsById), so a part registered through the same session-local
+  // customPartRegistry.js Automatic Design Mode uses can be dropped in here
+  // unchanged. One registry instance, created lazily, shared by every
+  // "gene of interest" registration this session.
+  const customRegistryRef = useRef(null);
+  if (!customRegistryRef.current && window.Automatic && window.Automatic.createCustomPartRegistry) {
+    customRegistryRef.current = window.Automatic.createCustomPartRegistry();
+  }
   const [asmErr, setAsmErr] = useState(null);   // names of parts with no sequence
   const [codonOrgs, setCodonOrgs] = useState(null); // from ./data/codon_tables.json
   const [cdsMode, setCdsMode] = useState("catalog"); // "catalog" | "optimize"
@@ -2015,7 +2029,7 @@ function App() {
 
   useEffect(() => {
     let cancelled = false;
-    const get = u => fetch(u).then(r => { if (!r.ok) throw new Error(u + " - HTTP " + r.status); return r.json(); });
+    const get = u => fetch(u, { cache: "no-store" }).then(r => { if (!r.ok) throw new Error(u + " - HTTP " + r.status); return r.json(); });
     Promise.all([get("./data/parts.json"), get("./data/templates.json"), get("./data/codon_tables.json")])
       .then(([p, t, c]) => {
         if (cancelled) return;
@@ -2171,7 +2185,35 @@ function App() {
     setCopied(true); setTimeout(()=>setCopied(false),2000);
   };
 
-  const stepN = !cdsMatch?1:!result?2:3;
+  // Phase 6, item 3: "Use This Design" -- convert an Automatic Design
+  // candidate into the SAME parts/host/result shape this Template-Guided
+  // workflow already produces from its own template+CDS pipeline, then open
+  // the existing (unmodified) Map/Parts/Sequence/Delivery tabs on it. Reuses
+  // window.Automatic.buildWorkspaceHandoff() for the actual conversion --
+  // this function only assigns the resulting values into App()'s own state.
+  // tplId is cleared to "" (template resolves to null) so the template-
+  // driven re-seed effect above (keyed on plan/template) never fires and
+  // silently overwrites the handed-off parts with a template's own defaults.
+  const handoffToWorkspace = ({ candidate, anchorPart, host: h, assemblyMethod: am, partsById: pBid }) => {
+    if (!window.Automatic) return;
+    const handoff = window.Automatic.buildWorkspaceHandoff(candidate, { partsById: pBid || partsById, anchorPart, host: h, assemblyMethod: am });
+    setTplId("");
+    setCdsPart(null);
+    setParts(handoff.parts.map(p => ({ id: ++_uid, srcId: p.srcId, name: p.name, type: p.type, role: p.role, seq: p.seq, len: p.len })));
+    setHost(handoff.host || "");
+    setResult({ assembled: handoff.assembledSequence, gc: handoff.gc, total: handoff.totalBp, proto: protocolFor(handoff.host) });
+    setAsmErr(null);
+    setExpanded(null);
+    setTab("map");
+    setMode("template");
+  };
+
+  /* Merge note: the steps are labelled Sequence / Design / Output, so the
+     first gate is having a coding sequence, not a host (the host is set the
+     moment a template loads, which would skip step 1 immediately). result is
+     tested first because an Automatic Design handoff sets host and result
+     without ever setting cdsMatch, and that is finished work, not step 1. */
+  const stepN = result ? 3 : cdsMatch ? 2 : 1;
   const S = {
     card:{background:"#1e293b",border:"1px solid #334155",borderRadius:12,overflow:"hidden",marginBottom:16},
     label:{fontSize:11,color:"#475569",marginBottom:10,textTransform:"uppercase",letterSpacing:1.2,display:"block"},
@@ -2258,7 +2300,21 @@ function App() {
                   ) : (
                     <div style={{display:"flex"}}>
                       <PartCombo pool={cdsPool} placeholder="Search CDS by name, or paste a DNA sequence to find it…"
-                        onPick={rec=>{setCdsPart(rec);}} hint="no CDS match"/>
+                        onPick={rec=>{setCdsPart(rec);}} hint="↵ registers as custom CDS"
+                        onCustom={raw => {
+                          // Phase 5B item 13, moved here from step 01 when the CDS
+                          // picker did: a pasted sequence with no catalog match
+                          // (PartCombo's exact/substring/revcomp search already found
+                          // nothing, or this isn't a name at all) is registered as a
+                          // genuine session-local custom CDS -- never written to
+                          // data/parts.json -- instead of being discarded, the same way
+                          // Automatic Design Mode's "Register Custom Part" flow does.
+                          const seq = asDNA(raw);
+                          if (!seq || !customRegistryRef.current) return;
+                          const res = customRegistryRef.current.registerCustomPart({
+                            name: `Custom CDS (${seq.length} bp)`, seq, role: "cds" });
+                          if (res.ok) setCdsPart(res.part);
+                        }}/>
                     </div>
                   )}
                   {cdsPart && cdsPart.desc && (
@@ -2307,6 +2363,32 @@ function App() {
       {/* steps 01 and 03 keep the builder's original 860px column, untouched */}
       <div style={{padding:"0 20px 20px",maxWidth:860,margin:"0 auto"}}>
 
+        {/* Template-Guided Mode (existing workflow, unchanged) vs. Automatic Design Mode (new).
+            Phase 6, item 1: make the product distinction explicit, in plain language --
+            never "AI"/exaggerated framing, just what each mode actually does. */}
+        <div style={{display:"flex",gap:8,marginBottom:6,background:"#1e293b",border:"1px solid #334155",borderRadius:10,padding:4}}>
+          {[["template","🧭 Template-Guided"],["automatic","🧮 Automatic Design"]].map(([id,label])=>(
+            <button key={id} onClick={()=>setMode(id)}
+              style={{flex:1,padding:"9px 10px",borderRadius:7,border:"none",cursor:"pointer",fontSize:12,fontWeight:mode===id?700:500,
+                background:mode===id?"linear-gradient(90deg,#0369a1,#0ea5e9)":"transparent",color:mode===id?"#fff":"#94a3b8"}}>
+              {label}
+            </button>
+          ))}
+        </div>
+        <div style={{fontSize:11,color:"#64748b",lineHeight:1.5,marginBottom:16,padding:"0 4px"}}>
+          {mode==="template"
+            ? <span><b style={{color:"#93c5fd"}}>Build from a known architecture.</b> You choose the template and components; this mode helps you assemble, inspect, and export the plasmid.</span>
+            : <span><b style={{color:"#93c5fd"}}>Design around a biological part.</b> You supply a part, host, and design objective (plus any components that must stay fixed); a constraint-based computational design engine determines the architecture, supporting parts, and valid alternatives.</span>}
+        </div>
+
+        {mode==="automatic" && (
+          window.AutomaticModeUI
+            ? <window.AutomaticModeUI db={db} templates={templates} partsById={partsById} onUseDesign={handoffToWorkspace} />
+            : <div style={{color:"#fca5a5",fontSize:12,padding:12}}>./automatic/AutomaticModeUI.jsx did not load — the page must be served over http, not opened as a file.</div>
+        )}
+
+        {mode==="template" && <React.Fragment>
+
         {/* 01 - template, gene, and the editable part list */}
         <div style={{marginBottom:16}}>
           <span style={S.label}>01 — Design</span>
@@ -2340,6 +2422,10 @@ function App() {
                     <EvidencePill evidence={cdsMatch.evidence}/>
                   </div>
                 ) : (
+                  // The CDS picker that used to live here moved to step 00,
+                  // which is now the single place a coding sequence enters the
+                  // build (catalog, pasted, or codon-optimized). The custom-part
+                  // registration this slot carried moved there with it.
                   <div style={{padding:"8px 10px",background:"#0f172a",border:"1px dashed #334155",
                     borderRadius:6,fontSize:11,color:"#475569"}}>
                     None yet — choose or optimize one in step 00. The template's own default CDS is used meanwhile.
@@ -2652,6 +2738,8 @@ function App() {
             </div>
           </div>
         )}
+
+        </React.Fragment>}
       </div>
     </div>
   );

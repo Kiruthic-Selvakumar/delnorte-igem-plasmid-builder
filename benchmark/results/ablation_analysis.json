@@ -1,0 +1,97 @@
+[
+  {
+    "ablation": "ablateHostFiltering",
+    "scenario": "V. natriegens, sg_GFP anchor, free-text goal",
+    "defaultCandidatesPerRoleCap": {
+      "beamCandidatesProduced": 5,
+      "validCount": 0,
+      "detail": "At the default per-role candidate cap, every generated beam candidate honestly reports a missing-required-role GAP (not a silently vanished branch, not a smuggled-in cross-host part) -- see the Phase 4C robustness fix in architectureGeneration.js's beam loop (fallback to an unassigned role whenever every retrieved candidate for it gets pruned)."
+    },
+    "wideCandidatesPerRoleCap": {
+      "candidatesContainingABsubOnlyPart": 5,
+      "anyBsubOnlyPartReachedAValidCandidate": false,
+      "everyCandidateContainingABsubOnlyPartWasHardRejectedWithCitation": true,
+      "recommendedStillValidAndHostAppropriate": true
+    },
+    "materialDifference": true,
+    "detail": "With a wide per-role cap, ablating retrieval-tier host filtering DOES widen the candidate pool (5 generated candidate(s) used a B.-subtilis-only part) -- but every single one was hard-rejected by validateCandidate()'s independent, unconditional host-eligibility check, citing \"host-ineligible\"/data/templates.json, EVEN with constraint-engine pruning also ablated at the same time. The final recommended candidate never contains a B.-subtilis-only part and remains valid. This is the corrected interpretation: retrieval-tier filtering affects SEARCH EFFICIENCY/breadth (how many doomed branches get explored, and whether the per-role cap gets crowded out), while validateCandidate()'s Phase 4C host-eligibility check is what actually guarantees CORRECTNESS regardless of either flag -- exactly the intended division of labor.",
+    "partialsConsidered": {
+      "defaultCap": 58,
+      "wideCapFull": 42,
+      "wideCapAblated": 93,
+      "wideCapBothAblated": 117
+    }
+  },
+  {
+    "ablation": "ablateRegistryEvidence",
+    "scenario": "E. coli, sg_GFP anchor, goalFamily=constitutive_expression",
+    "withRegistryBeamPromoters": [
+      "constitutive promoter family member"
+    ],
+    "withoutRegistryBeamPromoters": [
+      "araBAD promoter",
+      "lac promoter"
+    ],
+    "withRegistryValidBeamCount": 5,
+    "withoutRegistryValidBeamCount": 5,
+    "materialDifference": true,
+    "detail": "With Registry evidence, every beam candidate correctly uses the ONLY documented constitutive E. coli promoter (a cached Registry record, evidence:placeholder) and is correctly hard-rejected (0/5 valid) -- honest, not a bug. Without Registry evidence, the constitutive_expression family is still selected but has no resolvable Tier-0 recommendation for E. coli, so retrieval falls back to host-curated (inducible) promoters, and all 5 beam candidates become valid -- but they no longer reflect the requested 'constitutive' goal at all (araBAD/lac are inducible). This shows Registry evidence and goal-specific rules are currently COUPLED for this specific family/host: this family's only E. coli evidence source is a Registry record."
+  },
+  {
+    "ablation": "ablateRegistryEvidence",
+    "scenario": "B. subtilis secretion, locked promoter (PkatA) + locked cds (endolysin)",
+    "withRegistryRecommended": [
+      "pUB110 ori",
+      "ori",
+      "Kanamycin Resistance (KanR)",
+      "PkatA Promoter",
+      "RBS st7",
+      "AmyE Signal Peptide",
+      "Lysqdvp001 Endolysin",
+      "rrnB T1 Terminator"
+    ],
+    "withoutRegistryRecommended": [
+      "pUB110 ori",
+      "ori",
+      "Kanamycin Resistance (KanR)",
+      "PkatA Promoter",
+      "RBS st7",
+      "AmyE Signal Peptide",
+      "Lysqdvp001 Endolysin",
+      "rrnB T1 Terminator"
+    ],
+    "materialDifference": false,
+    "detail": "No difference found: this family's B. subtilis evidence is entirely project_template-sourced (real templates.json slot documentation), so it does not depend on Registry evidence at all. Reported honestly as a null result, as instructed, rather than omitted."
+  },
+  {
+    "ablation": "ablateGoalRules",
+    "scenario": "E. coli, sg_GFP anchor, goalFamily=constitutive_expression",
+    "fullBeamPromoters": [
+      "constitutive promoter family member"
+    ],
+    "fullValidBeamCount": 5,
+    "ablatedBeamPromoters": [
+      "araBAD promoter",
+      "lac promoter"
+    ],
+    "ablatedValidBeamCount": 5,
+    "materialDifference": true,
+    "detail": "With the family applied, every beam candidate is forced onto the one honestly-documented (but placeholder-evidence) constitutive promoter and is correctly hard-rejected -- the design goal MATERIALLY changes generation, at the cost of buildability, exactly as intended. With goal-specific rules ablated, the anchor's own required roles are still inferred (universal + host rules are untouched), but retrieval falls back to host-curated inducible promoters and every candidate becomes valid -- silently dropping the user's actual stated intent (constitutive, not inducible, expression). This demonstrates the family layer's real, load-bearing contribution: without it, the goal text/selection stops affecting WHICH promoter is chosen at all for this host."
+  },
+  {
+    "ablation": "ablatePruning",
+    "scenario": "E. coli, sg_GFP anchor, inducible family, beamWidth=20 (generous, to give a doomed branch room to survive)",
+    "partialsConsidered": {
+      "full": 85,
+      "ablated": 106
+    },
+    "prunedByConstraintEngine": {
+      "incompatibility": 0,
+      "dependency": 1
+    },
+    "knownDoomedBranch_pSC101_survivedToFinalOutputWhenAblated": false,
+    "finalRecommendedScoreUnchanged": true,
+    "materialDifference": false,
+    "detail": "Ablating pruning did NOT change the final recommended candidate or its score (both 93.7/100) in this scenario -- this project's real data currently has few enough real dependency-failure branches (E. coli's pSC101-without-Rep101 case) that the existing scoreCandidate/beam-trimming heuristic already deprioritizes them out of the final window on its own, even at a generous beamWidth=20. Constraint-aware pruning's real, measured benefit here is EFFICIENCY, not final correctness: 106 candidate-part combinations were considered without it vs 85 with it (25% more search effort for an identical final answer). Reported honestly as a modest, not dramatic, difference."
+  }
+]

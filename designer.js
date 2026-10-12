@@ -6,7 +6,7 @@ export const ENZYMES = {
   XbaI:   "TCTAGA", SpeI:  "ACTAGT", PstI:  "CTGCAG",
 };
 
-const rc = s => s.split("").reverse()
+export const rc = s => s.split("").reverse()
   .map(c => ({A:"T",T:"A",G:"C",C:"G",N:"N"}[c] || "N")).join("");
 
 const gc = s => s.length ? 100 * [...s].filter(c => c === "G" || c === "C").length / s.length : 0;

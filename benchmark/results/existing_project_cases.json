@@ -1,0 +1,189 @@
+{
+  "meta": {
+    "title": "Existing Project Cases (Phase 5A, item 5)",
+    "generatedAt": "2026-09-11T04:12:56.923Z"
+  },
+  "records": [
+    {
+      "label": "B. subtilis / endolysin (real Dry Lab case)",
+      "input": {
+        "label": "B. subtilis / endolysin (real Dry Lab case)",
+        "partId": "dn_lysqdvp001_endolysin",
+        "host": "B. subtilis",
+        "goalFamily": "secretion"
+      },
+      "evaluation": {
+        "ok": true,
+        "architectureGenerated": true,
+        "hardValidGenerated": true,
+        "anchorPreserved": true,
+        "validCount": 7,
+        "invalidCount": 2,
+        "recommendationProduced": true,
+        "goalCompatibleRecommendation": true,
+        "assemblyFeasibleTop1": true,
+        "registryComparisonAvailable": true,
+        "paretoOptimalTop1": true,
+        "robustness": {
+          "stability": 1,
+          "label": "highly stable"
+        },
+        "failureCategory": null
+      },
+      "recommendedRoleOrder": [
+        "pUB110 ori",
+        "ori",
+        "Spectinomycin Resistance (SpcR)",
+        "Pveg Promoter",
+        "Shine-Dalgarno sequence",
+        "AmyE Signal Peptide",
+        "Lysqdvp001 Endolysin",
+        "rrnB T1 Terminator"
+      ]
+    },
+    {
+      "label": "E. coli / GFP / inducible expression",
+      "input": {
+        "label": "E. coli / GFP / inducible expression",
+        "partId": "sg_GFP",
+        "host": "E. coli",
+        "goalFamily": "inducible_regulated_expression"
+      },
+      "evaluation": {
+        "ok": true,
+        "architectureGenerated": true,
+        "hardValidGenerated": true,
+        "anchorPreserved": true,
+        "validCount": 12,
+        "invalidCount": 1,
+        "recommendationProduced": true,
+        "goalCompatibleRecommendation": true,
+        "assemblyFeasibleTop1": true,
+        "registryComparisonAvailable": true,
+        "paretoOptimalTop1": true,
+        "robustness": {
+          "stability": 1,
+          "label": "highly stable"
+        },
+        "failureCategory": null
+      },
+      "recommendedRoleOrder": [
+        "ori",
+        "AmpR",
+        "araBAD promoter",
+        "RBS",
+        "GFP",
+        "rrnB T1 terminator"
+      ]
+    },
+    {
+      "label": "E. coli / GFP / constitutive expression",
+      "input": {
+        "label": "E. coli / GFP / constitutive expression",
+        "partId": "sg_GFP",
+        "host": "E. coli",
+        "goalFamily": "constitutive_expression"
+      },
+      "evaluation": {
+        "ok": true,
+        "architectureGenerated": true,
+        "hardValidGenerated": true,
+        "anchorPreserved": true,
+        "validCount": 12,
+        "invalidCount": 1,
+        "recommendationProduced": true,
+        "goalCompatibleRecommendation": true,
+        "assemblyFeasibleTop1": true,
+        "registryComparisonAvailable": true,
+        "paretoOptimalTop1": true,
+        "robustness": {
+          "stability": 1,
+          "label": "highly stable"
+        },
+        "failureCategory": null
+      },
+      "recommendedRoleOrder": [
+        "ori",
+        "AmpR",
+        "constitutive promoter family member",
+        "RBS",
+        "GFP",
+        "rrnB T1 terminator"
+      ]
+    },
+    {
+      "label": "V. natriegens / GFP / inducible expression",
+      "input": {
+        "label": "V. natriegens / GFP / inducible expression",
+        "partId": "sg_GFP",
+        "host": "V. natriegens",
+        "goalFamily": "inducible_regulated_expression"
+      },
+      "evaluation": {
+        "ok": true,
+        "architectureGenerated": true,
+        "hardValidGenerated": true,
+        "anchorPreserved": true,
+        "validCount": 10,
+        "invalidCount": 2,
+        "recommendationProduced": true,
+        "goalCompatibleRecommendation": true,
+        "assemblyFeasibleTop1": true,
+        "registryComparisonAvailable": true,
+        "paretoOptimalTop1": true,
+        "robustness": {
+          "stability": 1,
+          "label": "highly stable"
+        },
+        "failureCategory": null
+      },
+      "recommendedRoleOrder": [
+        "pBBR1 oriV",
+        "pBBR1 Rep",
+        "oriT",
+        "CmR",
+        "araBAD promoter",
+        "RBS",
+        "GFP",
+        "rrnB T1 terminator"
+      ]
+    },
+    {
+      "label": "V. natriegens / GFP / conjugation transfer",
+      "input": {
+        "label": "V. natriegens / GFP / conjugation transfer",
+        "partId": "sg_GFP",
+        "host": "V. natriegens",
+        "goalFamily": "conjugation_transfer"
+      },
+      "evaluation": {
+        "ok": true,
+        "architectureGenerated": true,
+        "hardValidGenerated": true,
+        "anchorPreserved": true,
+        "validCount": 10,
+        "invalidCount": 2,
+        "recommendationProduced": true,
+        "goalCompatibleRecommendation": true,
+        "assemblyFeasibleTop1": true,
+        "registryComparisonAvailable": true,
+        "paretoOptimalTop1": true,
+        "robustness": {
+          "stability": 1,
+          "label": "highly stable"
+        },
+        "failureCategory": null
+      },
+      "recommendedRoleOrder": [
+        "pBBR1 oriV",
+        "pBBR1 Rep",
+        "oriT",
+        "CmR",
+        "araBAD promoter",
+        "RBS",
+        "GFP",
+        "rrnB T1 terminator"
+      ]
+    }
+  ]
+}

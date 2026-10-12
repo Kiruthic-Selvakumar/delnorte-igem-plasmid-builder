@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 420" font-family="Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="1180" height="420" fill="#ffffff"/>
+
+  <!-- Side input box -->
+  <rect x="30" y="40" width="190" height="110" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
+  <text x="125" y="70" text-anchor="middle" font-size="13" font-weight="700" fill="#312e81">Host + Goal +</text>
+  <text x="125" y="88" text-anchor="middle" font-size="13" font-weight="700" fill="#312e81">Fixed Parts</text>
+  <text x="125" y="112" text-anchor="middle" font-size="11" fill="#4338ca">(chassis, design</text>
+  <text x="125" y="128" text-anchor="middle" font-size="11" fill="#4338ca">objective, locks)</text>
+
+  <!-- Arrow from side input down into Design Requirements -->
+  <line x1="125" y1="150" x2="125" y2="205" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowSide)"/>
+
+  <!-- Main horizontal chain -->
+  <!-- Node 1: Biological Part -->
+  <g>
+    <rect x="20" y="230" width="150" height="70" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+    <text x="95" y="260" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">Biological</text>
+    <text x="95" y="278" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">Part</text>
+  </g>
+
+  <line x1="170" y1="265" x2="205" y2="265" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Node 2: Design Requirements -->
+  <g>
+    <rect x="205" y="230" width="150" height="70" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="280" y="260" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1e3a8a">Design</text>
+    <text x="280" y="278" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1e3a8a">Requirements</text>
+  </g>
+
+  <line x1="355" y1="265" x2="390" y2="265" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Node 3: Architecture Search -->
+  <g>
+    <rect x="390" y="230" width="150" height="70" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="465" y="260" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1e3a8a">Architecture</text>
+    <text x="465" y="278" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1e3a8a">Search</text>
+  </g>
+
+  <line x1="540" y1="265" x2="575" y2="265" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Node 4: Constraint Validation -->
+  <g>
+    <rect x="575" y="230" width="160" height="70" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+    <text x="655" y="260" text-anchor="middle" font-size="12.5" font-weight="700" fill="#7f1d1d">Constraint</text>
+    <text x="655" y="278" text-anchor="middle" font-size="12.5" font-weight="700" fill="#7f1d1d">Validation</text>
+  </g>
+
+  <line x1="735" y1="265" x2="770" y2="265" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Node 5: Assembly Analysis -->
+  <g>
+    <rect x="770" y="230" width="150" height="70" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+    <text x="845" y="260" text-anchor="middle" font-size="12.5" font-weight="700" fill="#78350f">Assembly</text>
+    <text x="845" y="278" text-anchor="middle" font-size="12.5" font-weight="700" fill="#78350f">Analysis</text>
+  </g>
+
+  <line x1="920" y1="265" x2="955" y2="265" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Node 6: Registry Comparison -->
+  <g>
+    <rect x="955" y="230" width="205" height="70" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+    <text x="1057" y="260" text-anchor="middle" font-size="12.5" font-weight="700" fill="#78350f">Registry</text>
+    <text x="1057" y="278" text-anchor="middle" font-size="12.5" font-weight="700" fill="#78350f">Comparison</text>
+  </g>
+
+  <!-- second row: wrap down then continue -->
+  <line x1="1057" y1="300" x2="1057" y2="330" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="1057" y1="330" x2="845" y2="330" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Node 7: Ranking + Pareto -->
+  <g>
+    <rect x="670" y="295" width="175" height="70" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+    <text x="757" y="325" text-anchor="middle" font-size="12.5" font-weight="700" fill="#4c1d95">Ranking +</text>
+    <text x="757" y="343" text-anchor="middle" font-size="12.5" font-weight="700" fill="#4c1d95">Pareto</text>
+  </g>
+
+  <line x1="670" y1="330" x2="635" y2="330" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Node 8: Recommended Plasmid -->
+  <g>
+    <rect x="460" y="295" width="175" height="70" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="3"/>
+    <text x="547" y="325" text-anchor="middle" font-size="12.5" font-weight="800" fill="#064e3b">Recommended</text>
+    <text x="547" y="343" text-anchor="middle" font-size="12.5" font-weight="800" fill="#064e3b">Plasmid</text>
+  </g>
+
+  <text x="590" y="30" text-anchor="middle" font-size="18" font-weight="800" fill="#0f172a">Constraint-Based Automatic Plasmid Design — Pipeline</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arrowSide" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#6366f1"/>
+    </marker>
+  </defs>
+</svg>

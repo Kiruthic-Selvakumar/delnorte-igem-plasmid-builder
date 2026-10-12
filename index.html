@@ -14,13 +14,363 @@ input,select,button,textarea{font-family:inherit}
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:#0f172a}
 ::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Step 00 — the codon optimizer.
+
+   This is the Reef Codon interface, reproduced layout for layout: the
+   organism bar, the physiology chain, the sticky control rail, the tab
+   strip and every pane. Only the tokens below changed. Reef Codon's own
+   palette (deep water + coral fluorescent-protein emission) and its
+   Bricolage/IBM Plex typefaces are replaced by this project's slate theme
+   and system fonts, so step 00 reads as part of the builder rather than a
+   second product bolted on.
+
+   Every rule is scoped under .rc. The builder's own styles are inline and
+   must stay untouched, so nothing here may select a bare element.
+   ══════════════════════════════════════════════════════════════════════ */
+.rc{
+  /* surfaces, darkest to lightest — the builder's four-step slate ramp */
+  --abyss:#0f172a; --water:#1e293b; --shelf:#293549; --reef:#334155;
+  --inset:#070f1a;
+  /* text ramp */
+  --foam:#e2e8f0; --silt:#94a3b8; --dim:#475569;
+  /* accents: the builder's, in the roles Reef Codon gave its own */
+  --cfp:#38bdf8; --gfp:#4ade80; --rfp:#f87171; --chromo:#c084fc; --amber:#fbbf24;
+  --r:3px;
+  --mono:monospace;
+  --sans:system-ui,-apple-system,sans-serif;
+  --disp:var(--sans);
+
+  background:var(--abyss); color:var(--foam);
+  font:400 14px/1.55 var(--sans);
+  -webkit-font-smoothing:antialiased;
+  /* matches the step-00 card's radius: the card must keep overflow visible
+     so the rail and tab strip can stick, so .rc rounds its own corners */
+  border-radius:0 0 11px 11px;
+}
+.rc h1,.rc h2,.rc h3{font-family:var(--disp);font-weight:800;letter-spacing:-.02em;margin:0}
+.rc a{color:var(--cfp)}
+.rc ::selection{background:var(--cfp);color:var(--abyss)}
+.rc :focus-visible{outline:2px solid var(--cfp);outline-offset:2px}
+
+.rc .eyebrow{
+  font:600 10px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase;
+  color:var(--dim);
+}
+
+/* ── top bar ─────────────────────────────────────────────────────────── */
+.rc .topbar{
+  display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+  padding:12px 22px; border-bottom:1px solid var(--reef);
+  background:#0f172ae6;
+}
+.rc .brand{display:flex;align-items:center;gap:11px;margin-right:auto}
+.rc .brand h1{font-size:19px;line-height:1}
+.rc .brand p{margin:3px 0 0;font:400 11px/1 var(--mono);color:var(--dim);letter-spacing:.02em}
+.rc .polyp{width:26px;height:26px;flex:none}
+
+/* ── organism bar ─────────────────────────────────────────────────────── */
+.rc .orgbar{
+  display:flex;gap:0;border-bottom:1px solid var(--reef);overflow-x:auto;
+  background:linear-gradient(180deg,#0f172a00,#1e293b66);
+}
+.rc .orgbar button{
+  appearance:none;background:transparent;border:0;border-right:1px solid var(--reef);
+  padding:11px 18px;cursor:pointer;text-align:left;white-space:nowrap;color:var(--silt);
+  display:flex;flex-direction:column;gap:4px;min-width:150px;
+  border-bottom:2px solid transparent;
+}
+.rc .orgbar button:hover{background:var(--water)}
+.rc .orgbar button[aria-selected="true"]{background:var(--shelf);color:var(--foam)}
+.rc .orgbar .nm{font:600 12.5px/1 var(--sans);letter-spacing:-.01em;display:flex;align-items:center;gap:7px}
+.rc .orgbar .nm i{width:7px;height:7px;border-radius:50%;flex:none;background:currentColor;opacity:.45}
+.rc .orgbar button[aria-selected="true"] .nm i{opacity:1}
+.rc .orgbar .sub{font:500 9.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+
+.rc .badge{
+  display:inline-flex;align-items:center;gap:4px;border-radius:2px;padding:2px 5px;
+  font:600 8.5px/1.35 var(--mono);letter-spacing:.09em;text-transform:uppercase;
+}
+.rc .badge.ok{background:#14532d55;color:var(--gfp)}
+.rc .badge.prov{background:#78350f55;color:var(--amber)}
+.rc .badge.euk{background:#4c1d9555;color:var(--chromo)}
+.rc .badge.none{background:#7f1d1d55;color:var(--rfp)}
+
+.rc .banner{
+  display:flex;gap:11px;align-items:flex-start;border:1px solid var(--reef);border-left:2px solid var(--amber);
+  border-radius:var(--r);padding:12px 14px;margin-bottom:18px;background:var(--water);
+  font-size:12.5px;line-height:1.6;color:var(--silt);
+}
+.rc .banner.euk{border-left-color:var(--chromo)}
+.rc .banner.ok{border-left-color:var(--gfp)}
+.rc .banner strong{color:var(--foam);display:block;margin-bottom:3px}
+
+.rc .checkline{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--shelf);font:400 11.5px/1.4 var(--mono)}
+.rc .checkline .mk{width:15px;flex:none;text-align:center;font-weight:600}
+.rc .checkline .mk.p{color:var(--gfp)} .rc .checkline .mk.f{color:var(--rfp)}
+.rc .checkline .nm2{flex:1;color:var(--silt)}
+.rc .checkline .dt{color:var(--dim);text-align:right}
+
+.rc .cardgrid{display:grid;grid-template-columns:auto repeat(3,1fr);gap:6px 8px;align-items:center;margin-top:10px}
+.rc .cardgrid label{font:500 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.rc .cardgrid input{padding:6px 7px;font-size:11px;text-align:right}
+.rc .cardgrid .hd{font:500 9px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-align:center}
+
+.rc .run{
+  appearance:none;border:1px solid var(--cfp);border-radius:var(--r);cursor:pointer;
+  background:var(--cfp);color:#06263a;
+  font:600 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  padding:11px 18px; transition:filter .15s, opacity .15s;
+}
+.rc .run:hover{filter:brightness(1.12)}
+.rc .run[disabled]{opacity:.45;cursor:progress}
+
+/* ── signature: physiology chain ─────────────────────────────────────── */
+.rc .chain{border-bottom:1px solid var(--reef);background:linear-gradient(180deg,#0f172a00,#1e293b88)}
+.rc .chain-head{display:flex;align-items:baseline;gap:12px;padding:14px 22px 0;flex-wrap:wrap}
+.rc .chain-head p{margin:0;color:var(--silt);font-size:12px}
+.rc .chain-inner{
+  display:grid;
+  grid-template-columns:minmax(150px,1fr) 18px minmax(180px,1.2fr) 18px auto 18px minmax(190px,1.3fr);
+  align-items:center; gap:0 10px; padding:12px 22px 20px;
+}
+.rc .chain-arrow{color:var(--reef);text-align:center;font-size:15px;user-select:none}
+.rc .chain-col{display:flex;flex-direction:column;gap:7px}
+.rc .chain-lab{font:500 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:2px}
+
+.rc .factor{display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:9px;font:500 11px/1 var(--mono)}
+.rc .factor .nm{color:var(--silt)}
+.rc .factor .val{color:var(--foam);text-align:right;font-variant-numeric:tabular-nums}
+.rc .meter{height:4px;background:var(--shelf);border-radius:2px;overflow:hidden}
+.rc .meter i{display:block;height:100%;background:var(--cfp);transition:width .35s cubic-bezier(.2,.8,.3,1)}
+.rc .meter.g i{background:var(--gfp)} .rc .meter.a i{background:var(--amber)} .rc .meter.r i{background:var(--rfp)}
+
+.rc .mu{display:flex;flex-direction:column;align-items:center;gap:4px}
+.rc .mu svg{display:block}
+.rc .mu .cap{font:500 9px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-align:center}
+
+.rc .wstack{display:flex;height:26px;border-radius:var(--r);overflow:hidden;border:1px solid var(--reef)}
+.rc .wstack i{display:block;height:100%;transition:width .35s cubic-bezier(.2,.8,.3,1);position:relative}
+.rc .wkey{display:flex;flex-wrap:wrap;gap:4px 12px;font:500 10px/1 var(--mono);color:var(--silt)}
+.rc .wkey span{display:flex;align-items:center;gap:5px}
+.rc .wkey b{width:7px;height:7px;border-radius:1px;display:inline-block}
+.rc .w-cai{background:var(--cfp)} .rc .w-env{background:var(--chromo)} .rc .w-gc{background:var(--gfp)}
+.rc .w-struct{background:var(--rfp)} .rc .w-cons{background:var(--amber)}
+
+/* ── layout ──────────────────────────────────────────────────────────── */
+.rc .layout{display:grid;grid-template-columns:340px minmax(0,1fr);gap:0;align-items:start}
+.rc .rail{
+  border-right:1px solid var(--reef); padding:0 0 24px;
+  position:sticky; top:0; max-height:100vh; overflow-y:auto;
+}
+.rc .results{padding:0 0 24px;min-width:0}
+
+.rc .block{border-bottom:1px solid var(--reef);padding:18px 20px}
+.rc .block h3{font-size:12px;font-family:var(--mono);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--silt);margin-bottom:12px}
+.rc .hint{color:var(--dim);font-size:11.5px;line-height:1.5;margin:8px 0 0}
+
+.rc textarea,.rc input[type=text],.rc input[type=number],.rc select{
+  width:100%;background:var(--abyss);border:1px solid var(--reef);border-radius:var(--r);
+  color:var(--foam);font:400 12px/1.5 var(--mono);padding:9px 10px;
+}
+.rc textarea{resize:vertical;min-height:104px;letter-spacing:.03em;word-break:break-all}
+.rc select{cursor:pointer}
+.rc .row{display:flex;gap:8px;align-items:center}
+.rc .row+.row{margin-top:8px}
+.rc .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.rc .chip{
+  appearance:none;border:1px solid var(--reef);background:transparent;color:var(--silt);
+  border-radius:var(--r);font:500 10.5px/1 var(--mono);padding:6px 9px;cursor:pointer;
+}
+.rc .chip:hover{border-color:var(--cfp);color:var(--foam)}
+.rc .chip[disabled]{opacity:.45;cursor:not-allowed}
+
+.rc .status{margin-top:9px;font:500 11px/1.45 var(--mono);color:var(--silt);display:flex;gap:7px;flex-wrap:wrap}
+.rc .status.bad{color:var(--amber)}
+.rc .status.ok{color:var(--gfp)}
+
+.rc .slider{margin-bottom:15px}
+.rc .slider .top{display:flex;justify-content:space-between;align-items:baseline;font:500 11px/1 var(--mono);margin-bottom:7px}
+.rc .slider .top .k{color:var(--silt)}
+.rc .slider .top .v{color:var(--foam);font-variant-numeric:tabular-nums}
+.rc input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;background:transparent;height:16px;margin:0;cursor:pointer;
+}
+.rc input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--shelf);border-radius:2px}
+.rc input[type=range]::-moz-range-track{height:3px;background:var(--shelf);border-radius:2px}
+.rc input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--foam);
+  margin-top:-5px;border:0;
+}
+.rc input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--foam);border:0}
+.rc input[type=range]:disabled{opacity:.4;cursor:not-allowed}
+
+.rc .check{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--foam);margin-bottom:9px;cursor:pointer}
+.rc .check input{margin:2px 0 0;accent-color:var(--cfp);flex:none}
+.rc .check span small{display:block;color:var(--dim);font-size:11px;line-height:1.4}
+
+/* ── tabs ────────────────────────────────────────────────────────────── */
+.rc .tabs{display:flex;gap:0;border-bottom:1px solid var(--reef);overflow-x:auto;
+  position:sticky;top:0;background:#0f172af0;backdrop-filter:blur(10px);z-index:20}
+.rc .tabs button{
+  appearance:none;background:transparent;border:0;border-bottom:2px solid transparent;
+  color:var(--dim);font:500 11.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  padding:14px 16px;cursor:pointer;white-space:nowrap;
+}
+.rc .tabs button:hover{color:var(--silt)}
+.rc .tabs button[aria-selected="true"]{color:var(--foam);border-bottom-color:var(--cfp)}
+.rc .pane{padding:22px}
+
+.rc .empty{
+  border:1px dashed var(--reef);border-radius:var(--r);padding:40px 26px;text-align:center;color:var(--silt);
+}
+.rc .empty strong{display:block;font-family:var(--disp);font-size:17px;color:var(--foam);margin-bottom:6px;letter-spacing:-.01em}
+
+/* ── metric strip ────────────────────────────────────────────────────── */
+.rc .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:1px;background:var(--reef);border:1px solid var(--reef);border-radius:var(--r);overflow:hidden;margin-bottom:20px}
+.rc .metric{background:var(--water);padding:12px 13px}
+.rc .metric .k{font:500 9.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.rc .metric .v{font:700 21px/1.1 var(--disp);margin-top:7px;font-variant-numeric:tabular-nums}
+.rc .metric .d{font:500 10.5px/1 var(--mono);margin-top:5px;color:var(--silt)}
+.rc .up{color:var(--gfp)} .rc .down{color:var(--rfp)} .rc .flat{color:var(--dim)}
+
+/* ── codon track ─────────────────────────────────────────────────────── */
+.rc .tracklegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 14px;font:500 10.5px/1 var(--mono);color:var(--silt)}
+.rc .tracklegend span{display:flex;align-items:center;gap:6px}
+.rc .tracklegend b{width:8px;height:8px;border-radius:1px;display:inline-block}
+.rc .track{display:flex;flex-wrap:wrap;gap:2px}
+.rc .cod{
+  position:relative;width:38px;padding:4px 0 5px;border-radius:2px;text-align:center;
+  background:var(--water);border-top:2px solid transparent;cursor:default;
+}
+.rc .cod .aa{display:block;font:500 8.5px/1 var(--mono);color:var(--dim)}
+.rc .cod .nt{display:block;font:500 11px/1.2 var(--mono);color:var(--silt);letter-spacing:.02em;margin-top:2px}
+.rc .cod.ch{background:var(--shelf)}
+.rc .cod.ch .nt{color:var(--foam)}
+.rc .cod .was{display:block;font:400 8.5px/1 var(--mono);color:var(--dim);text-decoration:line-through;min-height:9px}
+.rc .cod.lock{outline:1px solid var(--reef);outline-offset:-1px}
+.rc .cod[data-d="cai"]{border-top-color:var(--cfp)}
+.rc .cod[data-d="env"]{border-top-color:var(--chromo)}
+.rc .cod[data-d="gc"]{border-top-color:var(--gfp)}
+.rc .cod[data-d="struct"]{border-top-color:var(--rfp)}
+.rc .cod[data-d="cons"]{border-top-color:var(--amber)}
+#tip{
+  position:fixed;z-index:60;display:none;pointer-events:none;width:212px;text-align:left;
+  background:#070f1a;border:1px solid #334155;border-radius:3px;padding:9px 11px;
+  font:400 11px/1.55 monospace;color:#94a3b8;box-shadow:0 10px 28px #000a;
+}
+#tip b{color:#e2e8f0;font-weight:600}
+#tip em{font-style:normal;color:#38bdf8}
+@media (prefers-reduced-motion:no-preference){
+  .rc .track .cod.ch{animation:rcpop .3s cubic-bezier(.2,.8,.3,1) both}
+}
+@keyframes rcpop{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+
+.rc .seqbox{margin-top:20px}
+.rc .seqbox .bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.rc .seqout{
+  background:var(--inset);border:1px solid var(--reef);border-radius:var(--r);padding:12px;
+  font:400 12px/1.75 var(--mono);word-break:break-all;letter-spacing:.04em;color:var(--silt);max-height:230px;overflow:auto;
+}
+.rc .seqout .init{color:var(--rfp)}
+
+/* ── objective bars ──────────────────────────────────────────────────── */
+.rc .obj{display:grid;grid-template-columns:132px 1fr 128px;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--shelf)}
+.rc .obj .name{font:500 11.5px/1.3 var(--mono);color:var(--foam)}
+.rc .obj .name small{display:block;color:var(--dim);font-size:10px;letter-spacing:.04em}
+.rc .obj .lanes{display:flex;flex-direction:column;gap:4px}
+.rc .lane{display:flex;align-items:center;gap:8px;font:500 10px/1 var(--mono);color:var(--dim)}
+.rc .lane .t{width:44px;flex:none}
+.rc .lane .bar{flex:1;height:7px;background:var(--shelf);border-radius:2px;overflow:hidden}
+.rc .lane .bar i{display:block;height:100%;background:var(--dim);transition:width .4s}
+.rc .lane.new .bar i{background:var(--cfp)}
+.rc .obj .num{font:500 11px/1.4 var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+
+.rc table.data{width:100%;border-collapse:collapse;font:400 12px/1.5 var(--mono)}
+.rc table.data th{
+  text-align:left;font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);padding:9px 10px;border-bottom:1px solid var(--reef);white-space:nowrap;
+}
+.rc table.data td{padding:9px 10px;border-bottom:1px solid var(--shelf);color:var(--silt);font-variant-numeric:tabular-nums}
+.rc table.data td.lead{color:var(--foam)}
+.rc table.data tr.best td{color:var(--foam)}
+.rc table.data tr.best td.lead{color:var(--cfp)}
+
+.rc .note{border-left:2px solid var(--reef);padding:2px 0 2px 14px;color:var(--silt);font-size:12.5px;line-height:1.65;margin:18px 0}
+.rc .note strong{color:var(--foam)}
+
+.rc .prose{max-width:74ch}
+.rc .prose h2{font-size:17px;margin:26px 0 9px}
+.rc .prose h2:first-child{margin-top:0}
+.rc .prose p{color:var(--silt);line-height:1.7;margin:0 0 12px}
+.rc .prose ul{color:var(--silt);line-height:1.7;padding-left:19px;margin:0 0 12px}
+.rc .prose code{font-family:var(--mono);font-size:12px;color:var(--foam);background:var(--shelf);padding:1px 5px;border-radius:2px}
+.rc .formula{
+  font-family:var(--mono);font-size:12.5px;color:var(--foam);background:var(--water);
+  border:1px solid var(--reef);border-radius:var(--r);padding:13px 15px;margin:0 0 14px;overflow-x:auto;line-height:1.8;
+}
+
+.rc .progress{height:2px;background:var(--shelf);border-radius:2px;overflow:hidden;margin-top:10px}
+.rc .progress i{display:block;height:100%;width:0;background:var(--cfp);transition:width .18s linear}
+
+.rc .paretowrap{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:22px}
+.rc .axisrow{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.rc .axisrow label{font:500 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);display:flex;flex-direction:column;gap:6px}
+.rc .axisrow select{width:auto;min-width:150px}
+.rc .ptinfo{border:1px solid var(--reef);border-radius:var(--r);padding:14px;background:var(--water);font:400 11.5px/1.7 var(--mono);color:var(--silt)}
+.rc .ptinfo h4{margin:0 0 9px;font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.rc .ptinfo dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0}
+.rc .ptinfo dt{color:var(--dim)} .rc .ptinfo dd{margin:0;color:var(--foam);text-align:right;font-variant-numeric:tabular-nums}
+.rc circle.pt{cursor:pointer;transition:r .12s}
+.rc circle.pt:hover{r:7}
+
+.rc .cutable{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1px;background:var(--reef);border:1px solid var(--reef);border-radius:var(--r);overflow:hidden}
+.rc .aabox{background:var(--water);padding:11px 12px}
+.rc .aabox .h{display:flex;justify-content:space-between;font:600 10.5px/1 var(--mono);letter-spacing:.1em;color:var(--foam);margin-bottom:9px}
+.rc .aabox .h em{font-style:normal;color:var(--dim);font-weight:400}
+.rc .curow{display:grid;grid-template-columns:38px 1fr 34px;gap:7px;align-items:center;font:400 10.5px/1 var(--mono);color:var(--silt);margin-bottom:4px}
+.rc .curow .cbar{height:5px;background:var(--shelf);border-radius:1px;overflow:hidden}
+.rc .curow .cbar i{display:block;height:100%;background:var(--dim)}
+.rc .curow.top{color:var(--foam)} .rc .curow.top .cbar i{background:var(--cfp)}
+.rc .curow .n{text-align:right;font-variant-numeric:tabular-nums;color:var(--dim)}
+
+/* the handoff into step 01 — the one element Reef Codon has no analogue for */
+.rc .handoff{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  border:1px solid var(--reef);border-left:2px solid var(--gfp);border-radius:var(--r);
+  background:var(--water);padding:13px 15px;margin-top:20px;
+}
+.rc .handoff .txt{flex:1;min-width:180px;font-size:12.5px;line-height:1.6;color:var(--silt)}
+.rc .handoff .txt strong{color:var(--foam);display:block;margin-bottom:2px}
+.rc .take{
+  appearance:none;border:1px solid var(--gfp);border-radius:var(--r);cursor:pointer;
+  background:var(--gfp);color:#06251a;font:600 12px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;padding:11px 18px;
+}
+.rc .take:hover{filter:brightness(1.1)}
+
+@media (max-width:1100px){
+  .rc .layout{grid-template-columns:1fr}
+  .rc .rail{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--reef)}
+  .rc .chain-inner{grid-template-columns:1fr;gap:18px}
+  .rc .chain-arrow{display:none}
+  .rc .paretowrap{grid-template-columns:1fr}
+  .rc .tabs{position:static}
+  .rc .obj{grid-template-columns:1fr;gap:6px}
+  .rc .obj .num{text-align:left}
+}
 </style>
 </head>
 <body>
 <div id="root"></div>
+<!-- one shared tooltip for the codon track in step 00; positioned on hover -->
+<div id="tip" role="tooltip"></div>
 <script type="module">
   import * as Designer from "./designer.js";
+  import * as Codon from "./codon.js";
   window.Designer = Designer;
+  window.Codon = Codon;
 </script>
 <script type="text/babel">
 const { useState, useEffect, useLayoutEffect, useMemo, useRef } = React;
@@ -58,6 +408,25 @@ const PROTOCOLS = {
 /* ── Part presets ─────────────────────────────────────────────────────── */
 const HOST_ALIAS = { "V. natriegens": "V. natrigens" };
 const protocolFor = host => PROTOCOLS[HOST_ALIAS[host] || host] || null;
+
+/* ── Codon optimizer presentation ─────────────────────────────────────
+   Labels and colours for the five objective terms in codon.js. The keys
+   match Codon.TERM_KEYS; the engine itself carries no presentation. */
+const TERM_META = {
+  cai:    { label:"tRNA adaptation", sub:"CAI vs highly expressed",  cls:"w-cai",    color:"#38bdf8" },
+  env:    { label:"Environment fit", sub:"pool blend + GC3",         cls:"w-env",    color:"#c084fc" },
+  gc:     { label:"GC composition",  sub:"global + 45 bp window",    cls:"w-gc",     color:"#4ade80" },
+  struct: { label:"Open initiation", sub:"first 48 nt folding",      cls:"w-struct", color:"#f87171" },
+  cons:   { label:"Constraints",     sub:"sites, runs, repeats",     cls:"w-cons",   color:"#fbbf24" },
+};
+/* Growth-condition presets. "Lab optimum" resolves against the chosen
+   organism's own cardinal values, so it means something different per host. */
+const ENV_PRESETS = {
+  lab:  { label:"Lab optimum", from:org => ({temp:org.cardinal.T.opt, ph:org.cardinal.pH.opt, salt:org.cardinal.salt.opt, oxygen:"aerobic"}) },
+  reef: { label:"Reef seawater", from:() => ({temp:27, ph:8.1, salt:3.5, oxygen:"aerobic"}) },
+  pond: { label:"Hypersaline pond", from:() => ({temp:33, ph:8.6, salt:15, oxygen:"microaerobic"}) },
+};
+const TABLE_TONE = { verified:"#22c55e", provisional:"#f97316", none:"#f87171" };
 
 const FILL = {
   promoter:"#4ade80", operator:"#22d3ee", rbs:"#fbbf24", cds:"#60a5fa", signal:"#f472b6",
@@ -306,6 +675,1323 @@ function cRuns(str, start, m) {
   if(s)r.push({s,col}); return r;
 }
 
+/* ── Step 00: codon optimization ──────────────────────────────────────
+   The Reef Codon interface, reproduced layout for layout: organism bar,
+   physiology chain, sticky control rail, tab strip, and all seven panes.
+   Only the look changed - the .rc block in <style> restyles it to this
+   project's slate theme and system fonts.
+
+   The optimization engine is ./codon.js. Nothing below does any science.
+
+   Reef Codon shipped a demoSequence() that invented DNA with a PRNG. It is
+   deliberately not ported, because CLAUDE.md forbids generating fake
+   sequence, so "load an example" pulls a real CDS out of parts.json. */
+
+function download(name, text) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], {type:"text/plain"}));
+  a.download = name; a.click(); URL.revokeObjectURL(a.href);
+}
+const pctS = x => (x * 100).toFixed(1) + "%";
+const f3 = x => x.toFixed(3);
+
+/* One tooltip node for the whole track, positioned and clamped on hover.
+   Delegated on the container, so a 2,000-codon track costs two listeners
+   rather than four thousand. */
+function useTrackTips(ref) {
+  useEffect(() => {
+    const host = ref.current, tip = document.getElementById("tip");
+    if (!host || !tip) return;
+    const over = e => {
+      const t = e.target.closest(".cod");
+      if (!t || !t.dataset.tip) return;
+      tip.innerHTML = t.dataset.tip;
+      tip.style.display = "block";
+      const r = t.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+      let x = Math.max(8, Math.min(r.left + r.width/2 - w/2, window.innerWidth - w - 8));
+      let y = r.top - h - 8;
+      if (y < 8) y = r.bottom + 8;
+      tip.style.left = x + "px"; tip.style.top = y + "px";
+    };
+    const out = () => { tip.style.display = "none"; };
+    host.addEventListener("mouseover", over);
+    host.addEventListener("mouseleave", out);
+    return () => {
+      host.removeEventListener("mouseover", over);
+      host.removeEventListener("mouseleave", out);
+      tip.style.display = "none";
+    };
+  });
+}
+
+function Factor({ name, value, frac, tone }) {
+  return (
+    <div className="factor">
+      <span className="nm">{name}</span>
+      <div className={"meter" + (tone ? " " + tone : "")}>
+        <i style={{width:Math.max(0,Math.min(1,frac))*100+"%"}}/>
+      </div>
+      <span className="val">{value}</span>
+    </div>
+  );
+}
+
+function RcSection({ title, tone, children }) {
+  return (
+    <div style={{marginBottom:14}}>
+      <div style={{fontSize:10,color:tone||"#475569",marginBottom:6,letterSpacing:.5,textTransform:"uppercase"}}>{title}</div>
+      {children}
+    </div>
+  );
+}
+function Headed({ title, children }) {
+  return (
+    <div style={{marginBottom:18}}>
+      <h2 style={{fontSize:17,marginBottom:6}}>{title}</h2>
+      <p style={{color:"#94a3b8",margin:0,maxWidth:"76ch",lineHeight:1.65,fontSize:12.5}}>{children}</p>
+    </div>
+  );
+}
+function RcEmpty({ title, children }) {
+  return <div className="empty"><strong>{title}</strong>{children}</div>;
+}
+
+function CodonPanel({ organisms, cdsPool, template, accepted, onAccept, onClear }) {
+  const C = window.Codon;
+  const orgList = useMemo(() => (organisms ? Object.values(organisms) : []), [organisms]);
+  const hostOrg = useMemo(
+    () => (C && organisms && template) ? C.organismForHost(organisms, template.host) : null,
+    [C, organisms, template]);
+
+  const [orgId, setOrgId] = useState("");
+  const [orgTouched, setOrgTouched] = useState(false);
+  const [raw, setRaw] = useState("");
+  const [srcRec, setSrcRec] = useState(null);
+  const [env, setEnv] = useState({temp:37, ph:7, salt:0.5, oxygen:"aerobic"});
+  const [envOrg, setEnvOrg] = useState("");
+  const [cardinalOv, setCardinalOv] = useState({});
+  const [cardNote, setCardNote] = useState("");
+  const [cons, setCons] = useState({typeIIS:true, cloning:true, internalSD:true,
+    avoidRepeats:true, maxHomopolymer:5, lockN:0, gcMin:30, gcMax:72, custom:""});
+  const [autoW, setAutoW] = useState(true);
+  const [manualW, setManualW] = useState(null);
+  const [hyp, setHyp] = useState({thermal:0.25, osmotic:0.20, growth:1.0});
+  const [busy, setBusy] = useState(false);
+  const [prog, setProg] = useState(0);
+  const [run, setRun] = useState(null);
+  const [err, setErr] = useState(null);
+  const [tab, setTab] = useState("p-seq");
+  const [usageOv, setUsageOv] = useState({});
+  const [highOv, setHighOv] = useState({});
+  const [buildRep, setBuildRep] = useState({});
+  const [fasta, setFasta] = useState("");
+  const [fastaTgt, setFastaTgt] = useState("avg");
+  const [pasteTbl, setPasteTbl] = useState("");
+  const [pareto, setPareto] = useState(null);
+  const [axes, setAxes] = useState({x:"cai", y:"struct"});
+  const [ptSel, setPtSel] = useState(null);
+  const [pBusy, setPBusy] = useState(false);
+  const [selfRes, setSelfRes] = useState(null);
+  const [copied, setCopied] = useState(false);
+  const [dirty, setDirty] = useState(false);   // settings moved since the last run
+  const trackRef = useRef(null);
+  useTrackTips(trackRef);
+
+  // cardinal values are editable, so the organism in play may differ from the file
+  const org = useMemo(() => {
+    if (!organisms || !orgId || !organisms[orgId]) return null;
+    const base = organisms[orgId], ov = cardinalOv[orgId];
+    return ov ? Object.assign({}, base, {cardinal: ov}) : base;
+  }, [organisms, orgId, cardinalOv]);
+
+  useEffect(() => {
+    if (hostOrg && !orgTouched && hostOrg.id !== orgId) setOrgId(hostOrg.id);
+    else if (!orgId && orgList.length) setOrgId(orgList[0].id);
+  }, [hostOrg, orgTouched, orgId, orgList]);
+
+  useEffect(() => {
+    if (org && envOrg !== org.id) {
+      const c = org.cardinal;
+      setEnv({temp:c.T.opt, ph:c.pH.opt, salt:c.salt.opt, oxygen:"aerobic"});
+      setEnvOrg(org.id);
+    }
+  }, [org, envOrg]);
+
+  const parsed = useMemo(() => (C && raw.trim()) ? C.parseInput(raw) : null, [C, raw]);
+  const aa = parsed && !parsed.error ? parsed.aa : null;
+  const usage = org ? (usageOv[org.id] || org.usage) : null;
+  const asmEnzymes = useMemo(
+    () => (C && template) ? C.enzymesForAssembly(template.assembly) : [], [C, template]);
+
+  const optsFor = () => ({
+    typeIIS: cons.typeIIS, cloning: cons.cloning, internalSD: cons.internalSD,
+    avoidRepeats: cons.avoidRepeats,
+    maxHomopolymer: Math.max(3, +cons.maxHomopolymer || 5),
+    gcMin: (+cons.gcMin || 30) / 100,
+    gcMax: (+cons.gcMax || 72) / 100,
+    enzymes: asmEnzymes,
+    custom: cons.custom.toUpperCase().split(/[,\s]+/).map(s => s.replace(/[^ACGT]/g,"")).filter(s => s.length >= 4),
+    hypotheses: hyp,
+    usageOverride: org ? usageOv[org.id] : null,
+    usageHighOverride: org ? highOv[org.id] : null,
+  });
+
+  // the chain needs no codon table, so it works even for an organism with none
+  const dw = useMemo(() => (C && org) ? C.defaultWeights(org, env) : null, [C, org, env]);
+  const weights = (autoW || !manualW) ? (dw && dw.weights) : manualW;
+  const ctxPrev = useMemo(() => {
+    if (!C || !org || !usage || !weights) return null;
+    try { return C.makeContext(org, env, optsFor(), weights, aa); } catch (e) { return null; }
+  }, [C, org, usage, weights, env, aa, cons, hyp, asmEnzymes, usageOv, highOv]);
+
+  /* Two kinds of change. A new sequence or organism makes the old result
+     meaningless, so it is thrown away. A condition, weight or hypothesis
+     change leaves the result valid for the settings it was run under, so
+     Reef Codon kept it on screen - but then the chain above describes
+     settings the numbers below were not computed with, which is why the
+     result is flagged stale rather than silently left to look current. */
+  const invalidate = () => { setRun(null); setErr(null); setPareto(null); setPtSel(null); setDirty(false); };
+  const touch = () => { setDirty(true); setPareto(null); setPtSel(null); };
+
+  const runOptimize = async (wOverride) => {
+    if (!C || !org || !aa || busy) return;
+    setBusy(true); setErr(null); setProg(0);
+    try {
+      const o = optsFor();
+      const w = wOverride || weights || C.defaultWeights(org, env).weights;
+      const ctx = C.makeContext(org, env, o, w, aa);
+      const lockN = Math.min(+cons.lockN || 0, aa.length);
+      const locked = new Array(aa.length).fill(null);
+      if (lockN > 0 && parsed.type === "dna")
+        for (let i = 0; i < lockN; i++) locked[i] = parsed.codons[i];
+      // The stop codon is held fixed. Swapping it to satisfy a composition
+      // target is a bad trade: readthrough behaviour differs between stops,
+      // and TGA is reassigned in some contexts.
+      const last = aa.length - 1;
+      if (aa[last] === "*")
+        locked[last] = parsed.type === "dna" ? parsed.codons[last] : C.bestStop(ctx.usage);
+
+      const res = await C.optimizeAsync(aa, ctx, locked, {}, f => setProg(f));
+      const refCodons = parsed.type === "dna" ? parsed.codons : C.baselineMaxCAI(aa, ctx.wHigh);
+      const refLabel = parsed.type === "dna" ? "Your input" : "Most-frequent-codon draft";
+      setRun({
+        ctx, aa, res, lockN, locked, refCodons, refLabel,
+        refEval: C.evaluate(refCodons, ctx),
+        changes: C.attributeChanges(aa, refCodons, res.codons, ctx),
+        inputType: parsed.type, inputCodons: parsed.type === "dna" ? parsed.codons.slice() : null,
+      });
+      setDirty(false); setPareto(null); setPtSel(null); setTab("p-seq");
+    } catch (e) { setErr(e.message); setRun(null); }
+    finally { setBusy(false); setProg(0); }
+  };
+
+  const sampleWeights = () => {
+    if (!run) return;
+    setPBusy(true);
+    setTimeout(() => {
+      try {
+        setPareto(C.paretoSweep(run.aa, run.ctx.org, run.ctx.env, optsFor(), run.locked, 36));
+      } catch (e) { setErr(e.message); }
+      setPBusy(false);
+    }, 20);
+  };
+
+  const buildTable = () => {
+    const out = C.codonUsageFromFasta(fasta);
+    if (out.error) { setBuildRep(m => ({...m, [org.id]:{cls:"bad", text:out.error}})); return; }
+    const st = out.stats;
+    const slot = fastaTgt === "high" ? "highly-expressed reference" : "genome average";
+    const bits = [`[${slot}] Counted ${st.codons.toLocaleString()} codons from ${st.used} sequences.`];
+    let cls = "ok";
+    if (st.codons < 20000) {
+      cls = "bad";
+      bits.push("Enough to load, but a stable genome table usually needs a few hundred thousand codons — treat this one as provisional.");
+    }
+    if (st.skippedFrame || st.skippedInternalStop || st.skippedAmbiguous)
+      bits.push(`Rejected ${st.skippedFrame} out-of-frame, ${st.skippedInternalStop} with internal stops, ${st.skippedAmbiguous} with ambiguous bases.`);
+    if (st.emptyFamilies)
+      bits.push(`${st.emptyFamilies} amino acid(s) never appeared; those families were left uniform.`);
+    setBuildRep(m => ({...m, [org.id]:{cls, text:bits.join(" ")}}));
+    if (fastaTgt === "high") setHighOv(m => ({...m, [org.id]: out.usage}));
+    else setUsageOv(m => ({...m, [org.id]: out.usage}));
+    invalidate();
+  };
+
+  const applyPasted = () => {
+    const t = C.parseUsageText(pasteTbl);
+    const k = Object.keys(t).length;
+    if (k < 40) { setBuildRep(m => ({...m, [org.id]:{cls:"bad", text:`Only ${k} codons were recognized. A usable table needs at least 40.`}})); return; }
+    for (const c of Object.keys(C.CODON_AA)) if (!(c in t)) t[c] = 0.01;
+    setUsageOv(m => ({...m, [org.id]: C.normalizeUsage(t)}));
+    setBuildRep(m => ({...m, [org.id]:{cls:"ok", text:`Applied a pasted table: ${k} codons recognized, normalised to within-family fractions.`}}));
+    invalidate();
+  };
+
+  const resetTable = () => {
+    setUsageOv(m => { const n = {...m}; delete n[org.id]; return n; });
+    setHighOv(m => { const n = {...m}; delete n[org.id]; return n; });
+    setBuildRep(m => { const n = {...m}; delete n[org.id]; return n; });
+    invalidate();
+  };
+
+  const setW = (k, v) => {
+    const rawW = {}; let z = 0;
+    for (const j of C.TERM_KEYS) {
+      rawW[j] = Math.max(0.001, j === k ? +v : (weights ? weights[j] : 0.2));
+      z += rawW[j];
+    }
+    const out = {};
+    for (const j of C.TERM_KEYS) out[j] = rawW[j] / z;
+    setManualW(out); touch();
+  };
+
+  const editCardinal = (key, bound, value) => {
+    const base = organisms[orgId].cardinal;
+    const cur = cardinalOv[orgId] ? JSON.parse(JSON.stringify(cardinalOv[orgId])) : JSON.parse(JSON.stringify(base));
+    cur[key][bound] = parseFloat(value);
+    // keep min < opt < max, otherwise the gamma model is undefined
+    if (!(cur[key].min < cur[key].opt && cur[key].opt < cur[key].max)) {
+      setCardNote("Cardinal values must satisfy min < opt < max. Reverted that edit.");
+      return false;
+    }
+    setCardNote(""); setCardinalOv(m => ({...m, [orgId]: cur})); touch();
+    return true;
+  };
+
+  /* The accepted CDS is shaped like a parts.json record so designer.js can
+     slot it straight in. Evidence is inherited, never upgraded: optimizing a
+     placeholder does not turn it into a verified sequence. */
+  const accept = () => {
+    const r = run, seq = r.res.result.seq;
+    const label = srcRec ? srcRec.name : "pasted sequence";
+    const prov = usageOv[org.id] ? "codon table counted from CDS you supplied"
+                                 : (org.table.source || "no bundled table");
+    onAccept({
+      id: "opt_" + (srcRec ? srcRec.id : "pasted") + "_" + org.id,
+      name: label + " · optimized for " + org.short,
+      type: "cds",
+      seq, length: seq.length, gc: +gcCalc(seq).toFixed(1),
+      desc: `Synonymous recoding of ${label} for ${org.name} ${org.strain}`
+          + ` at ${env.temp} °C, pH ${env.ph}, ${env.salt}% NaCl, ${env.oxygen}.`
+          + ` Protein unchanged (${r.aa.length} codons). F=${r.res.result.total.toFixed(3)},`
+          + ` CAI=${r.res.result.terms.cai.toFixed(3)}, GC=${pctS(r.res.result.gc)},`
+          + ` ${r.res.result.violations.total} unresolved constraint hit(s).`,
+      src: (srcRec ? `Recoded from ${srcRec.name} (${srcRec.id}); original source: ${srcRec.src}`
+                   : "Recoded from a sequence pasted into the builder by the user")
+         + ` — codon.js ${r.res.stage}, ${prov}`,
+      evidence: srcRec ? (srcRec.evidence === "verified" ? "verified" : "placeholder") : "verified",
+      hosts: {},
+      optimized: {
+        orgId: org.id, orgShort: org.short, host: template ? template.host : null,
+        env: Object.assign({}, env), stage: r.res.stage, result: r.res.result,
+        refLabel: r.refLabel, tableStatus: usageOv[org.id] ? "built" : org.table.status,
+        highStatus: r.ctx.highSource.status,
+        changed: r.changes.filter(c => c.changed).length, codons: r.aa.length,
+      },
+    });
+  };
+
+  if (!C) return (
+    <div style={{background:"#2a0a0a",border:"1px solid #b91c1c",borderRadius:8,padding:"12px 14px",color:"#fca5a5",fontSize:12}}>
+      ./codon.js did not load — the page must be served over http, not opened as a file.
+    </div>
+  );
+  if (!organisms || !org) return (
+    <div style={{fontSize:12,color:"#475569",padding:"14px"}}>Loading codon tables…</div>
+  );
+
+  const phys = dw.phys, card = org.cardinal;
+  const tone = v => v > .7 ? "g" : v > .3 ? "" : "r";
+  const MU_C = 2 * Math.PI * 34;
+  const hostMismatch = accepted && accepted.optimized && hostOrg
+    && accepted.optimized.orgId !== hostOrg.id;
+
+  return (
+    <div className="rc">
+      <header className="topbar">
+        <div className="brand">
+          <svg className="polyp" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="3.1" fill="var(--rfp)"/>
+            <g stroke="var(--cfp)" strokeWidth="1.5" strokeLinecap="round">
+              <path d="M12 8.9V2.6"/><path d="M12 15.1v6.3"/>
+              <path d="M8.9 12H2.6"/><path d="M15.1 12h6.3"/>
+              <path d="M9.8 9.8 5.3 5.3"/><path d="M14.2 14.2l4.5 4.5"/>
+              <path d="M14.2 9.8l4.5-4.5"/><path d="M9.8 14.2l-4.5 4.5"/>
+            </g>
+          </svg>
+          <div>
+            <h1>Codon optimization</h1>
+            <p>step 00 · environment-aware synonymous recoding</p>
+          </div>
+        </div>
+        <button className="run" onClick={runOptimize} disabled={!aa || busy}>
+          {busy ? "Optimizing…" : "Optimize sequence"}
+        </button>
+      </header>
+
+      <nav className="orgbar" role="tablist" aria-label="Target organism">
+        {orgList.map(o => (
+          <button key={o.id} role="tab" aria-selected={o.id === orgId}
+            onClick={()=>{setOrgId(o.id); setOrgTouched(true); invalidate();}}>
+            <div className="nm"><i style={{background:o.accent}}/>{o.name}</div>
+            <div className="sub">{o.strain}</div>
+          </button>
+        ))}
+      </nav>
+
+      {/* signature element: environment → physiology → objective weights */}
+      <section className="chain" aria-label="Physiology chain">
+        <div className="chain-head">
+          <span className="eyebrow">Physiology chain</span>
+          <p>
+            {phys.mu < 0.02
+              ? `These conditions fall outside the tolerated range for ${org.short}, so the growth-rate coupling is switched off and the weights fall back to composition and constraints.`
+              : `At ${(+env.temp).toFixed(0)} °C, pH ${(+env.ph).toFixed(1)}, ${(+env.salt).toFixed(1)}% NaCl, ${org.short} is predicted to run at ${Math.round(phys.mu*100)}% of its maximum growth rate.`}
+            {ctxPrev
+              ? ` Target GC3 shifts from ${pctS(ctxPrev.gc3Genome)} to ${pctS(ctxPrev.gc3Target)}.`
+              : " No codon table is loaded, so no GC3 target can be computed."}
+          </p>
+        </div>
+        <div className="chain-inner">
+          <div className="chain-col">
+            <span className="chain-lab">Conditions</span>
+            <Factor name="Temp" value={(+env.temp).toFixed(1)+" °C"} tone="a"
+              frac={(env.temp-card.T.min)/(card.T.max-card.T.min)}/>
+            <Factor name="pH" value={(+env.ph).toFixed(1)} tone="a"
+              frac={(env.ph-card.pH.min)/(card.pH.max-card.pH.min)}/>
+            <Factor name="NaCl" value={(+env.salt).toFixed(1)+" %"} tone="a"
+              frac={(env.salt-card.salt.min)/(card.salt.max-card.salt.min)}/>
+            <Factor name="O₂" value={env.oxygen.slice(0,5)} tone="a" frac={org.oxygen[env.oxygen]}/>
+          </div>
+          <div className="chain-arrow" aria-hidden="true">→</div>
+          <div className="chain-col">
+            <span className="chain-lab">Cardinal response γ</span>
+            <Factor name="γ temp" value={f3(phys.gT)} frac={phys.gT} tone={tone(phys.gT)}/>
+            <Factor name="γ pH" value={f3(phys.gP)} frac={phys.gP} tone={tone(phys.gP)}/>
+            <Factor name="γ salt" value={f3(phys.gS)} frac={phys.gS} tone={tone(phys.gS)}/>
+            <Factor name="γ O₂" value={f3(phys.gO)} frac={phys.gO} tone={tone(phys.gO)}/>
+          </div>
+          <div className="chain-arrow" aria-hidden="true">→</div>
+          <div className="mu">
+            <svg width="86" height="86" viewBox="0 0 86 86" aria-hidden="true">
+              <circle cx="43" cy="43" r="34" fill="none" stroke="var(--shelf)" strokeWidth="7"/>
+              <circle cx="43" cy="43" r="34" fill="none" strokeWidth="7" strokeLinecap="round"
+                stroke={phys.mu > .7 ? "var(--gfp)" : phys.mu > .25 ? "var(--cfp)" : "var(--rfp)"}
+                strokeDasharray={MU_C} strokeDashoffset={MU_C * (1 - phys.mu)}
+                transform="rotate(-90 43 43)"
+                style={{transition:"stroke-dashoffset .45s cubic-bezier(.2,.8,.3,1), stroke .3s"}}/>
+              <text x="43" y="48" textAnchor="middle" fill="var(--foam)"
+                style={{font:"700 19px system-ui,sans-serif"}}>
+                {phys.mu < 0.001 ? "0" : phys.mu.toFixed(2)}
+              </text>
+            </svg>
+            <span className="cap">μ / μ<sub>max</sub><br/>predicted</span>
+          </div>
+          <div className="chain-arrow" aria-hidden="true">→</div>
+          <div className="chain-col">
+            <span className="chain-lab">Objective weights</span>
+            <div className="wstack">
+              {C.TERM_KEYS.map(k => (
+                <i key={k} className={TERM_META[k].cls} style={{width:weights[k]*100+"%"}}
+                  title={TERM_META[k].label + " " + pctS(weights[k])}/>
+              ))}
+            </div>
+            <div className="wkey">
+              {C.TERM_KEYS.map(k => (
+                <span key={k}><b className={TERM_META[k].cls}/>
+                  {TERM_META[k].label.toLowerCase()} {Math.round(weights[k]*100)}%</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <main className="layout">
+        {/* ── controls ───────────────────────────────────────────────── */}
+        <aside className="rail">
+          <div className="block">
+            <h3>Sequence</h3>
+            <textarea value={raw} spellCheck={false}
+              onChange={e=>{setRaw(e.target.value); setSrcRec(null); invalidate();}}
+              placeholder="Paste a coding sequence (DNA) or a protein sequence in one-letter code. FASTA headers are ignored."/>
+            <div style={{marginTop:8}}>
+              <PartCombo pool={cdsPool}
+                placeholder={`Load a CDS from the catalog (${cdsPool.length.toLocaleString()})…`}
+                onPick={rec=>{setSrcRec(rec); setRaw(rec.seq || ""); invalidate();}}
+                hint="no CDS match"/>
+            </div>
+            <div className="chips">
+              <button className="chip" onClick={()=>{setRaw(""); setSrcRec(null); invalidate();}}>Clear</button>
+            </div>
+            <div className={"status" + (!parsed ? "" : parsed.error ? " bad" : " ok")}>
+              <span>
+                {!parsed ? "Waiting for a sequence."
+                  : parsed.error ? parsed.error
+                  : `${parsed.type === "dna" ? "DNA" : "Protein"} · ${parsed.aa.length} codons · ${parsed.aa.length*3} bp`
+                    + (parsed.hasStop ? " · stop included" : " · no stop codon")
+                    + (srcRec ? " · " + srcRec.name : "")}
+              </span>
+            </div>
+            {busy && <div className="progress"><i style={{width:prog*100+"%"}}/></div>}
+          </div>
+
+          <div className="block">
+            <h3>Growth conditions</h3>
+            {[["temp","Temperature",0,60,.5,v=>v.toFixed(1)+" °C"],
+              ["ph","pH",3,12,.1,v=>v.toFixed(1)],
+              ["salt","NaCl",0,26,.1,v=>v.toFixed(1)+" % w/v"]].map(([k,label,lo,hi,step,fmt])=>(
+              <div className="slider" key={k}>
+                <div className="top"><span className="k">{label}</span><span className="v">{fmt(+env[k])}</span></div>
+                <input type="range" min={lo} max={hi} step={step} value={env[k]}
+                  onChange={e=>{setEnv(v=>Object.assign({},v,{[k]:+e.target.value})); touch();}}/>
+              </div>
+            ))}
+            <div className="row">
+              <label className="eyebrow" style={{flex:"none"}}>Oxygen</label>
+              <select value={env.oxygen} title={org.oxygenNote||""}
+                onChange={e=>{setEnv(v=>Object.assign({},v,{oxygen:e.target.value})); touch();}}>
+                <option value="aerobic">Aerobic</option>
+                <option value="microaerobic">Microaerobic</option>
+                <option value="anaerobic">Anaerobic</option>
+              </select>
+            </div>
+            <div className="chips">
+              {Object.entries(ENV_PRESETS).map(([k,p])=>(
+                <button key={k} className="chip"
+                  onClick={()=>{setEnv(p.from(org)); touch();}}>{p.label}</button>
+              ))}
+            </div>
+            <div className="cardgrid">
+              <span/><span className="hd">min</span><span className="hd">opt</span><span className="hd">max</span>
+              {[["T","Temp °C",0.5],["pH","pH",0.1],["salt","NaCl %",0.1]].map(([key,label,step])=>(
+                <React.Fragment key={key}>
+                  <label>{label}</label>
+                  {["min","opt","max"].map(b=>(
+                    <input key={b} type="number" step={step} value={card[key][b]}
+                      onChange={e=>editCardinal(key,b,e.target.value)}/>
+                  ))}
+                </React.Fragment>
+              ))}
+            </div>
+            <div className="chips">
+              <button className="chip" onClick={()=>{
+                setCardinalOv(m=>{const n={...m}; delete n[orgId]; return n;});
+                setCardNote(""); touch();
+              }}>Reset to reference values</button>
+            </div>
+            <p className="hint">
+              {cardNote || `${org.short} cardinal values — temperature ${card.T.min}/${card.T.opt}/${card.T.max} °C,`
+                + ` pH ${card.pH.min}/${card.pH.opt}/${card.pH.max},`
+                + ` NaCl ${card.salt.min}/${card.salt.opt}/${card.salt.max} % w/v (min/opt/max).`}
+            </p>
+          </div>
+
+          <div className="block">
+            <h3>Design constraints</h3>
+            {[["typeIIS","Remove Type IIS sites","BsaI, BbsI, BsmBI, SapI — keeps Golden Gate assembly clean"],
+              ["cloning","Remove common cloning sites","EcoRI, BamHI, HindIII, XhoI, NdeI, SalI, XbaI, NotI"],
+              ["internalSD", org.hostClass === "yeast" ? "Remove premature poly(A) signals" : "Remove internal ribosome binding sites",
+                org.hostClass === "yeast"
+                  ? "TAYRTA efficiency elements, weaker T/A-rich variants and the AATAAA positioning element, which can cut the transcript short inside the ORF"
+                  : "AGGAGG-like motifs that can start translation mid-gene"],
+              ["avoidRepeats","Break exact 12 bp repeats","Reduces synthesis failures and recombination"]].map(([k,t,sub])=>(
+              <label className="check" key={k}>
+                <input type="checkbox" checked={cons[k]}
+                  onChange={e=>{setCons(c=>Object.assign({},c,{[k]:e.target.checked})); touch();}}/>
+                <span>{t}<small>{sub}</small></span>
+              </label>
+            ))}
+            <p className="hint" style={{margin:"0 0 4px"}}>
+              The stop codon is always held fixed.
+              {template && (asmEnzymes.length
+                ? ` This template assembles by ${template.assembly}, so ${asmEnzymes.join(" and ")} are removed automatically too.`
+                : ` This template assembles by ${template.assembly}, which is scarless — no extra sites are forced on the insert.`)}
+            </p>
+            <div className="row" style={{marginTop:12}}>
+              <label className="eyebrow" style={{flex:1}}>Longest single-base run</label>
+              <input type="number" min={3} max={10} value={cons.maxHomopolymer} style={{width:66}}
+                onChange={e=>{setCons(c=>Object.assign({},c,{maxHomopolymer:e.target.value})); touch();}}/>
+            </div>
+            <div className="row">
+              <label className="eyebrow" style={{flex:1}}>Keep first N codons unchanged</label>
+              <input type="number" min={0} max={60} value={cons.lockN} style={{width:66}}
+                onChange={e=>{setCons(c=>Object.assign({},c,{lockN:e.target.value})); touch();}}/>
+            </div>
+            <div className="row">
+              <label className="eyebrow" style={{flex:1}}>GC range %</label>
+              <input type="number" min={15} max={85} value={cons.gcMin} style={{width:60}}
+                onChange={e=>{setCons(c=>Object.assign({},c,{gcMin:e.target.value})); touch();}}/>
+              <input type="number" min={15} max={85} value={cons.gcMax} style={{width:60}}
+                onChange={e=>{setCons(c=>Object.assign({},c,{gcMax:e.target.value})); touch();}}/>
+            </div>
+            <div className="row">
+              <input type="text" value={cons.custom} placeholder="Extra motifs to avoid, comma separated"
+                onChange={e=>{setCons(c=>Object.assign({},c,{custom:e.target.value})); touch();}}/>
+            </div>
+          </div>
+
+          <div className="block">
+            <h3>Objective weights</h3>
+            <label className="check">
+              <input type="checkbox" checked={autoW}
+                onChange={e=>{setAutoW(e.target.checked); if (e.target.checked) setManualW(null); touch();}}/>
+              <span>Set weights from growth conditions<small>Uncheck to steer the trade-off by hand</small></span>
+            </label>
+            {C.TERM_KEYS.map(k=>(
+              <div className="slider" key={k}>
+                <div className="top">
+                  <span className="k">{TERM_META[k].label}</span>
+                  <span className="v">{Math.round(weights[k]*100)}%</span>
+                </div>
+                <input type="range" min={0} max={1} step={0.01} value={weights[k]} disabled={autoW}
+                  onChange={e=>setW(k, e.target.value)}/>
+              </div>
+            ))}
+          </div>
+
+          <div className="block">
+            <h3>Environment hypotheses</h3>
+            <p className="hint" style={{margin:"0 0 14px"}}>
+              Three coupling coefficients connect conditions to codon choice. Set one to zero to drop that
+              hypothesis and re-run — that comparison is the experiment.
+            </p>
+            {[["thermal","Thermal → GC3",-0.6,0.6],
+              ["osmotic","Osmotic → GC3",-0.6,0.6],
+              ["growth","Growth rate → tRNA pool",0,1]].map(([k,label,lo,hi])=>(
+              <div className="slider" key={k}>
+                <div className="top"><span className="k">{label}</span><span className="v">{(+hyp[k]).toFixed(2)}</span></div>
+                <input type="range" min={lo} max={hi} step={0.01} value={hyp[k]}
+                  onChange={e=>{setHyp(h=>Object.assign({},h,{[k]:+e.target.value})); touch();}}/>
+              </div>
+            ))}
+          </div>
+        </aside>
+
+        {/* ── results ────────────────────────────────────────────────── */}
+        <section className="results">
+          <div className="tabs" role="tablist">
+            {[["p-seq","Sequence"],["p-obj","Objectives"],["p-par","Trade-offs"],["p-ben","Benchmark"],
+              ["p-cu","Codon tables"],["p-ver","Verification"],["p-meth","Method & limits"]].map(([id,l])=>(
+              <button key={id} role="tab" aria-selected={tab===id} onClick={()=>setTab(id)}>{l}</button>
+            ))}
+          </div>
+
+          <div className="pane">
+            {err && (
+              <div className="banner" style={{borderLeftColor:"var(--rfp)"}}>
+                <div><strong>The optimizer could not run.</strong>{err}</div>
+              </div>
+            )}
+
+            {tab === "p-seq" && (
+              <RcSeqPane run={run} org={org} usageOv={usageOv} ctxPrev={ctxPrev} trackRef={trackRef}
+                copied={copied} setCopied={setCopied} accepted={accepted} onAccept={accept}
+                onClear={onClear} hostMismatch={hostMismatch} template={template} dirty={dirty}/>
+            )}
+            {tab === "p-obj" && <RcObjPane run={run}/>}
+            {tab === "p-par" && (
+              <RcParPane run={run} pareto={pareto} pBusy={pBusy} axes={axes} setAxes={setAxes}
+                ptSel={ptSel} setPtSel={setPtSel} onSample={sampleWeights}
+                onAdopt={w=>{
+                  // adopt the point's weights and re-optimize under them; the
+                  // state update has not landed yet, so pass them explicitly
+                  const adopted = Object.assign({}, w);
+                  setAutoW(false); setManualW(adopted); runOptimize(adopted);
+                }}/>
+            )}
+            {tab === "p-ben" && <RcBenPane run={run} org={org}/>}
+            {tab === "p-cu" && (
+              <RcCuPane org={org} usageOv={usageOv} highOv={highOv} buildRep={buildRep}
+                fasta={fasta} setFasta={setFasta} fastaTgt={fastaTgt} setFastaTgt={setFastaTgt}
+                pasteTbl={pasteTbl} setPasteTbl={setPasteTbl}
+                onBuild={buildTable} onApply={applyPasted} onReset={resetTable}/>
+            )}
+            {tab === "p-ver" && (
+              <RcVerPane organisms={organisms} usageOv={usageOv} highOv={highOv}
+                selfRes={selfRes} setSelfRes={setSelfRes}/>
+            )}
+            {tab === "p-meth" && <RcMethPane/>}
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
+
+/* Warnings that must travel with every result for this host. */
+function RcBanners({ org, usageOv, ctxPrev }) {
+  const out = [];
+  if (!usageOv[org.id] && org.table.status === "none") out.push(
+    <div className="banner" key="none" style={{borderLeftColor:"var(--rfp)"}}>
+      <div><strong>No codon table on file for {org.name}.</strong>{org.table.note}</div>
+    </div>);
+  else if (!usageOv[org.id] && org.table.status === "provisional") out.push(
+    <div className="banner" key="prov">
+      <div><strong>{org.name} is using a provisional codon table.</strong>{org.table.note}
+        {" "}Until you load a real table, treat the CAI and environment-fit numbers for this organism as
+        placeholders and read only the GC, folding and constraint results.</div>
+    </div>);
+  if (ctxPrev && ctxPrev.highSource.status === "heuristic") out.push(
+    <div className="banner" key="heur">
+      <div><strong>CAI here uses a heuristic reference set.</strong> CAI is properly defined against highly
+        expressed genes, and no measured reference set is loaded for {org.short}, so the tool sharpened the
+        genome average instead. That amplifies whatever bias is already present, including bias that is
+        mutational rather than selective. For E. coli the two disagree on the best codon in 10 of 18 families,
+        so the gap is not academic. Load ribosomal-protein CDS in the Codon tables panel to replace it.</div>
+    </div>);
+  if (org.hostClass === "yeast") out.push(
+    <div className="banner euk" key="euk">
+      <div><strong>{org.short} is a eukaryote.</strong> The Shine-Dalgarno rule does not apply, so the
+        initiation-motif constraint switches to premature poly(A) signals instead — the TAYRTA efficiency
+        elements and the AATAAA positioning element. Translation initiates by cap-dependent scanning, which
+        means Kozak context and 5′ structure matter, while the growth-rate and tRNA-pool reasoning is
+        unchanged. Nuclear export, intron-like signals and secretion routing are not modelled at all.</div>
+    </div>);
+  return out;
+}
+
+function RcSeqPane({ run, org, usageOv, ctxPrev, trackRef, copied, setCopied,
+                     accepted, onAccept, onClear, hostMismatch, template, dirty }) {
+  const C = window.Codon;
+  if (!run) return (
+    <>
+      <RcBanners org={org} usageOv={usageOv} ctxPrev={ctxPrev}/>
+      <RcEmpty title="Nothing optimized yet">
+        Paste a coding sequence or load one from the catalog, set the growth conditions, then run the optimization.
+      </RcEmpty>
+    </>
+  );
+  const o = run.res.result, r = run.refEval;
+  const changed = run.changes.filter(c => c.changed).length;
+  const arrow = (a, b, better="up") => {
+    const d = b - a;
+    if (Math.abs(d) < 0.0005) return ["no change","flat"];
+    const good = better === "up" ? d > 0 : d < 0;
+    return [(d>0?"+":"")+d.toFixed(3)+" vs "+run.refLabel.toLowerCase(), good?"up":"down"];
+  };
+  const m = [];
+  let a = arrow(r.total, o.total);            m.push(["Objective F", o.total.toFixed(3), a[0], a[1]]);
+  a = arrow(r.terms.cai, o.terms.cai);        m.push(["CAI", o.terms.cai.toFixed(3), a[0], a[1]]);
+  m.push(["GC content", pctS(o.gc), (o.gc>r.gc?"+":"")+((o.gc-r.gc)*100).toFixed(1)+" pts", "flat"]);
+  a = arrow(r.foldP, o.foldP, "down");        m.push(["5′ folded fraction", o.foldP.toFixed(3), a[0], a[1]]);
+  m.push(["Constraint hits", String(o.violations.total), `was ${r.violations.total}`,
+    o.violations.total < r.violations.total ? "up" : o.violations.total > r.violations.total ? "down" : "flat"]);
+  m.push(["Codons changed", `${changed} / ${run.changes.length}`, pctS(changed/run.changes.length)+" of sequence", "flat"]);
+
+  const fastaOut = () =>
+    `>optimized|${run.ctx.org.name} ${run.ctx.org.strain}|T=${run.ctx.env.temp}C pH=${run.ctx.env.ph}`
+    + ` NaCl=${run.ctx.env.salt}% O2=${run.ctx.env.oxygen}|F=${o.total.toFixed(4)}`
+    + ` CAI=${o.terms.cai.toFixed(3)} GC=${pctS(o.gc)}\n` + o.seq.replace(/(.{60})/g, "$1\n");
+  const csvOut = () => {
+    const rows = [["position","amino_acid","reference_codon","optimized_codon","changed","dominant_driver",
+                   "w_highly_expressed","w_genome","w_environment","gc3"]];
+    for (const c of run.changes) rows.push([c.i+1, c.aa, c.old, c.new, c.changed?"yes":"no",
+      c.changed?TERM_META[c.driver].label:"", f3(run.ctx.wHigh[c.new]), f3(run.ctx.wGenome[c.new]),
+      f3(run.ctx.wEnv[c.new]), C.isGC3(c.new)]);
+    return rows.map(x => x.join(",")).join("\n");
+  };
+
+  return (
+    <>
+      <RcBanners org={org} usageOv={usageOv} ctxPrev={ctxPrev}/>
+
+      {dirty && (
+        <div className="banner">
+          <div><strong>Settings changed since this run.</strong>The physiology chain above now describes
+            conditions these numbers were not computed under. Press Optimize sequence to bring them back
+            into agreement.</div>
+        </div>
+      )}
+
+      <div className="metrics">
+        {m.map(([k,v,d,cls])=>(
+          <div className="metric" key={k}>
+            <div className="k">{k}</div><div className="v">{v}</div><div className={"d "+cls}>{d}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="tracklegend">
+        <span>Colour marks the term that gained most from each change:</span>
+        {C.TERM_KEYS.map(k => (
+          <span key={k}><b className={TERM_META[k].cls}/>{TERM_META[k].label.toLowerCase()}</span>
+        ))}
+      </div>
+
+      <div className="track" ref={trackRef}>
+        {run.changes.map(c => (
+          <div key={c.i}
+            className={"cod" + (c.changed ? " ch" : "") + (run.lockN && c.i < run.lockN ? " lock" : "")}
+            data-d={c.changed ? c.driver : undefined}
+            title={c.changed
+              ? `Codon ${c.i+1} ${C.AA_NAMES[c.aa]||c.aa}: ${c.old} to ${c.new}, driven by ${TERM_META[c.driver].label}`
+              : `Codon ${c.i+1} ${C.AA_NAMES[c.aa]||c.aa}: ${c.new}, unchanged`}
+            data-tip={`<b>Codon ${c.i+1} · ${C.AA_NAMES[c.aa]||c.aa}</b><br>`
+              + (c.changed ? `${c.old} → <em>${c.new}</em><br>` : `${c.new} — unchanged<br>`)
+              + `w = ${f3(run.ctx.wGenome[c.new])} · third position ${C.isGC3(c.new) ? "G/C" : "A/T"}`
+              + (run.lockN && c.i < run.lockN ? "<br>locked by you" : "")
+              + (c.deltas ? "<br>" + C.TERM_KEYS.filter(k=>Math.abs(c.deltas[k])>1e-6)
+                  .sort((x,y)=>c.deltas[y]-c.deltas[x])
+                  .map(k=>`${TERM_META[k].label}: ${c.deltas[k]>0?"+":""}${c.deltas[k].toFixed(3)}`)
+                  .join("<br>") : "")}>
+            <span className="aa">{C.AA_NAMES[c.aa]||c.aa}</span>
+            <span className="was">{c.changed ? c.old : ""}</span>
+            <span className="nt">{c.new}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="seqbox">
+        <div className="bar">
+          <span className="eyebrow">Optimized coding sequence — first 48 nt highlighted</span>
+          <div className="chips">
+            <button className="chip" onClick={()=>{navigator.clipboard.writeText(o.seq);setCopied(true);setTimeout(()=>setCopied(false),1800);}}>
+              {copied ? "✓ Copied" : "Copy sequence"}
+            </button>
+            <button className="chip" onClick={()=>download("optimized_cds.fasta", fastaOut())}>Download FASTA</button>
+            <button className="chip" onClick={()=>download("codon_report.csv", csvOut())}>Download codon report (CSV)</button>
+          </div>
+        </div>
+        <div className="seqout">
+          <span className="init">{o.seq.slice(0, C.INIT_WINDOW_NT)}</span>{o.seq.slice(C.INIT_WINDOW_NT)}
+        </div>
+      </div>
+
+      {o.violations.total > 0 && (
+        <div className="note">
+          <strong>{o.violations.total} constraint hit(s) could not be removed.</strong>{" "}
+          {o.violations.hits.slice(0,6).map(h=>`${h.text} at ${h.at+1}`).join(", ")}. These usually sit where
+          the protein sequence itself forces the motif — relax a constraint or edit those residues.
+        </div>
+      )}
+
+      {/* the handoff into step 01 */}
+      <div className="handoff">
+        <div className="txt">
+          {accepted && accepted.optimized ? (
+            <>
+              <strong>✓ In use as the gene of interest</strong>
+              {accepted.name} · {accepted.length.toLocaleString()} bp · GC {accepted.gc}% ·
+              {" "}{accepted.optimized.changed} of {accepted.optimized.codons} codons changed
+              {hostMismatch && (
+                <span style={{display:"block",color:"var(--amber)",marginTop:4}}>
+                  ⚠️ Optimized for {accepted.optimized.orgShort}, but the selected template targets {template.host}.
+                  Re-optimize or switch templates.
+                </span>
+              )}
+            </>
+          ) : (
+            <>
+              <strong>Hand this CDS to the plasmid</strong>
+              It becomes the gene of interest in step 01, filling the template's user-supplied CDS slot.
+            </>
+          )}
+        </div>
+        {accepted && accepted.optimized
+          ? <button className="chip" onClick={onClear}>Discard</button>
+          : null}
+        <button className="take" onClick={onAccept}>
+          {accepted && accepted.optimized ? "Replace with this run" : "Use this CDS →"}
+        </button>
+      </div>
+    </>
+  );
+}
+
+function RcObjPane({ run }) {
+  const C = window.Codon;
+  if (!run) return <RcEmpty title="No objective breakdown yet">Run an optimization to see how each term moved.</RcEmpty>;
+  const o = run.res.result, r = run.refEval, w = run.ctx.weights, c = run.ctx;
+  return (
+    <>
+      <Headed title="Objective terms">
+        Each term is scaled to 0–1 and multiplied by its weight. F is the weighted sum:{" "}
+        {o.total.toFixed(4)} against {r.total.toFixed(4)} for the reference.
+      </Headed>
+      {C.TERM_KEYS.map(k=>{
+        const d = o.terms[k] - r.terms[k];
+        return (
+          <div className="obj" key={k}>
+            <div className="name">{TERM_META[k].label}
+              <small>{TERM_META[k].sub} · weight {Math.round(w[k]*100)}%</small></div>
+            <div className="lanes">
+              <div className="lane"><span className="t">ref</span>
+                <div className="bar"><i style={{width:Math.max(0,Math.min(1,r.terms[k]))*100+"%"}}/></div></div>
+              <div className="lane new"><span className="t">opt</span>
+                <div className="bar"><i style={{width:Math.max(0,Math.min(1,o.terms[k]))*100+"%"}}/></div></div>
+            </div>
+            <div className="num">{o.terms[k].toFixed(3)}<br/>
+              <span className={d>.0005?"up":d<-.0005?"down":"flat"}>{d>=0?"+":""}{d.toFixed(3)}</span></div>
+          </div>
+        );
+      })}
+      <table className="data" style={{marginTop:24}}>
+        <thead><tr><th>Quantity</th><th>Reference</th><th>Optimized</th><th>Notes</th></tr></thead>
+        <tbody>
+          {[["GC content", pctS(r.gc), pctS(o.gc), `target ${pctS(c.gcTarget)}`],
+            ["GC at third position", pctS(r.gc3), pctS(o.gc3), `target ${pctS(c.gc3Target)} (genome ${pctS(c.gc3Genome)})`],
+            ["5′ window ΔG proxy", r.foldDG.toFixed(1), o.foldDG.toFixed(1), "kcal·mol⁻¹, salt and temperature corrected"],
+            ["5′ folded fraction", r.foldP.toFixed(3), o.foldP.toFixed(3), "lower keeps the start codon accessible"],
+            ["Restriction / motif hits", r.violations.motif, o.violations.motif, ""],
+            ["Long single-base runs", r.violations.homo, o.violations.homo, `longer than ${c.opts.maxHomopolymer} nt`],
+            ["Repeated 12-mers", r.violations.repeat, o.violations.repeat, ""]].map(row=>(
+            <tr key={row[0]}><td className="lead">{row[0]}</td><td>{row[1]}</td><td>{row[2]}</td><td>{row[3]}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+function RcParPane({ run, pareto, pBusy, axes, setAxes, ptSel, setPtSel, onSample, onAdopt }) {
+  const C = window.Codon;
+  if (!run) return <RcEmpty title="No trade-off surface yet">Run an optimization first, then sample the weight space.</RcEmpty>;
+
+  const sel = (which, val) => (
+    <label key={which}>{which === "x" ? "Horizontal axis" : "Vertical axis"}
+      <select value={val} onChange={e=>setAxes(a=>Object.assign({},a,{[which]:e.target.value}))}>
+        {C.TERM_KEYS.map(k=><option key={k} value={k}>{TERM_META[k].label}</option>)}
+      </select>
+    </label>
+  );
+
+  let body;
+  if (!pareto) {
+    body = <RcEmpty title="Weight space not sampled">
+      Sampling runs the dynamic program 36 times with different weightings. It takes a few seconds.
+    </RcEmpty>;
+  } else {
+    const pts = pareto.map(p => Object.assign({}, p, {x:p.terms[axes.x], y:p.terms[axes.y]}));
+    for (const p of pts) p.front = !pts.some(q => q !== p
+      && q.x >= p.x - 1e-9 && q.y >= p.y - 1e-9 && (q.x > p.x + 1e-9 || q.y > p.y + 1e-9));
+    const W = 560, H = 380, mg = {l:56, r:18, t:16, b:46};
+    const pad = arr => { const lo = Math.min(...arr), hi = Math.max(...arr); const s = (hi-lo) || 0.1; return [lo-s*.12, hi+s*.12]; };
+    const [x0,x1] = pad(pts.map(d=>d.x)), [y0,y1] = pad(pts.map(d=>d.y));
+    const sx = v => mg.l + (v-x0)/(x1-x0)*(W-mg.l-mg.r);
+    const sy = v => H - mg.b - (v-y0)/(y1-y0)*(H-mg.t-mg.b);
+    const cur = run.res.result;
+    const nf = pts.filter(d=>d.front).length;
+    const tickFont = {font:"400 10px monospace"};
+    const labFont = {font:"500 11px monospace"};
+
+    body = (
+      <div className="paretowrap">
+        <div>
+          <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",maxWidth:W}}>
+            {[0,1,2,3,4].map(i=>{
+              const gy = mg.t + i*(H-mg.t-mg.b)/4, v = y1 - i*(y1-y0)/4;
+              return (
+                <g key={"y"+i}>
+                  <line x1={mg.l} x2={W-mg.r} y1={gy} y2={gy} stroke="var(--shelf)" strokeWidth="1"/>
+                  <text x={mg.l-9} y={gy+4} textAnchor="end" fill="var(--dim)" style={tickFont}>{v.toFixed(2)}</text>
+                </g>
+              );
+            })}
+            {[0,1,2,3,4].map(i=>{
+              const gx = mg.l + i*(W-mg.l-mg.r)/4, v = x0 + i*(x1-x0)/4;
+              return <text key={"x"+i} x={gx} y={H-mg.b+18} textAnchor="middle" fill="var(--dim)" style={tickFont}>{v.toFixed(2)}</text>;
+            })}
+            <text x={(mg.l+W-mg.r)/2} y={H-8} textAnchor="middle" fill="var(--silt)" style={labFont}>{TERM_META[axes.x].label}</text>
+            <text x={14} y={(H-mg.b+mg.t)/2} textAnchor="middle" fill="var(--silt)" style={labFont}
+              transform={`rotate(-90 14 ${(H-mg.b+mg.t)/2})`}>{TERM_META[axes.y].label}</text>
+            {pts.map((d,i)=>(
+              <circle key={i} className="pt" cx={sx(d.x)} cy={sy(d.y)} r={d.front?5.5:3.5}
+                fill={d.front?"var(--cfp)":"none"} stroke={d.front?"var(--cfp)":"var(--dim)"}
+                strokeWidth="1.4" opacity={d.front?1:.55}
+                onClick={()=>setPtSel(d)} onMouseEnter={()=>setPtSel(d)}/>
+            ))}
+            <circle cx={sx(cur.terms[axes.x])} cy={sy(cur.terms[axes.y])} r="7" fill="none"
+              stroke="var(--rfp)" strokeWidth="2"/>
+            <text x={sx(cur.terms[axes.x])+12} y={sy(cur.terms[axes.y])+4} fill="var(--rfp)"
+              style={{font:"500 10px monospace"}}>current</text>
+          </svg>
+          <p className="hint">
+            {nf} of {pts.length} runs are non-dominated on these two axes. The ringed point is the sequence you currently have.
+          </p>
+        </div>
+        <div className="ptinfo">
+          <h4>Selected run</h4>
+          {!ptSel ? "Hover or click a point." : (
+            <>
+              <dl>
+                {C.TERM_KEYS.map(k=>(
+                  <React.Fragment key={k}>
+                    <dt>{TERM_META[k].label.toLowerCase()}</dt>
+                    <dd>{ptSel.terms[k].toFixed(3)} · w {Math.round(ptSel.weights[k]*100)}%</dd>
+                  </React.Fragment>
+                ))}
+                <dt>GC</dt><dd>{pctS(ptSel.gc)}</dd>
+                <dt>constraint hits</dt><dd>{ptSel.violations}</dd>
+              </dl>
+              <button className="chip" style={{marginTop:12}} onClick={()=>onAdopt(ptSel.weights)}>
+                Use these weights
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <Headed title="Trade-off surface">
+        Each point is a full optimization run under a different random weight vector. Filled points are
+        non-dominated on the two axes you pick: nothing else beats them on both at once. Choosing among them
+        is a judgement call, not a maths problem.
+      </Headed>
+      <div className="axisrow">
+        {sel("x", axes.x)}{sel("y", axes.y)}
+        <button className="chip" style={{alignSelf:"flex-end"}} disabled={pBusy} onClick={onSample}>
+          {pBusy ? "Sampling…" : pareto ? "Resample (36 runs)" : "Sample the weight space (36 runs)"}
+        </button>
+      </div>
+      {body}
+    </>
+  );
+}
+
+function RcBenPane({ run, org }) {
+  const C = window.Codon;
+  if (!run) return <RcEmpty title="No benchmark yet">Run an optimization to compare it against the standard baselines.</RcEmpty>;
+  const ctx = run.ctx;
+  const models = [
+    {id:"A", name:"Random synonymous", note:"picks uniformly among synonyms", codons:C.baselineRandom(run.aa, 1)},
+    {id:"B", name:"Most-frequent codon", note:"the usual “codon optimization”", codons:C.baselineMaxCAI(run.aa, ctx.wHigh)},
+    {id:"C", name:"Environment-aware (this tool)", note:run.res.stage, codons:run.res.codons},
+  ];
+  if (run.inputCodons) models.unshift({id:"0", name:"Your input sequence", note:"unmodified", codons:run.inputCodons});
+  const evals = models.map(m => Object.assign({}, m, {e:C.evaluate(m.codons, ctx)}));
+  const bestF = Math.max(...evals.map(m=>m.e.total));
+  return (
+    <>
+      <Headed title="Baseline comparison">
+        Four designs for the same protein, all scored under the current model. This tests whether the
+        environment-aware objective actually produces different, higher-scoring sequences — it does not test
+        whether they express better. That needs measured data.
+      </Headed>
+      <table className="data">
+        <thead><tr><th>Model</th><th>F</th><th>CAI</th><th>Env fit</th><th>GC fit</th><th>Open 5′</th><th>GC %</th><th>Hits</th></tr></thead>
+        <tbody>
+          {evals.map(m=>(
+            <tr key={m.id} className={Math.abs(m.e.total-bestF)<1e-9 ? "best" : undefined}>
+              <td className="lead">{m.id} · {m.name}<br/>
+                <span style={{color:"var(--dim)",fontSize:10.5}}>{m.note}</span></td>
+              <td>{m.e.total.toFixed(4)}</td><td>{m.e.terms.cai.toFixed(3)}</td>
+              <td>{m.e.terms.env.toFixed(3)}</td><td>{m.e.terms.gc.toFixed(3)}</td>
+              <td>{m.e.terms.struct.toFixed(3)}</td><td>{(m.e.gc*100).toFixed(1)}</td>
+              <td>{m.e.violations.total}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="note">
+        <strong>What would make this a result.</strong> Hold the protein fixed and vary only the model. Then
+        take a published expression dataset for {org.short} where the coding sequences and measured protein or
+        mRNA levels are both available, score every sequence with models B and C, and ask which score
+        correlates better with the measurement on data the model never saw. Report the correlation and its
+        confidence interval, not a single optimized gene.
+      </div>
+    </>
+  );
+}
+
+function RcCuPane({ org, usageOv, highOv, buildRep, fasta, setFasta, fastaTgt, setFastaTgt,
+                    pasteTbl, setPasteTbl, onBuild, onApply, onReset }) {
+  const C = window.Codon;
+  const usage = usageOv[org.id] || org.usage;
+  const overridden = !!usageOv[org.id];
+  const rep = buildRep[org.id];
+  const w = usage ? C.relativeAdaptiveness(usage) : null;
+  const rs = usage ? C.rscuTable(usage) : null;
+
+  return (
+    <>
+      <Headed title={`${org.name} — ${org.strain}`}>
+        {org.blurb} Genome GC {pctS(org.gcGenome)}.{" "}
+        {usage
+          ? "Values below are each codon's share within its synonymous family, so every family sums to 1."
+          : "No codon table is loaded for this organism, so there is nothing to show below yet."}
+      </Headed>
+
+      <div className={"banner" + (overridden || org.table.status === "verified" ? " ok" : "")}
+        style={!overridden && org.table.status === "none" ? {borderLeftColor:"var(--rfp)"} : undefined}>
+        <div>{overridden
+          ? <><strong>Using your table.</strong>Built from the CDS or table you supplied. The bundled reference is still on file.</>
+          : <><strong>Source: {org.table.source || "none on file"}</strong>{org.table.note}</>}</div>
+      </div>
+
+      <h2 style={{fontSize:17,margin:"24px 0 6px"}}>Build a table from CDS</h2>
+      <p style={{color:"var(--silt)",margin:"0 0 12px",fontSize:12.5,lineHeight:1.65,maxWidth:"76ch"}}>
+        This is the accurate route, and the only one for an organism with no published table. Download the
+        coding sequences for your strain (on NCBI Genome, use the “coding sequences (FASTA)” download, or
+        cds_from_genomic.fna from the RefSeq FTP directory) and paste them here. Records whose length is not a
+        multiple of three, or that contain an internal stop or an ambiguous base, are counted as rejected
+        rather than silently included.
+      </p>
+      <div className="row">
+        <label className="eyebrow" style={{flex:"none"}}>Build which table</label>
+        <select value={fastaTgt} onChange={e=>setFastaTgt(e.target.value)}>
+          <option value="avg">Genome average (all CDS)</option>
+          <option value="high">Highly expressed reference (ribosomal proteins etc.)</option>
+        </select>
+      </div>
+      <p className="hint">
+        Paste all CDS for the genome average. For the highly-expressed reference, paste only a high-expression
+        gene set — ribosomal proteins, elongation factors and chaperones are the conventional choice, and 30 to
+        100 genes is enough. CAI is scored against that second table.
+      </p>
+      <textarea rows={5} spellCheck={false} value={fasta} onChange={e=>setFasta(e.target.value)}
+        placeholder=">lcl|NC_000000.1_cds_1 [gene=rpsA]" style={{marginTop:8,minHeight:"auto"}}/>
+      <div className="chips">
+        <button className="chip" disabled={!fasta.trim()} onClick={onBuild}>Count codons and use this table</button>
+        {(usageOv[org.id] || highOv[org.id]) && <button className="chip" onClick={onReset}>Restore bundled table</button>}
+      </div>
+      {rep && <div className={"status " + rep.cls} style={{marginBottom:4}}><span>{rep.text}</span></div>}
+      <p className="hint">
+        Tables built here live in this browser tab only — they are not written to ./data/codon_tables.json.
+      </p>
+
+      <h2 style={{fontSize:17,margin:"24px 0 6px"}}>Or paste a published table</h2>
+      <p style={{color:"var(--silt)",margin:"0 0 12px",fontSize:12.5,lineHeight:1.65,maxWidth:"76ch"}}>
+        From Kazusa or HIVE-CUTS. The first number after each codon is read, so either the fraction column or
+        the per-1000 column works — only ratios within a family affect the result.
+      </p>
+      <textarea rows={4} spellCheck={false} value={pasteTbl} onChange={e=>setPasteTbl(e.target.value)}
+        placeholder="TTT 0.57  TTC 0.43  TTA 0.13 …   (or a full Kazusa block)" style={{minHeight:"auto"}}/>
+      <div className="chips">
+        <button className="chip" disabled={!pasteTbl.trim()} onClick={onApply}>Apply pasted table</button>
+        <button className="chip" onClick={onReset}>Restore bundled table</button>
+      </div>
+
+      {usage && (
+        <>
+          <h2 style={{fontSize:17,margin:"26px 0 10px"}}>Codon table in use</h2>
+          <div className="cutable" style={{marginTop:20}}>
+            {"ARNDCQEGHILKMFPSTWYV*".split("").map(aaL=>{
+              const codons = C.AA_CODONS[aaL];
+              if (!codons) return null;
+              const mx = Math.max(...codons.map(c=>usage[c]||0)) || 1;
+              return (
+                <div className="aabox" key={aaL}>
+                  <div className="h">
+                    <span>{C.AA_NAMES[aaL]} {aaL === "*" ? "" : "("+aaL+")"}</span>
+                    <em>{codons.length} codons</em>
+                  </div>
+                  {[...codons].sort((x,y)=>(usage[y]||0)-(usage[x]||0)).map(c=>(
+                    <div className={"curow" + ((usage[c]||0) === mx ? " top" : "")} key={c}
+                      title={`usage ${(usage[c]||0).toFixed(2)} · RSCU ${rs[c].toFixed(2)} · w ${w[c].toFixed(3)}`}>
+                      <span>{c}</span>
+                      <div className="cbar"><i style={{width:((usage[c]||0)/mx*100)+"%"}}/></div>
+                      <span className="n">{codons.length > 1 ? f3(w[c]) : "—"}</span>
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+function RcVerPane({ organisms, usageOv, highOv, selfRes, setSelfRes }) {
+  const C = window.Codon;
+  useEffect(() => {
+    if (selfRes) return;
+    // selfTest optimizes several test genes; defer so the pane paints first
+    const t = setTimeout(() => {
+      try { setSelfRes(C.selfTest(organisms)); } catch (e) { setSelfRes({error:e.message}); }
+    }, 0);
+    return () => clearTimeout(t);
+  }, [C, organisms, selfRes, setSelfRes]);
+
+  return (
+    <>
+      <Headed title="Verification">
+        Where every number in this tool comes from, and a suite that re-runs in your browser. If a check fails
+        here, do not trust the output above it.
+      </Headed>
+
+      <table className="data">
+        <thead><tr><th>Organism</th><th>Genome-average table</th><th>Status</th><th>CAI reference set</th><th>Genome GC</th><th>Host</th></tr></thead>
+        <tbody>
+          {Object.values(organisms).map(o=>{
+            const built = !!usageOv[o.id];
+            const bd = built ? {cls:"ok", text:"your table"}
+              : o.table.status === "provisional" ? {cls:"prov", text:"provisional"}
+              : o.table.status === "none" ? {cls:"none", text:"no table"}
+              : {cls:"ok", text:"verified"};
+            const hi = highOv[o.id] ? {status:"measured", label:"your highly-expressed set"}
+              : (o.usageHigh ? o.highSource : {status:"heuristic", label:"sharpened genome average"});
+            return (
+              <tr key={o.id}>
+                <td className="lead">{o.name}<br/><span style={{color:"var(--dim)",fontSize:10.5}}>{o.strain}</span></td>
+                <td>{built ? "Built from your CDS or pasted table" : (o.table.source || "none on file")}</td>
+                <td><span className={"badge "+bd.cls}>{bd.text}</span></td>
+                <td>{hi.label}<br/><span className={"badge "+(hi.status === "heuristic" ? "prov" : "ok")}>{hi.status}</span></td>
+                <td>{pctS(o.gcGenome)}</td>
+                <td>{o.hostClass === "yeast" ? "eukaryote" : "bacteria"}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
+      <div className="note">
+        <strong>What “verified” means here.</strong> The three Kazusa tables were checked three ways: every
+        family contains all its synonymous codons, every family sums to 1.000, and the amino-acid assignment
+        was compared codon by codon against this tool's genetic code with zero mismatches. They were also
+        spot-checked against textbook facts — the rare E. coli arginine codons AGA and AGG at 0.04 and 0.02,
+        yeast preferring AGA for arginine and TTG for leucine, B. subtilis using AAA for 70% of lysines. It
+        does not mean the table matches your strain in your medium. Codon usage is strain- and
+        condition-dependent, and the honest move is to build one from your own genome.
+      </div>
+      <div className="note">
+        <strong>Genome average is not the same as the CAI reference set.</strong> CAI was defined against
+        highly expressed genes, and for E. coli the two tables disagree on which codon is best in 10 of 18
+        synonymous families — highly expressed genes prefer GCT, GGT and CGT where the genome average prefers
+        GCG, GGC and CGC, because mutational pressure pushes the genome toward GC while tRNA abundance pulls
+        expressed genes the other way. They agree closely on which codons are rare, which is why the two
+        sources correlate at Spearman 0.67 overall while disagreeing at the top. E. coli ships with the
+        measured Sharp and Li 1987 reference. The others fall back to a sharpened genome average, which is
+        flagged as heuristic everywhere it is used — build a real one from ribosomal-protein CDS to replace it.
+      </div>
+      <div className="note">
+        <strong>Why V. natriegens has no table.</strong> It is a plasmid host in this project, but no
+        genome-derived codon table was reachable from the environment this tool was built in, and inventing
+        one would have been worse than admitting the gap — the same reason the V. natrigens variant of the
+        Lysqdvp001 endolysin is still null in parts.json. Optimizing against E. coli is the conventional
+        stand-in for a Gammaproteobacterium, but the accurate route is to paste V. natriegens CDS in the Codon
+        tables panel and count a real table. Halomonas is a different kind of gap: its entry is an explicit
+        mutational-equilibrium null model built from genome GC alone, which cannot tell a preferred codon from
+        a merely GC-rich one, so maximizing CAI against it just maximizes GC.
+      </div>
+
+      <h2 style={{fontSize:17,margin:"26px 0 4px"}}>Self-test</h2>
+      {!selfRes ? <p style={{color:"var(--silt)",fontSize:12.5}}>Running…</p>
+        : selfRes.error ? <p style={{color:"var(--rfp)",fontSize:12.5}}>{selfRes.error}</p>
+        : <>
+            <p style={{color:"var(--silt)",margin:"0 0 14px",fontSize:12.5}}>
+              <span className={selfRes.passed === selfRes.total ? "up" : "down"}
+                style={{font:"600 12.5px monospace"}}>{selfRes.passed} / {selfRes.total} checks passed</span>
+              {" "}— run just now, in this browser, against the tables actually loaded.
+            </p>
+            {selfRes.checks.map((c,i)=>(
+              <div className="checkline" key={i}>
+                <span className={"mk " + (c.pass ? "p" : "f")}>{c.pass ? "✓" : "✗"}</span>
+                <span className="nm2">{c.name}</span>
+                <span className="dt">{c.detail}</span>
+              </div>
+            ))}
+          </>}
+      <div className="note">
+        <strong>What the self-test cannot check.</strong> It proves the tool is internally consistent: the
+        protein never changes, stop codons survive, gamma behaves at the cardinal points, host-specific motif
+        rules are applied to the right host, an organism with no table refuses instead of guessing, and the
+        optimizer beats a random baseline. It proves nothing about whether a higher score means more protein.
+        That claim needs measured expression data, and the Benchmark tab describes the experiment that would
+        test it.
+      </div>
+    </>
+  );
+}
+
+function RcMethPane() {
+  return (
+    <div className="prose">
+      <h2>What step 00 computes</h2>
+      <p>For a fixed protein, every synonymous coding sequence is a candidate. The optimizer searches that
+        space for the sequence that maximizes a weighted sum of five terms, each scaled to 0–1:</p>
+      <div className="formula">F(x) = w<sub>cai</sub>·f<sub>cai</sub> + w<sub>env</sub>·f<sub>env</sub> + w<sub>gc</sub>·f<sub>gc</sub> + w<sub>str</sub>·f<sub>str</sub> + w<sub>cons</sub>·f<sub>cons</sub></div>
+      <ul>
+        <li><code>f_cai</code> — codon adaptation index against the species table, the geometric mean of relative adaptiveness w = f(codon)/f(best synonym).</li>
+        <li><code>f_env</code> — 60% adaptation against a growth-rate-blended tRNA pool, 40% fit of third-position GC to an environment-shifted target.</li>
+        <li><code>f_gc</code> — global GC plus the worst 45 bp sliding window, both against the target.</li>
+        <li><code>f_str</code> — one minus the folded fraction of the first 48 nt.</li>
+        <li><code>f_cons</code> — a violation-density penalty on restriction sites, internal ribosome binding sites, long single-base runs and repeated 12-mers.</li>
+      </ul>
+
+      <h2>How conditions reach the sequence</h2>
+      <p>The chain is deliberately explicit, because “37 °C means use codon X” is not a mechanism. Conditions
+        set a predicted growth rate; growth rate and duplex physics then set what the objective rewards.</p>
+      <div className="formula">temperature, pH, salinity, O₂ → γ terms → μ/μ<sub>max</sub> → tRNA pool skew and objective weights</div>
+      <p>Each γ is a cardinal-parameter model of the kind used in predictive microbiology (Rosso and
+        colleagues): a factor is 0 outside the organism's minimum and maximum, 1 at its optimum, and the four
+        γ values multiply. Three coupling coefficients then link that state to codon choice, and all three are
+        exposed as sliders so you can set them to zero and re-run:</p>
+      <ul>
+        <li><strong>Growth rate → tRNA pool.</strong> Codon bias in highly expressed genes tracks tRNA gene copy number, and that skew is strongest in fast growth. Near μ<sub>max</sub> the target table is the highly-expressed one; as growth slows it relaxes toward the genome average, so aggressive bias buys less.</li>
+        <li><strong>Temperature → third-position GC.</strong> Codon–anticodon duplex stability is set mostly by the wobble position. The model shifts the preferred GC3 up with growth temperature. This is the least settled of the three: the analogous trend is well supported for structural RNA but contested for coding sequence, which is exactly why the coefficient is adjustable and signed.</li>
+        <li><strong>Salinity → third-position GC and folding.</strong> Cations screen the phosphate backbone, so duplexes are more stable in high salt. The folding term carries a salt correction of the SantaLucia form, and the GC3 target shifts down to compensate.</li>
+      </ul>
+
+      <h2>Host class changes the rules</h2>
+      <p>Most of the bundled hosts are bacteria and one is not, and that distinction is enforced rather than decorative:</p>
+      <ul>
+        <li><strong>Bacteria</strong> (<code>E. coli</code>, <code>B. subtilis</code>, <code>Halomonas</code>, <code>V. natriegens</code>) initiate translation at a Shine-Dalgarno sequence, so an AGGAGG-like motif inside the ORF can start translation in the wrong place and is removed.</li>
+        <li><strong>Yeast</strong> has no Shine-Dalgarno sequence at all; initiation is cap-dependent scanning. Applying the bacterial rule would be meaningless. The equivalent internal hazard is premature cleavage and polyadenylation, so for <code>S. cerevisiae</code> the same constraint targets poly(A) signals instead.</li>
+      </ul>
+      <p>A yeast poly(A) signal is tripartite: an upstream <em>efficiency element</em>, a downstream
+        <em> positioning element</em>, and the poly(A) site. The efficiency element is the TA-rich part usually
+        called the TATATA family, and saturation mutagenesis narrowed it to the consensus <code>TAYRTA</code>
+        (Y = C or T, R = A or G). That expands to exactly four hexamers, of which TATATA is the most efficient.</p>
+      <p>Strand handling follows the same logic. Restriction sites are read on duplex DNA, so both the site and
+        its reverse complement are removed. Initiation and poly(A) motifs act on the mRNA, so only the coding
+        strand is checked — removing their reverse complements would delete codon choices for no reason.</p>
+
+      <h2>Search</h2>
+      <p>Three stages, and constraints outrank the score. A dynamic program over synonymous choices, with the
+        previous codon as state, solves the separable part of the objective exactly, including motifs that
+        straddle a codon boundary. Simulated annealing then works on the full objective, which is not
+        separable because of the folding and sliding-window terms, and a coordinate-ascent pass guarantees the
+        answer is at least a single-codon local optimum. The temperature schedule is deliberately cold —
+        single-codon moves shift F by roughly 10⁻⁴ to 10⁻², and a hotter schedule random-walks away from the
+        dynamic-programming solution. The stop codon is held fixed throughout.</p>
+      <p>A third stage then walks any remaining constraint violations and takes the cheapest synonymous change
+        that clears each one. This exists because a weighted sum handles constraints badly at the last mile:
+        every decreasing penalty is convex, so removing the final violation is richly rewarded while going
+        from two to one barely moves the score, and a single-codon hill climber stalls holding two restriction
+        sites it would gladly have removed one at a time. Candidates are then compared lexicographically —
+        fewer violations first, objective score only as a tiebreak. If you ticked a box saying remove these
+        sites, that is a constraint on the answer rather than a preference to be traded away.</p>
+
+      <h2>How this connects to the plasmid</h2>
+      <p>The CDS you accept here fills the template's user-supplied CDS slot in step 01, and
+        <code> designer.js</code> then treats it exactly like a catalog part: it is scanned for the assembly
+        method's enzyme sites, included in the Gibson primer design, and drawn on the plasmid map. Because the
+        assembly method is known before the search runs, the sites that method cannot tolerate are removed
+        while the CDS still has synonymous freedom to spend — which is cheaper than discovering the conflict
+        after the backbone is fixed. Evidence is inherited rather than upgraded: recoding a part whose
+        sequence is a placeholder yields a placeholder, so it still blocks the build.</p>
+
+      <h2>Folding proxy</h2>
+      <p>The initiation-window term uses base-pair maximization with pair energies standing in for stacking,
+        not a full nearest-neighbour model. It is a monotone proxy for local pairing potential, salt- and
+        temperature-corrected, then mapped through a logistic with a softening constant. Treat the folded
+        fraction as an ordering, not a physical probability. For publication-grade numbers, export the
+        sequence and re-fold it in ViennaRNA or a comparable package.</p>
+
+      <h2>What this does not tell you</h2>
+      <p>The output is a score, not a prediction of protein yield. No term here has been fitted to measured
+        expression, so a higher F means the sequence better satisfies the stated objective — nothing more.
+        Expression also depends on the promoter, the ribosome binding site and its spacing, plasmid copy
+        number, secretion signals, protein folding and toxicity, and none of that is modelled. The bundled
+        codon tables are approximate, and the hosts differ enough in GC that using the wrong one produces a
+        sequence that is worse than no optimization at all.</p>
+
+      <h2>Turning this into a result</h2>
+      <p>The interesting question is not whether the tool produces a sequence. It is whether the environment
+        terms carry information. A clean design: fix a set of coding sequences with measured expression in
+        your organism, score them under the growth-only model and under the full model, and compare how well
+        each score correlates with the measurement on held-out data. Report the coefficients you fitted, the
+        confidence interval, and the case where the environment terms made no difference — that last one is
+        the honest control.</p>
+    </div>
+  );
+}
+
 /* ── Main App ────────────────────────────────────────────────────────── */
 function App() {
   const [host, setHost] = useState("");
@@ -321,16 +2007,22 @@ function App() {
   const [tplId, setTplId] = useState("");
   const [cdsPart, setCdsPart] = useState(null);     // chosen gene of interest
   const [asmErr, setAsmErr] = useState(null);   // names of parts with no sequence
+  const [codonOrgs, setCodonOrgs] = useState(null); // from ./data/codon_tables.json
+  const [cdsMode, setCdsMode] = useState("catalog"); // "catalog" | "optimize"
+  const [optCds, setOptCds] = useState(null);        // CDS accepted from step 00
+  const [rawCds, setRawCds] = useState("");          // CDS pasted in, used as-is
+  const [rawErr, setRawErr] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
     const get = u => fetch(u).then(r => { if (!r.ok) throw new Error(u + " - HTTP " + r.status); return r.json(); });
-    Promise.all([get("./data/parts.json"), get("./data/templates.json")])
-      .then(([p, t]) => {
+    Promise.all([get("./data/parts.json"), get("./data/templates.json"), get("./data/codon_tables.json")])
+      .then(([p, t, c]) => {
         if (cancelled) return;
         setDb(p.parts || []);
         setTemplates(t.templates || []);
         setTplId(prev => prev || (t.templates && t.templates[0] ? t.templates[0].id : ""));
+        setCodonOrgs(window.Codon ? window.Codon.loadOrganisms(c) : null);
       })
       .catch(e => { if (!cancelled) setDbErr(e.message); });
     return () => { cancelled = true; };
@@ -348,8 +2040,12 @@ function App() {
     return m;
   }, [db]);
 
-  // the exact record a design part came from; falls back to name for custom parts
-  const meta = p => (p.srcId && byId.get(p.srcId)) || byName.get(p.name) || null;
+  // the exact record a design part came from; falls back to name for custom
+  // parts, and to the step-00 CDS, which exists only in memory
+  const meta = p =>
+    (p.srcId && byId.get(p.srcId))
+    || (cdsMatch && (p.srcId === cdsMatch.id || p.name === cdsMatch.name) ? cdsMatch : null)
+    || byName.get(p.name) || null;
 
   // design() indexes with partsById[id], so it needs a plain object, not the Map
   const partsById = useMemo(() => {
@@ -368,7 +2064,9 @@ function App() {
     () => (!db ? [] : addFilter ? db.filter(p => p.type === addFilter) : db),
     [db, addFilter]
   );
-  const cdsMatch = cdsPart;
+  // Step 00 decides where the gene of interest comes from: a catalog part, or
+  // a CDS the codon optimizer produced. Only one is ever handed to designer.js.
+  const cdsMatch = cdsMode === "optimize" ? optCds : cdsPart;
 
   // { plan } on success, { err } on failure - no setState during render
   const designed = useMemo(() => {
@@ -384,7 +2082,11 @@ function App() {
     setHost(template.host);
     setParts(prev => {
       const seeded = plan.order.map(o => {
-        const rec = partsById[o.id];
+        // The step-00 CDS is not in the catalog, so partsById cannot resolve
+        // it; without this fallback it would seed with seq === null and the
+        // whole design would read as unbuildable.
+        const rec = partsById[o.id]
+          || (cdsMatch && cdsMatch.id === o.id ? cdsMatch : null);
         const seq = rec ? rec.seq : null;
         return {
           id: ++_uid, srcId: o.id, name: o.name,
@@ -395,7 +2097,27 @@ function App() {
       return [...seeded, ...prev.filter(p => p.extra)];   // hand-added parts survive
     });
     setResult(null); setExpanded(null); setAsmErr(null);
-  }, [plan, template, partsById]);
+  }, [plan, template, partsById, cdsMatch]);
+
+  /* A CDS pasted in step 00 and used exactly as given. Reading frame and
+     internal stops are still checked - a frameshifted insert is a wasted
+     synthesis order whether or not it was codon-optimized. */
+  const useRawCds = () => {
+    const C = window.Codon;
+    const p = C ? C.parseInput(rawCds) : null;
+    if (!p) { setRawErr("./codon.js did not load, so the sequence cannot be checked."); return; }
+    if (p.error) { setRawErr(p.error); return; }
+    if (p.type !== "dna") { setRawErr("That looks like protein. A CDS used as-is must be DNA — switch to “Codon-optimize first” to encode a protein."); return; }
+    setRawErr(null);
+    setCdsPart({
+      id: "raw_pasted_cds", name: "Pasted CDS", type: "cds",
+      seq: p.dna, length: p.dna.length, gc: +gcCalc(p.dna).toFixed(1),
+      desc: `Coding sequence pasted into the builder and used as-is. ${p.aa.length} codons`
+          + `${p.hasStop ? ", stop codon included" : ", no stop codon"}. Not recoded.`,
+      src: "User-supplied sequence, pasted into the builder (not codon-optimized)",
+      evidence: "verified", hosts: {},
+    });
+  };
 
   const addRecord = rec => {
     const seq = seqFor(rec, host);
@@ -449,7 +2171,7 @@ function App() {
     setCopied(true); setTimeout(()=>setCopied(false),2000);
   };
 
-  const stepN = !host?1:!result?2:3;
+  const stepN = !cdsMatch?1:!result?2:3;
   const S = {
     card:{background:"#1e293b",border:"1px solid #334155",borderRadius:12,overflow:"hidden",marginBottom:16},
     label:{fontSize:11,color:"#475569",marginBottom:10,textTransform:"uppercase",letterSpacing:1.2,display:"block"},
@@ -478,7 +2200,7 @@ function App() {
           <div style={{fontSize:11,color:"#7dd3fc"}}>Sequence assembly for coral reef protection · no login required</div>
         </div>
         <div style={{marginLeft:"auto",display:"flex",gap:4,alignItems:"center"}}>
-          {["Host","Parts","Output"].map((l,i)=>(
+          {["Sequence","Design","Output"].map((l,i)=>(
             <div key={i} style={{display:"flex",alignItems:"center",gap:3}}>
               <div style={{width:24,height:24,borderRadius:"50%",background:stepN>i+1?"#0ea5e9":stepN===i+1?"#1e40af":"#1e293b",border:`2px solid ${stepN>i+1?"#38bdf8":stepN===i+1?"#3b82f6":"#334155"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:stepN>i+1?"#fff":stepN===i+1?"#93c5fd":"#475569"}}>{i+1}</div>
               <span style={{fontSize:10,color:stepN===i+1?"#93c5fd":"#334155"}}>{l}</span>
@@ -488,7 +2210,102 @@ function App() {
         </div>
       </div>
 
-      <div style={{padding:"20px",maxWidth:860,margin:"0 auto"}}>
+      {/* 00 - where the coding sequence comes from.
+          Step 00 gets its own wider column: the optimizer's rail + results
+          layout needs more than the 860px the rest of the builder uses, and
+          the .rc media query collapses it to one column below 1100px. */}
+      <div style={{padding:"20px 20px 0",maxWidth:cdsMode==="optimize"?1320:860,margin:"0 auto"}}>
+        <div style={{marginBottom:16}}>
+          <span style={S.label}>00 — Coding sequence</span>
+          {/* overflow must stay visible or the rail and tab strip cannot stick */}
+          <div style={{...S.card,overflow:"visible",marginBottom:0}}>
+            <div style={{display:"flex",borderBottom:"1px solid #1e293b",flexWrap:"wrap"}}>
+              {[["catalog","Use an existing sequence","A CDS from the catalog, or one you already have"],
+                ["optimize","Codon-optimize first","Recode a protein or CDS for this host and its growth conditions"]]
+                .map(([id,label,sub])=>{
+                const on = cdsMode === id;
+                return (
+                  <button key={id} onClick={()=>setCdsMode(id)}
+                    style={{flex:"1 1 220px",textAlign:"left",padding:"12px 14px",cursor:"pointer",
+                      background:on?"#0c2a3f":"none",border:"none",
+                      borderBottom:`2px solid ${on?"#0ea5e9":"transparent"}`}}>
+                    <div style={{fontSize:12.5,fontWeight:on?700:500,color:on?"#38bdf8":"#94a3b8"}}>
+                      {on ? "● " : "○ "}{label}
+                    </div>
+                    <div style={{fontSize:10.5,color:"#475569",marginTop:3,lineHeight:1.45}}>{sub}</div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div style={cdsMode==="catalog"?{padding:"14px"}:undefined}>
+              {cdsMode === "catalog" ? (
+                <div>
+                  <div style={{fontSize:10,color:"#475569",margin:"0 0 9px",letterSpacing:.6,textTransform:"uppercase"}}>
+                    Gene of interest · {cdsPool.length.toLocaleString()} CDS in the catalog
+                  </div>
+                  {cdsPart ? (
+                    <div style={{display:"flex",alignItems:"center",gap:8,padding:"9px 11px",background:"#0f172a",
+                      border:"1px solid #1e3a5f",borderRadius:7,flexWrap:"wrap"}}>
+                      <span style={{flex:1,minWidth:120,fontSize:12.5,color:"#93c5fd"}}>{cdsPart.name}</span>
+                      <span style={{fontSize:10,color:"#475569",fontFamily:"monospace",whiteSpace:"nowrap"}}>
+                        {cdsPart.seq ? cdsPart.length.toLocaleString()+" bp" : "no seq"}
+                        {cdsPart.seq ? ` · GC ${gcCalc(cdsPart.seq).toFixed(1)}%` : ""}
+                      </span>
+                      <EvidencePill evidence={cdsPart.evidence}/>
+                      <button onClick={()=>setCdsPart(null)} style={{...S.ib,fontSize:15}} title="Clear">×</button>
+                    </div>
+                  ) : (
+                    <div style={{display:"flex"}}>
+                      <PartCombo pool={cdsPool} placeholder="Search CDS by name, or paste a DNA sequence to find it…"
+                        onPick={rec=>{setCdsPart(rec);}} hint="no CDS match"/>
+                    </div>
+                  )}
+                  {cdsPart && cdsPart.desc && (
+                    <div style={{fontSize:11,color:"#64748b",marginTop:7,lineHeight:1.55}}>{cdsPart.desc}</div>
+                  )}
+                  {cdsPart && cdsPart.src && (
+                    <div style={{fontSize:10,color:"#475569",marginTop:4}}>📚 {cdsPart.src}</div>
+                  )}
+
+                  <div style={{fontSize:10,color:"#475569",margin:"16px 0 7px",letterSpacing:.6,textTransform:"uppercase"}}>
+                    Or paste a CDS you already have
+                  </div>
+                  <textarea value={rawCds} onChange={e=>{setRawCds(e.target.value); setRawErr(null);}}
+                    rows={3} spellCheck={false}
+                    placeholder="Paste a ready coding sequence (ATCG). It is used exactly as pasted — nothing is recoded."
+                    style={{width:"100%",background:"#0f172a",border:"1px solid #334155",borderRadius:6,
+                      color:"#60a5fa",fontSize:10,fontFamily:"monospace",padding:"8px",resize:"vertical",outline:"none"}}/>
+                  <div style={{display:"flex",gap:8,marginTop:8,alignItems:"center",flexWrap:"wrap"}}>
+                    <button onClick={useRawCds} disabled={!rawCds.trim()}
+                      style={{background:rawCds.trim()?"#0369a1":"#1e293b",border:"none",borderRadius:6,
+                        color:rawCds.trim()?"#fff":"#475569",fontSize:11,padding:"7px 12px",
+                        cursor:rawCds.trim()?"pointer":"not-allowed"}}>
+                      Use as gene of interest
+                    </button>
+                    {rawErr && <span style={{fontSize:11,color:"#fbbf24"}}>{rawErr}</span>}
+                  </div>
+                  <div style={{fontSize:10,color:"#475569",marginTop:8,lineHeight:1.5}}>
+                    Checked for reading frame and internal stops only. Switch to “Codon-optimize first”
+                    if you want it recoded for the host.
+                  </div>
+                </div>
+              ) : (
+                <CodonPanel
+                  organisms={codonOrgs}
+                  cdsPool={cdsPool}
+                  template={template}
+                  accepted={optCds}
+                  onAccept={part=>{setOptCds(part); setResult(null); setAsmErr(null);}}
+                  onClear={()=>{setOptCds(null); setResult(null); setAsmErr(null);}}/>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* steps 01 and 03 keep the builder's original 860px column, untouched */}
+      <div style={{padding:"0 20px 20px",maxWidth:860,margin:"0 auto"}}>
 
         {/* 01 - template, gene, and the editable part list */}
         <div style={{marginBottom:16}}>
@@ -505,18 +2322,27 @@ function App() {
                 </select>
               </div>
               <div style={{flex:"1 1 240px",minWidth:0}}>
-                <div style={{fontSize:10,color:"#475569",marginBottom:5}}>GENE OF INTEREST · {cdsPool.length.toLocaleString()} CDS</div>
-                {cdsPart ? (
-                  <div style={{display:"flex",alignItems:"center",gap:8,padding:"7px 10px",background:"#0f172a",border:"1px solid #1e3a5f",borderRadius:6}}>
-                    <span style={{flex:1,minWidth:0,fontSize:12,color:"#93c5fd",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cdsPart.name}</span>
-                    <span style={{fontSize:10,color:"#475569",whiteSpace:"nowrap"}}>{cdsPart.seq ? cdsPart.length.toLocaleString()+" bp" : "no seq"}</span>
-                    <EvidencePill evidence={cdsPart.evidence}/>
-                    <button onClick={()=>setCdsPart(null)} style={{...S.ib,fontSize:15}} title="Clear">×</button>
+                <div style={{fontSize:10,color:"#475569",marginBottom:5}}>
+                  GENE OF INTEREST · from step 00
+                </div>
+                {cdsMatch ? (
+                  <div style={{display:"flex",alignItems:"center",gap:8,padding:"7px 10px",background:"#0f172a",
+                    border:`1px solid ${cdsMode==="optimize"?"#166534":"#1e3a5f"}`,borderRadius:6}}>
+                    <span style={{flex:1,minWidth:0,fontSize:12,color:cdsMode==="optimize"?"#4ade80":"#93c5fd",
+                      overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cdsMatch.name}</span>
+                    <span style={{fontSize:10,color:"#475569",whiteSpace:"nowrap"}}>
+                      {cdsMatch.seq ? cdsMatch.length.toLocaleString()+" bp" : "no seq"}
+                    </span>
+                    {cdsMode === "optimize" && (
+                      <span style={{fontSize:9,padding:"2px 6px",background:"#22c55e1a",color:"#22c55e",
+                        borderRadius:20,border:"1px solid #22c55e33",whiteSpace:"nowrap"}}>optimized</span>
+                    )}
+                    <EvidencePill evidence={cdsMatch.evidence}/>
                   </div>
                 ) : (
-                  <div style={{display:"flex"}}>
-                    <PartCombo pool={cdsPool} placeholder="Search CDS by name, or paste a DNA sequence…"
-                      onPick={rec=>setCdsPart(rec)} hint="no CDS match"/>
+                  <div style={{padding:"8px 10px",background:"#0f172a",border:"1px dashed #334155",
+                    borderRadius:6,fontSize:11,color:"#475569"}}>
+                    None yet — choose or optimize one in step 00. The template's own default CDS is used meanwhile.
                   </div>
                 )}
               </div>

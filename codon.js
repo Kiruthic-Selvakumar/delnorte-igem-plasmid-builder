@@ -376,6 +376,18 @@ export function makeContext(org, env, opts, weights, aaSeq) {
     throw new Error(`No codon usage table on file for ${org.name}. `
       + `Build one from CDS in the codon table panel, or pick a different target organism.`);
   }
+  /* The weight vector arrives from the UI. A missing or non-numeric term
+     would spread NaN through the dynamic program and only surface several
+     stages later as an unreadable TypeError, so it is caught here instead. */
+  const badTerm = weights ? TERM_KEYS.find(k => !Number.isFinite(+weights[k])) : null;
+  if (!weights || badTerm) {
+    throw new Error(`Objective weights are missing or not numeric`
+      + `${badTerm ? ` (term "${badTerm}")` : ''}. Tick "Set weights from growth`
+      + ` conditions", or move each slider once, then run again.`);
+  }
+  const wNum = {};
+  for (const k of TERM_KEYS) wNum[k] = +weights[k];
+
   const hyp = Object.assign({}, DEFAULT_HYPOTHESES, opts.hypotheses || {});
   opts = Object.assign({}, opts, { hostClass: org.hostClass });
   const wGenome = relativeAdaptiveness(usage);
@@ -418,7 +430,7 @@ export function makeContext(org, env, opts, weights, aaSeq) {
 
   const gcTarget = opts.gcTarget != null ? opts.gcTarget : org.gcGenome;
   return {
-    org, env, opts, weights, phys, hyp, blend,
+    org, env, opts, weights: wNum, phys, hyp, blend,
     usage, wGenome, wExpressed, wEnv, wHigh: wExpressed, highSource,
     gcTarget, gc3Genome, gc3Target, tau, sigma,
     forbidden: buildForbidden(opts)
@@ -742,7 +754,15 @@ export function dpOptimize(aaSeq, ctx, locked) {
   let bi = 0;
   for (let k = 1; k < choices[n - 1].length; k++) if (score[n - 1][k] > score[n - 1][bi]) bi = k;
   const out = new Array(n);
-  for (let i = n - 1; i >= 0; i--) { out[i] = choices[i][bi]; bi = back[i][bi]; }
+  for (let i = n - 1; i >= 0; i--) {
+    /* A well-formed DP always hands back a real predecessor index. Guarded
+       anyway: an out-of-range pointer would write undefined into the
+       sequence and fail far from its cause. Index 0 is always a codon for
+       this residue, so the fallback stays in-frame and synonymous. */
+    if (!(bi >= 0 && bi < choices[i].length)) bi = 0;
+    out[i] = choices[i][bi];
+    bi = back[i][bi];
+  }
   return out;
 }
 

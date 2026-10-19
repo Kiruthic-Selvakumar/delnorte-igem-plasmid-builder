@@ -861,7 +861,12 @@ function CodonPanel({ organisms, cdsPool, template, accepted, onAccept, onClear 
     setBusy(true); setErr(null); setProg(0);
     try {
       const o = optsFor();
-      const w = wOverride || weights || C.defaultWeights(org, env).weights;
+      // Only a real weight vector may override the current one. A click
+      // handler that forwards its event here would otherwise be read as
+      // weights, and every term would come out undefined.
+      const isWeights = v => !!v && C.TERM_KEYS.every(k => Number.isFinite(+v[k]));
+      const w = isWeights(wOverride) ? wOverride
+              : (isWeights(weights) ? weights : C.defaultWeights(org, env).weights);
       const ctx = C.makeContext(org, env, o, w, aa);
       const lockN = Math.min(+cons.lockN || 0, aa.length);
       const locked = new Array(aa.length).fill(null);
@@ -1027,7 +1032,7 @@ function CodonPanel({ organisms, cdsPool, template, accepted, onAccept, onClear 
             <p>step 00 · environment-aware synonymous recoding</p>
           </div>
         </div>
-        <button className="run" onClick={runOptimize} disabled={!aa || busy}>
+        <button className="run" onClick={()=>runOptimize()} disabled={!aa || busy}>
           {busy ? "Optimizing…" : "Optimize sequence"}
         </button>
       </header>
